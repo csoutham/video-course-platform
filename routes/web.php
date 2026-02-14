@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Payments\CheckoutController;
+use App\Http\Controllers\Payments\ClaimPurchaseController;
 use App\Http\Controllers\Payments\StripeWebhookController;
 use App\Livewire\Courses\Catalog;
 use App\Livewire\Courses\Detail;
@@ -12,6 +13,8 @@ Route::get('/courses/{slug}', Detail::class)->name('courses.show');
 Route::post('/checkout/{course}', CheckoutController::class)->name('checkout.start');
 Route::view('/checkout/success', 'checkout.success')->name('checkout.success');
 Route::view('/checkout/cancel', 'checkout.cancel')->name('checkout.cancel');
+Route::get('/claim-purchase/{token}', [ClaimPurchaseController::class, 'show'])->name('claim-purchase.show');
+Route::post('/claim-purchase/{token}', [ClaimPurchaseController::class, 'store'])->name('claim-purchase.store');
 Route::post('/webhooks/stripe', StripeWebhookController::class)->name('webhooks.stripe');
 
 Route::view('dashboard', 'dashboard')

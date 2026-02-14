@@ -73,6 +73,10 @@ class StripeWebhookTest extends TestCase
             'course_id' => $course->id,
             'status' => 'active',
         ]);
+
+        $this->assertDatabaseMissing('purchase_claim_tokens', [
+            'order_id' => $order->id,
+        ]);
     }
 
     public function test_repeated_event_is_idempotent(): void
@@ -138,6 +142,50 @@ class StripeWebhookTest extends TestCase
             'Stripe-Signature' => 't=1,v1=invalid',
         ])->postJson(route('webhooks.stripe'), $payload)
             ->assertStatus(400);
+    }
+
+    public function test_guest_checkout_creates_claim_token_without_entitlement(): void
+    {
+        config()->set('services.stripe.webhook_secret', 'whsec_test');
+
+        $course = Course::factory()->published()->create();
+
+        $payload = [
+            'id' => 'evt_guest_checkout_1',
+            'object' => 'event',
+            'type' => 'checkout.session.completed',
+            'data' => [
+                'object' => [
+                    'id' => 'cs_test_guest_1',
+                    'object' => 'checkout.session',
+                    'currency' => 'usd',
+                    'amount_subtotal' => 9900,
+                    'amount_total' => 9900,
+                    'customer_email' => 'guestbuyer@example.com',
+                    'metadata' => [
+                        'course_id' => (string) $course->id,
+                        'customer_email' => 'guestbuyer@example.com',
+                    ],
+                ],
+            ],
+        ];
+
+        $jsonPayload = json_encode($payload, JSON_THROW_ON_ERROR);
+        $signature = $this->generateSignatureHeader($jsonPayload, 'whsec_test');
+
+        $this->withHeaders([
+            'Stripe-Signature' => $signature,
+        ])->postJson(route('webhooks.stripe'), $payload)->assertOk();
+
+        $order = Order::query()->firstWhere('stripe_checkout_session_id', 'cs_test_guest_1');
+        $this->assertNotNull($order);
+        $this->assertNull($order->user_id);
+
+        $this->assertDatabaseHas('purchase_claim_tokens', [
+            'order_id' => $order->id,
+        ]);
+
+        $this->assertSame(0, Entitlement::query()->where('order_id', $order->id)->count());
     }
 
     public function test_refund_webhook_revokes_entitlements_for_order(): void

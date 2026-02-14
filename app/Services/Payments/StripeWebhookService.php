@@ -2,18 +2,25 @@
 
 namespace App\Services\Payments;
 
-use App\Models\Entitlement;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\StripeEvent;
 use App\Models\User;
+use App\Services\Claims\PurchaseClaimService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 use Stripe\Event;
 use Stripe\Webhook;
 
 class StripeWebhookService
 {
+    public function __construct(
+        private readonly EntitlementService $entitlementService,
+        private readonly PurchaseClaimService $purchaseClaimService,
+    ) {}
+
     public function handle(string $payload, string $signature): void
     {
         $event = Webhook::constructEvent(
@@ -112,21 +119,18 @@ class StripeWebhookService
         );
 
         if (! $order->user_id) {
+            $claimToken = $this->purchaseClaimService->issueForOrder($order);
+
+            Log::info('guest_purchase_claim_token_issued', [
+                'order_id' => $order->id,
+                'email' => $order->email,
+                'claim_url' => URL::route('claim-purchase.show', $claimToken->token),
+            ]);
+
             return;
         }
 
-        Entitlement::query()->updateOrCreate(
-            [
-                'user_id' => $order->user_id,
-                'course_id' => $courseId,
-            ],
-            [
-                'order_id' => $order->id,
-                'status' => 'active',
-                'granted_at' => now(),
-                'revoked_at' => null,
-            ]
-        );
+        $this->entitlementService->grantForOrder($order);
     }
 
     private function markOrderFailed(array $session): void
@@ -174,10 +178,6 @@ class StripeWebhookService
             'refunded_at' => now(),
         ])->save();
 
-        Entitlement::query()->where('order_id', $order->id)->update([
-            'status' => 'revoked',
-            'revoked_at' => now(),
-            'updated_at' => now(),
-        ]);
+        $this->entitlementService->revokeForOrder($order);
     }
 }
