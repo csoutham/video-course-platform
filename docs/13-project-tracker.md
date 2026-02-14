@@ -20,7 +20,7 @@ This file is the source of truth for project execution tracking in-repo.
 
 | Milestone | Scope | Status | Owner | Notes |
 |---|---|---|---|---|
-| Milestone 1 | Foundation (Laravel, auth, schema, public catalog/detail, test baseline) | `in_progress` | Chris/Codex | Backlog in `14-milestone-1-backlog.md` |
+| Milestone 1 | Foundation (Laravel, auth, schema, public catalog/detail, test baseline) | `done` | Chris/Codex | Backlog in `14-milestone-1-backlog.md` |
 | Milestone 2 | Checkout + webhooks + entitlements | `todo` | Chris/Codex | Depends on Milestone 1 schema/auth completion |
 | Milestone 3 | Learning experience and secure resource delivery | `todo` | Chris/Codex | Depends on Milestone 2 entitlements |
 | Milestone 4 | Hardening, operations, and expanded tests | `todo` | Chris/Codex | Security and runbook completion |
@@ -28,7 +28,7 @@ This file is the source of truth for project execution tracking in-repo.
 
 ## Active Sprint Focus
 
-- Current focus: Milestone 1.
+- Current focus: Milestone 2 preparation.
 - Exit criteria reference: `11-implementation-roadmap.md`.
 - Execution task list: `14-milestone-1-backlog.md`.
 
@@ -43,6 +43,8 @@ This file is the source of truth for project execution tracking in-repo.
 
 - 2026-02-14: Created in-repo tracking baseline and replaced external tracker dependency.
 - 2026-02-14: Marked Milestone 1 as `in_progress` after CI/test quality gates implementation started.
+- 2026-02-14: Marked Milestone 1 as `done` after all backlog tasks reached completion criteria.
 - 2026-02-14: Completed Milestone 1 authentication/password-reset baseline with Livewire Breeze.
 - 2026-02-14: Completed Milestone 1 core content schema and relationship tests.
 - 2026-02-14: Added deterministic course factories and seed data for repeatable local/dev testing.
+- 2026-02-14: Completed public catalog/detail routes and corresponding acceptance tests for Milestone 1.

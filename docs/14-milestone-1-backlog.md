@@ -17,10 +17,10 @@ Local task IDs use `VC-M1-XX`.
 | VC-M1-01 | Scaffold Laravel app with Livewire and Tailwind baseline | High | `done` | None |
 | VC-M1-02 | Implement authentication and password reset flow | High | `done` | VC-M1-01 |
 | VC-M1-03 | Create core content schema for courses/modules/lessons/resources | High | `done` | VC-M1-01 |
-| VC-M1-04 | Build public course catalog page with curated listing | High | `todo` | VC-M1-03 |
-| VC-M1-05 | Build public course detail page with curriculum preview and purchase CTA placeholder | High | `todo` | VC-M1-03 |
+| VC-M1-04 | Build public course catalog page with curated listing | High | `done` | VC-M1-03 |
+| VC-M1-05 | Build public course detail page with curriculum preview and purchase CTA placeholder | High | `done` | VC-M1-03 |
 | VC-M1-06 | Establish test harness and CI quality gates | Urgent | `done` | VC-M1-01 |
-| VC-M1-07 | Write Milestone 1 acceptance tests for public catalog and auth gates | Urgent | `todo` | VC-M1-02, VC-M1-04, VC-M1-05, VC-M1-06 |
+| VC-M1-07 | Write Milestone 1 acceptance tests for public catalog and auth gates | Urgent | `done` | VC-M1-02, VC-M1-04, VC-M1-05, VC-M1-06 |
 | VC-M1-08 | Add deterministic factories and seeders for catalog test data | High | `done` | VC-M1-03 |
 
 ## Task Details
@@ -95,7 +95,7 @@ Completion notes:
 
 ### VC-M1-04: Build public course catalog page with curated listing
 
-Status: `todo`
+Status: `done`
 
 Scope:
 
@@ -109,9 +109,16 @@ Acceptance:
 - Unpublished courses hidden.
 - Feature tests cover populated/empty states.
 
+Completion notes:
+
+- Implemented `/courses` with `App\\Livewire\\Courses\\Catalog`.
+- Added curated public layout for customer-facing pages.
+- Added published-only listing and explicit empty-state rendering.
+- Verified with `tests/Feature/PublicCoursePagesTest.php`.
+
 ### VC-M1-05: Build public course detail page with curriculum preview and purchase CTA placeholder
 
-Status: `todo`
+Status: `done`
 
 Scope:
 
@@ -124,6 +131,13 @@ Acceptance:
 - Anonymous access works.
 - 404 for missing or unpublished course.
 - Feature tests for valid/invalid slug and publish state.
+
+Completion notes:
+
+- Implemented `/courses/{slug}` with `App\\Livewire\\Courses\\Detail`.
+- Added curriculum preview with published lesson filtering per module.
+- Added Milestone 2 checkout placeholder CTA on detail page.
+- Added not-found handling for missing/unpublished courses.
 
 ### VC-M1-06: Establish test harness and CI quality gates
 
@@ -152,7 +166,7 @@ Completion notes:
 
 ### VC-M1-07: Write Milestone 1 acceptance tests for public catalog and auth gates
 
-Status: `todo`
+Status: `done`
 
 Scope:
 
@@ -163,6 +177,12 @@ Acceptance:
 
 - Scenario coverage mapped to `09-testing-acceptance.md`.
 - Tests pass locally and in CI.
+
+Completion notes:
+
+- Added public catalog and detail acceptance tests in `tests/Feature/PublicCoursePagesTest.php`.
+- Auth and password reset acceptance tests are present from Breeze stack.
+- Verified full suite with `composer test` and CI gate commands.
 
 ### VC-M1-08: Add deterministic factories and seeders for catalog test data
 
@@ -212,3 +232,4 @@ Completion notes:
 - 2026-02-14: Marked VC-M1-02 done after Breeze Livewire auth scaffolding and passing auth tests.
 - 2026-02-14: Marked VC-M1-03 done after core schema + relationship tests implementation.
 - 2026-02-14: Marked VC-M1-08 done after deterministic factories and catalog seeders were added.
+- 2026-02-14: Marked VC-M1-04, VC-M1-05, and VC-M1-07 done after public course pages and acceptance tests were implemented.
