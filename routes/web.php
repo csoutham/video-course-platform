@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Learning\CoursePlayerController;
+use App\Http\Controllers\Learning\MyCoursesController;
+use App\Http\Controllers\Learning\ResourceDownloadController;
 use App\Http\Controllers\Payments\CheckoutController;
 use App\Http\Controllers\Payments\ClaimPurchaseController;
 use App\Http\Controllers\Payments\StripeWebhookController;
@@ -16,6 +19,15 @@ Route::view('/checkout/cancel', 'checkout.cancel')->name('checkout.cancel');
 Route::get('/claim-purchase/{token}', [ClaimPurchaseController::class, 'show'])->name('claim-purchase.show');
 Route::post('/claim-purchase/{token}', [ClaimPurchaseController::class, 'store'])->name('claim-purchase.store');
 Route::post('/webhooks/stripe', StripeWebhookController::class)->name('webhooks.stripe');
+
+Route::middleware('auth')->group(function (): void {
+    Route::get('/my-courses', MyCoursesController::class)->name('my-courses.index');
+    Route::get('/learn/{course:slug}/{lessonSlug?}', CoursePlayerController::class)->name('learn.show');
+    Route::get('/resources/{resource}/download', [ResourceDownloadController::class, 'download'])->name('resources.download');
+    Route::get('/resources/{resource}/stream', [ResourceDownloadController::class, 'stream'])
+        ->middleware('signed')
+        ->name('resources.stream');
+});
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

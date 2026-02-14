@@ -15,6 +15,8 @@ return [
 
     'default' => env('FILESYSTEM_DISK', 'local'),
 
+    'course_resources_disk' => env('COURSE_RESOURCES_DISK', 'local'),
+
     /*
     |--------------------------------------------------------------------------
     | Filesystem Disks
