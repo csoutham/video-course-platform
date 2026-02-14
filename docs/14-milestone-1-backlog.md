@@ -19,7 +19,7 @@ Local task IDs use `VC-M1-XX`.
 | VC-M1-03 | Create core content schema for courses/modules/lessons/resources | High | `todo` | VC-M1-01 |
 | VC-M1-04 | Build public course catalog page with curated listing | High | `todo` | VC-M1-03 |
 | VC-M1-05 | Build public course detail page with curriculum preview and purchase CTA placeholder | High | `todo` | VC-M1-03 |
-| VC-M1-06 | Establish test harness and CI quality gates | Urgent | `todo` | VC-M1-01 |
+| VC-M1-06 | Establish test harness and CI quality gates | Urgent | `done` | VC-M1-01 |
 | VC-M1-07 | Write Milestone 1 acceptance tests for public catalog and auth gates | Urgent | `todo` | VC-M1-02, VC-M1-04, VC-M1-05, VC-M1-06 |
 | VC-M1-08 | Add deterministic factories and seeders for catalog test data | High | `todo` | VC-M1-03 |
 
@@ -113,7 +113,7 @@ Acceptance:
 
 ### VC-M1-06: Establish test harness and CI quality gates
 
-Status: `todo`
+Status: `done`
 
 Scope:
 
@@ -126,6 +126,15 @@ Acceptance:
 - CI runs tests on each PR.
 - Failing tests block merges.
 - Commands and CI behavior documented.
+
+Completion notes:
+
+- Added GitHub Actions workflow at `.github/workflows/ci.yml`.
+- CI now runs:
+  - `composer test`
+  - `./vendor/bin/pint --test`
+  - `npm run build`
+- Local verification passed for all quality-gate commands.
 
 ### VC-M1-07: Write Milestone 1 acceptance tests for public catalog and auth gates
 
@@ -177,3 +186,4 @@ Acceptance:
 ## Change Log
 
 - 2026-02-14: Migrated backlog from deleted external tracker into `/docs`.
+- 2026-02-14: Marked VC-M1-06 done after adding CI workflow and validating quality gates.

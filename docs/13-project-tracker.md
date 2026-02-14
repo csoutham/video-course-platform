@@ -20,7 +20,7 @@ This file is the source of truth for project execution tracking in-repo.
 
 | Milestone | Scope | Status | Owner | Notes |
 |---|---|---|---|---|
-| Milestone 1 | Foundation (Laravel, auth, schema, public catalog/detail, test baseline) | `todo` | Chris/Codex | Backlog in `14-milestone-1-backlog.md` |
+| Milestone 1 | Foundation (Laravel, auth, schema, public catalog/detail, test baseline) | `in_progress` | Chris/Codex | Backlog in `14-milestone-1-backlog.md` |
 | Milestone 2 | Checkout + webhooks + entitlements | `todo` | Chris/Codex | Depends on Milestone 1 schema/auth completion |
 | Milestone 3 | Learning experience and secure resource delivery | `todo` | Chris/Codex | Depends on Milestone 2 entitlements |
 | Milestone 4 | Hardening, operations, and expanded tests | `todo` | Chris/Codex | Security and runbook completion |
@@ -42,3 +42,4 @@ This file is the source of truth for project execution tracking in-repo.
 ## Change Log
 
 - 2026-02-14: Created in-repo tracking baseline and replaced external tracker dependency.
+- 2026-02-14: Marked Milestone 1 as `in_progress` after CI/test quality gates implementation started.

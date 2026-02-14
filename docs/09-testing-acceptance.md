@@ -15,6 +15,12 @@
 - Mutation testing recommended for entitlement and payment state transition logic.
 - Static analysis and coding standards checks must pass in CI.
 
+Current Milestone 1 CI command gates:
+
+- `composer test`
+- `./vendor/bin/pint --test`
+- `npm run build`
+
 ## Critical Acceptance Scenarios
 
 1. Guest can purchase published course and later claim account with access preserved.
