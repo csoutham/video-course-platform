@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Payments;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\Audit\AuditLogService;
 use App\Services\Claims\PurchaseClaimService;
 use App\Services\Payments\EntitlementService;
 use Illuminate\Contracts\View\View;
@@ -36,6 +37,7 @@ class ClaimPurchaseController extends Controller
         string $token,
         PurchaseClaimService $claimService,
         EntitlementService $entitlementService,
+        AuditLogService $auditLogService,
     ): RedirectResponse {
         $claimToken = $claimService->resolveActiveToken($token);
 
@@ -89,6 +91,15 @@ class ClaimPurchaseController extends Controller
         $claimToken->forceFill([
             'consumed_at' => now(),
         ])->save();
+
+        $auditLogService->record(
+            eventType: 'purchase_claim_completed',
+            userId: $user->id,
+            context: [
+                'order_id' => $order->id,
+                'claim_token_id' => $claimToken->id,
+            ]
+        );
 
         return redirect()->route('dashboard')->with('status', 'Purchase claimed successfully.');
     }

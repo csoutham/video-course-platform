@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\StripeEvent;
 use App\Models\User;
+use App\Services\Audit\AuditLogService;
 use App\Services\Claims\PurchaseClaimService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +20,7 @@ class StripeWebhookService
     public function __construct(
         private readonly EntitlementService $entitlementService,
         private readonly PurchaseClaimService $purchaseClaimService,
+        private readonly AuditLogService $auditLogService,
     ) {}
 
     public function handle(string $payload, string $signature): void
@@ -52,6 +54,14 @@ class StripeWebhookService
                 'processed_at' => now(),
                 'processing_error' => null,
             ])->save();
+
+            $this->auditLogService->record(
+                eventType: 'stripe_webhook_processed',
+                context: [
+                    'stripe_event_id' => $event->id,
+                    'event_type' => $event->type,
+                ]
+            );
         });
     }
 
@@ -179,5 +189,28 @@ class StripeWebhookService
         ])->save();
 
         $this->entitlementService->revokeForOrder($order);
+    }
+
+    public function reprocessStoredEvent(StripeEvent $storedEvent): void
+    {
+        $event = Event::constructFrom($storedEvent->payload_json);
+
+        DB::transaction(function () use ($event, $storedEvent): void {
+            $this->processEvent($event);
+
+            $storedEvent->forceFill([
+                'event_type' => $event->type,
+                'processed_at' => now(),
+                'processing_error' => null,
+            ])->save();
+
+            $this->auditLogService->record(
+                eventType: 'stripe_event_reprocessed',
+                context: [
+                    'stripe_event_id' => $storedEvent->stripe_event_id,
+                    'event_type' => $storedEvent->event_type,
+                ]
+            );
+        });
     }
 }

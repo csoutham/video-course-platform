@@ -42,6 +42,10 @@ class CheckoutStartTest extends TestCase
             'email' => 'guest@example.com',
             'promotion_code' => 'promo_123',
         ])->assertRedirect('https://checkout.stripe.test/session/cs_test_123');
+
+        $this->assertDatabaseHas('audit_logs', [
+            'event_type' => 'checkout_started',
+        ]);
     }
 
     public function test_authenticated_user_checkout_uses_account_email(): void

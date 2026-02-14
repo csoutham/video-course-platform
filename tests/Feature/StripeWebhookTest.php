@@ -58,6 +58,10 @@ class StripeWebhookTest extends TestCase
             'event_type' => 'checkout.session.completed',
         ]);
 
+        $this->assertDatabaseHas('audit_logs', [
+            'event_type' => 'stripe_webhook_processed',
+        ]);
+
         $order = Order::query()->firstWhere('stripe_checkout_session_id', 'cs_test_123');
         $this->assertNotNull($order);
         $this->assertSame('paid', $order->status);

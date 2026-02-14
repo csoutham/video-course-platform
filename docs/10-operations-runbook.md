@@ -31,13 +31,30 @@
 ### Reprocess Webhook Event
 
 - Locate `stripe_event_id` in `stripe_events`.
-- Reset processing flag/error if required.
-- Run replay command/job for deterministic reprocessing.
+- Run deterministic replay command:
+  - `php artisan videocourses:stripe-reprocess {stripe_event_id}`
 
 ### Manual Entitlement Override
 
-- Grant/revoke entitlement via protected internal command.
+- Grant via command:
+  - `php artisan videocourses:entitlement-grant {user_id} {course_id} {order_id}`
+- Revoke via command:
+  - `php artisan videocourses:entitlement-revoke {user_id} {course_id}`
 - Record reason and operator identity in audit trail.
+
+### Audit Log Review
+
+- Query `audit_logs` for event inspection during incidents.
+- Key event types:
+  - `checkout_started`
+  - `stripe_webhook_processed`
+  - `stripe_event_reprocessed`
+  - `entitlement_granted`
+  - `entitlement_revoked`
+  - `resource_download_requested`
+  - `resource_stream_served`
+  - `resource_download_denied`
+  - `purchase_claim_completed`
 
 ## Common Incident Playbooks
 

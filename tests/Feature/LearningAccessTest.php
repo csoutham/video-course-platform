@@ -107,6 +107,16 @@ class LearningAccessTest extends TestCase
         $this->actingAs($user)
             ->get($signedUrl)
             ->assertOk();
+
+        $this->assertDatabaseHas('audit_logs', [
+            'event_type' => 'resource_download_requested',
+            'user_id' => $user->id,
+        ]);
+
+        $this->assertDatabaseHas('audit_logs', [
+            'event_type' => 'resource_stream_served',
+            'user_id' => $user->id,
+        ]);
     }
 
     public function test_unentitled_user_cannot_download_resource(): void
