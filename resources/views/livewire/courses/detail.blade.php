@@ -4,13 +4,48 @@
         <h1 class="text-3xl font-semibold tracking-tight text-slate-900">{{ $course->title }}</h1>
         <p class="max-w-3xl text-sm text-slate-600">{{ $course->description }}</p>
 
-        <div class="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4">
+        <div class="space-y-4 border-t border-slate-100 pt-4">
             <p class="text-base font-semibold text-slate-900">
                 ${{ number_format($course->price_amount / 100, 2) }} {{ strtoupper($course->price_currency) }}
             </p>
-            <button type="button" class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
-                Buy course (Milestone 2)
-            </button>
+
+            <form method="POST" action="{{ route('checkout.start', $course) }}" class="space-y-3">
+                @csrf
+
+                @guest
+                    <div>
+                        <label for="email" class="block text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Email</label>
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            required
+                            value="{{ old('email') }}"
+                            class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                            placeholder="you@example.com"
+                        />
+                        @error('email')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                @endguest
+
+                <div>
+                    <label for="promotion_code" class="block text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Promotion code (optional)</label>
+                    <input
+                        id="promotion_code"
+                        name="promotion_code"
+                        type="text"
+                        value="{{ old('promotion_code') }}"
+                        class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                        placeholder="promo_xxx"
+                    />
+                </div>
+
+                <button type="submit" class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
+                    Buy course
+                </button>
+            </form>
         </div>
     </div>
 
