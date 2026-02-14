@@ -19,7 +19,7 @@ Local task IDs use `VC-M2-XX`.
 | VC-M2-03 | Implement Stripe webhook endpoint with signature verification and idempotency | Urgent | `done` | VC-M2-01 |
 | VC-M2-04 | Implement entitlement grant/revoke service based on order transitions | High | `done` | VC-M2-01, VC-M2-03 |
 | VC-M2-05 | Implement checkout success/cancel routes and customer-facing status messaging | High | `done` | VC-M2-02 |
-| VC-M2-06 | Implement guest purchase linking strategy and account-claim preparation hooks | High | `in_progress` | VC-M2-02, VC-M2-03 |
+| VC-M2-06 | Implement guest purchase linking strategy and account-claim preparation hooks | High | `done` | VC-M2-02, VC-M2-03 |
 | VC-M2-07 | Add Milestone 2 acceptance tests (checkout initiation, webhook idempotency, entitlement grant/revoke) | Urgent | `done` | VC-M2-02, VC-M2-03, VC-M2-04 |
 
 ## Notes
@@ -44,9 +44,11 @@ Local task IDs use `VC-M2-XX`.
   - Added order state transitions (`paid`, `failed`, `refunded`) and entitlement grant/revoke handling.
 - VC-M2-05 complete:
   - Added `/checkout/success` and `/checkout/cancel` pages.
-- VC-M2-06 in progress:
-  - Checkout metadata now stores `course_id`, `customer_email`, and optional `user_id` for future claim-linking.
-  - Remaining: explicit account-claim flow implementation and reconciliation command.
+- VC-M2-06 complete:
+  - Added `purchase_claim_tokens` table and model.
+  - Guest paid checkouts now issue claim tokens automatically via webhook processing.
+  - Added `/claim-purchase/{token}` flow for account creation or matching-account linking.
+  - Claim completion attaches order to user and grants entitlements.
 - VC-M2-07 complete:
   - Added acceptance tests for checkout initiation, webhook idempotency, and entitlement grant/revoke.
 
@@ -54,4 +56,4 @@ Local task IDs use `VC-M2-XX`.
 
 - 2026-02-14: Created Milestone 2 backlog.
 - 2026-02-14: Marked VC-M2-01 through VC-M2-05 and VC-M2-07 complete after checkout/webhook implementation and tests.
-- 2026-02-14: Marked VC-M2-06 as `in_progress` pending explicit account-claim flow implementation.
+- 2026-02-14: Marked VC-M2-06 done after implementing guest claim token issuance and claim endpoint flow.
