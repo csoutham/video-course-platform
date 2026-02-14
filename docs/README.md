@@ -35,3 +35,5 @@ This folder contains the implementation-ready documentation for VideoCourses v1,
 10. [10-operations-runbook](./10-operations-runbook.md)
 11. [11-implementation-roadmap](./11-implementation-roadmap.md)
 12. [12-open-source-readiness](./12-open-source-readiness.md)
+13. [13-project-tracker](./13-project-tracker.md)
+14. [14-milestone-1-backlog](./14-milestone-1-backlog.md)
