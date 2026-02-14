@@ -43,3 +43,4 @@ This file is the source of truth for project execution tracking in-repo.
 
 - 2026-02-14: Created in-repo tracking baseline and replaced external tracker dependency.
 - 2026-02-14: Marked Milestone 1 as `in_progress` after CI/test quality gates implementation started.
+- 2026-02-14: Completed Milestone 1 authentication/password-reset baseline with Livewire Breeze.

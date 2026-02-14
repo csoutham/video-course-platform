@@ -15,7 +15,7 @@ Local task IDs use `VC-M1-XX`.
 | Task ID | Title | Priority | Status | Depends On |
 |---|---|---|---|---|
 | VC-M1-01 | Scaffold Laravel app with Livewire and Tailwind baseline | High | `done` | None |
-| VC-M1-02 | Implement authentication and password reset flow | High | `todo` | VC-M1-01 |
+| VC-M1-02 | Implement authentication and password reset flow | High | `done` | VC-M1-01 |
 | VC-M1-03 | Create core content schema for courses/modules/lessons/resources | High | `todo` | VC-M1-01 |
 | VC-M1-04 | Build public course catalog page with curated listing | High | `todo` | VC-M1-03 |
 | VC-M1-05 | Build public course detail page with curriculum preview and purchase CTA placeholder | High | `todo` | VC-M1-03 |
@@ -50,7 +50,7 @@ Completion notes:
 
 ### VC-M1-02: Implement authentication and password reset flow
 
-Status: `todo`
+Status: `done`
 
 Scope:
 
@@ -62,6 +62,13 @@ Acceptance:
 
 - Feature tests for successful and invalid auth/reset flows.
 - Guest and auth middleware behavior verified.
+
+Completion notes:
+
+- Installed Laravel Breeze with Livewire stack.
+- Added auth routes, controllers, views, and profile management pages.
+- Added password reset and authentication feature tests.
+- Verified via `composer test`.
 
 ### VC-M1-03: Create core content schema for courses/modules/lessons/resources
 
@@ -187,3 +194,4 @@ Acceptance:
 
 - 2026-02-14: Migrated backlog from deleted external tracker into `/docs`.
 - 2026-02-14: Marked VC-M1-06 done after adding CI workflow and validating quality gates.
+- 2026-02-14: Marked VC-M1-02 done after Breeze Livewire auth scaffolding and passing auth tests.
