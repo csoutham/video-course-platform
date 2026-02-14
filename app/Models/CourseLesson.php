@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class CourseLesson extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'course_id',
+        'module_id',
+        'title',
+        'slug',
+        'summary',
+        'stream_video_id',
+        'sort_order',
+        'is_published',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_published' => 'boolean',
+        ];
+    }
+
+    public function course(): BelongsTo
+    {
+        return $this->belongsTo(Course::class);
+    }
+
+    public function module(): BelongsTo
+    {
+        return $this->belongsTo(CourseModule::class, 'module_id');
+    }
+
+    public function resources(): HasMany
+    {
+        return $this->hasMany(LessonResource::class, 'lesson_id')->orderBy('sort_order');
+    }
+
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->where('is_published', true);
+    }
+}

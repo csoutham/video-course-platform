@@ -16,12 +16,12 @@ Local task IDs use `VC-M1-XX`.
 |---|---|---|---|---|
 | VC-M1-01 | Scaffold Laravel app with Livewire and Tailwind baseline | High | `done` | None |
 | VC-M1-02 | Implement authentication and password reset flow | High | `done` | VC-M1-01 |
-| VC-M1-03 | Create core content schema for courses/modules/lessons/resources | High | `todo` | VC-M1-01 |
+| VC-M1-03 | Create core content schema for courses/modules/lessons/resources | High | `done` | VC-M1-01 |
 | VC-M1-04 | Build public course catalog page with curated listing | High | `todo` | VC-M1-03 |
 | VC-M1-05 | Build public course detail page with curriculum preview and purchase CTA placeholder | High | `todo` | VC-M1-03 |
 | VC-M1-06 | Establish test harness and CI quality gates | Urgent | `done` | VC-M1-01 |
 | VC-M1-07 | Write Milestone 1 acceptance tests for public catalog and auth gates | Urgent | `todo` | VC-M1-02, VC-M1-04, VC-M1-05, VC-M1-06 |
-| VC-M1-08 | Add deterministic factories and seeders for catalog test data | High | `todo` | VC-M1-03 |
+| VC-M1-08 | Add deterministic factories and seeders for catalog test data | High | `done` | VC-M1-03 |
 
 ## Task Details
 
@@ -72,7 +72,7 @@ Completion notes:
 
 ### VC-M1-03: Create core content schema for courses/modules/lessons/resources
 
-Status: `todo`
+Status: `done`
 
 Scope:
 
@@ -85,6 +85,13 @@ Acceptance:
 - Migrations run cleanly.
 - Relationship tests verify hierarchy and ordering.
 - Unpublished content excluded from public queries.
+
+Completion notes:
+
+- Added migrations for `courses`, `course_modules`, `course_lessons`, and `lesson_resources`.
+- Added model relations and published scopes for course and lesson visibility.
+- Added schema relationship/ordering/published-scope tests in `tests/Feature/CourseContentSchemaTest.php`.
+- Verified with `php artisan migrate:fresh --force`, `composer test`, and `./vendor/bin/pint --test`.
 
 ### VC-M1-04: Build public course catalog page with curated listing
 
@@ -159,7 +166,7 @@ Acceptance:
 
 ### VC-M1-08: Add deterministic factories and seeders for catalog test data
 
-Status: `todo`
+Status: `done`
 
 Scope:
 
@@ -172,6 +179,14 @@ Acceptance:
 - Tests can build hierarchy quickly with factories.
 - Local seed command yields usable catalog.
 - Data shape documented.
+
+Completion notes:
+
+- Added model factories for course hierarchy and resources.
+- Added deterministic `CourseCatalogSeeder` with published and unpublished sample data.
+- Wired seeding through `DatabaseSeeder`.
+- Added seeder/factory validation tests in `tests/Feature/CourseCatalogSeederTest.php`.
+- Verified via `php artisan migrate:fresh --seed --force`, `composer test`, and `./vendor/bin/pint --test`.
 
 ## Execution Order
 
@@ -195,3 +210,5 @@ Acceptance:
 - 2026-02-14: Migrated backlog from deleted external tracker into `/docs`.
 - 2026-02-14: Marked VC-M1-06 done after adding CI workflow and validating quality gates.
 - 2026-02-14: Marked VC-M1-02 done after Breeze Livewire auth scaffolding and passing auth tests.
+- 2026-02-14: Marked VC-M1-03 done after core schema + relationship tests implementation.
+- 2026-02-14: Marked VC-M1-08 done after deterministic factories and catalog seeders were added.
