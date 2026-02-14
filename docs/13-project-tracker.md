@@ -22,15 +22,15 @@ This file is the source of truth for project execution tracking in-repo.
 |---|---|---|---|---|
 | Milestone 1 | Foundation (Laravel, auth, schema, public catalog/detail, test baseline) | `done` | Chris/Codex | Backlog in `14-milestone-1-backlog.md` |
 | Milestone 2 | Checkout + webhooks + entitlements | `done` | Chris/Codex | Backlog in `15-milestone-2-backlog.md` |
-| Milestone 3 | Learning experience and secure resource delivery | `todo` | Chris/Codex | Depends on Milestone 2 entitlements |
-| Milestone 4 | Hardening, operations, and expanded tests | `todo` | Chris/Codex | Security and runbook completion |
+| Milestone 3 | Learning experience and secure resource delivery | `done` | Chris/Codex | Backlog in `16-milestone-3-backlog.md` |
+| Milestone 4 | Hardening, operations, and expanded tests | `in_progress` | Chris/Codex | Security and runbook completion |
 | Milestone 5 | Open-source preparation | `todo` | Chris/Codex | CI matrix, contributor docs, release process |
 
 ## Active Sprint Focus
 
-- Current focus: Milestone 3 preparation.
+- Current focus: Milestone 4 implementation.
 - Exit criteria reference: `11-implementation-roadmap.md`.
-- Execution task list: `15-milestone-2-backlog.md`.
+- Execution task list: `17-milestone-4-backlog.md` (to be created).
 
 ## Decision Log
 
@@ -51,3 +51,6 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-14: Started Milestone 2 with dedicated in-repo backlog and implementation sequencing.
 - 2026-02-14: Completed Milestone 2 payment schema, checkout endpoint, webhook idempotency flow, and acceptance tests.
 - 2026-02-14: Completed guest purchase claim-linking flow and marked Milestone 2 complete.
+- 2026-02-14: Started Milestone 3 implementation with learner routes and access-control focus.
+- 2026-02-14: Completed Milestone 3 learner library, gated playback, secure resource download flow, and acceptance tests.
+- 2026-02-14: Started Milestone 4 hardening and operational tooling implementation.
