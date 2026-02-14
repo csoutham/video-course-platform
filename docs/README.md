@@ -37,3 +37,4 @@ This folder contains the implementation-ready documentation for VideoCourses v1,
 12. [12-open-source-readiness](./12-open-source-readiness.md)
 13. [13-project-tracker](./13-project-tracker.md)
 14. [14-milestone-1-backlog](./14-milestone-1-backlog.md)
+15. [15-milestone-2-backlog](./15-milestone-2-backlog.md)
