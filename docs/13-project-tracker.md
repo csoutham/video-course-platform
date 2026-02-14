@@ -23,14 +23,14 @@ This file is the source of truth for project execution tracking in-repo.
 | Milestone 1 | Foundation (Laravel, auth, schema, public catalog/detail, test baseline) | `done` | Chris/Codex | Backlog in `14-milestone-1-backlog.md` |
 | Milestone 2 | Checkout + webhooks + entitlements | `done` | Chris/Codex | Backlog in `15-milestone-2-backlog.md` |
 | Milestone 3 | Learning experience and secure resource delivery | `done` | Chris/Codex | Backlog in `16-milestone-3-backlog.md` |
-| Milestone 4 | Hardening, operations, and expanded tests | `in_progress` | Chris/Codex | Security and runbook completion |
-| Milestone 5 | Open-source preparation | `todo` | Chris/Codex | CI matrix, contributor docs, release process |
+| Milestone 4 | Hardening, operations, and expanded tests | `done` | Chris/Codex | Backlog in `17-milestone-4-backlog.md` |
+| Milestone 5 | Open-source preparation | `done` | Chris/Codex | Backlog in `18-milestone-5-backlog.md` |
 
 ## Active Sprint Focus
 
-- Current focus: Milestone 4 implementation.
+- Current focus: Post-milestone stabilization and incremental enhancements.
 - Exit criteria reference: `11-implementation-roadmap.md`.
-- Execution task list: `17-milestone-4-backlog.md` (to be created).
+- Execution task list: `18-milestone-5-backlog.md`.
 
 ## Decision Log
 
@@ -54,3 +54,5 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-14: Started Milestone 3 implementation with learner routes and access-control focus.
 - 2026-02-14: Completed Milestone 3 learner library, gated playback, secure resource download flow, and acceptance tests.
 - 2026-02-14: Started Milestone 4 hardening and operational tooling implementation.
+- 2026-02-14: Completed Milestone 4 with structured audit logs, replay/manual operations commands, and hardening test coverage.
+- 2026-02-14: Completed Milestone 5 open-source readiness artifacts and CI compatibility matrix.

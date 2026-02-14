@@ -39,3 +39,5 @@ This folder contains the implementation-ready documentation for VideoCourses v1,
 14. [14-milestone-1-backlog](./14-milestone-1-backlog.md)
 15. [15-milestone-2-backlog](./15-milestone-2-backlog.md)
 16. [16-milestone-3-backlog](./16-milestone-3-backlog.md)
+17. [17-milestone-4-backlog](./17-milestone-4-backlog.md)
+18. [18-milestone-5-backlog](./18-milestone-5-backlog.md)
