@@ -6,16 +6,24 @@ Replace DB/manual operational workflows with a secure, maintainable admin interf
 
 ## Selected Approach
 
-- Framework: **Filament**.
+- Framework: **Custom Laravel/Blade admin (phase 1)** with optional Filament migration later.
 - Admin URL: `/admin`.
 - Access control: authenticated users with `users.is_admin = true`.
 
-## Why Filament
+## Why This Approach
 
-- Best fit for current Laravel + Livewire stack.
-- Fast CRUD/resource delivery.
-- Lower build and maintenance overhead than custom admin.
-- No Nova license dependency.
+- Delivers immediate operational value with minimal dependency risk.
+- Keeps admin UX aligned with existing public layout and Tailwind system.
+- Enables incremental shipping in small commits with focused feature tests.
+- Preserves future migration path to Filament if CRUD complexity grows.
+
+## Current Implementation Status (Live)
+
+- `users.is_admin` is implemented and enforced through `auth + admin` middleware.
+- `/admin` dashboard is implemented with operational metrics and recent orders.
+- `/admin/courses` read-only listing is implemented.
+- `/admin/orders` read-only listing with status filter is implemented.
+- Feature tests cover guest/non-admin/admin access control and page visibility.
 
 ## Admin Scope (Phase 1)
 
@@ -84,11 +92,11 @@ No advanced analytics in phase 1.
 
 ## Rollout Plan
 
-1. Install Filament and set up admin auth.
-2. Add core resources and relation managers.
-3. Add operational actions and audit integration.
-4. Add smoke and policy tests.
-5. Enable in production after QA pass.
+1. Ship custom read-only operational screens (`dashboard`, `courses`, `orders`) with tests.
+2. Add editable course/module/lesson/resource forms with audit logging.
+3. Add commerce operations (gift resend, entitlement adjustments, webhook replay).
+4. Add policy tests and admin mutation regression tests.
+5. Re-evaluate Filament migration after phase 1 once operational workload is known.
 
 ## Acceptance Criteria
 
@@ -96,4 +104,3 @@ No advanced analytics in phase 1.
 2. Admin-only access is enforced.
 3. Operational actions are available for common incidents.
 4. Existing customer-facing flows are unaffected.
-

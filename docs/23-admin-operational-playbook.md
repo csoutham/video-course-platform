@@ -2,7 +2,14 @@
 
 ## Purpose
 
-Define how operations should be executed once the Filament admin panel is in place.
+Define how operations are executed in the custom `/admin` panel and expanded over time.
+
+## Current Admin Surface (Implemented)
+
+- `/admin` dashboard with key operational metrics.
+- `/admin/courses` read-only catalogue view.
+- `/admin/orders` read-only order ledger with status filter.
+- All admin routes require `auth` and `is_admin`.
 
 ## Daily Operations
 
@@ -62,10 +69,10 @@ Every mutation action must capture:
 ## QA Checklist for Admin Release
 
 1. Non-admin cannot open `/admin`.
-2. Admin can CRUD content models.
-3. Admin can run entitlement and replay actions.
-4. Audit entries created for write actions.
-5. Customer journeys still pass existing feature tests.
+2. Admin can open dashboard, courses, and orders admin pages.
+3. Feature tests exist for admin access control and route visibility.
+4. Customer journeys still pass existing feature tests.
+5. Any new write actions are audited before production release.
 
 ## Phase 2 Extensions (Not in Phase 1)
 
@@ -73,4 +80,3 @@ Every mutation action must capture:
 - bulk operations
 - scheduled operational jobs
 - advanced role/permission matrix
-
