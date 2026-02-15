@@ -144,11 +144,14 @@
 
                 const player = window.Stream(iframe);
                 const heartbeatSeconds = {{ $videoProgressHeartbeatSeconds }};
+                const resumeSeconds = {{ max(0, (int) ($activeLessonProgress->playback_position_seconds ?? 0)) }};
+                const shouldAutoplay = true;
                 const endpoint = @json(route('learn.progress.video', ['course' => $course->slug, 'lessonSlug' => $activeLesson->slug]));
                 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
                 let lastSentAt = 0;
                 let heartbeatTimer = null;
+                let resumeApplied = false;
 
                 const readMetrics = () => {
                     const rawPosition = Number(player.currentTime ?? 0);
@@ -186,7 +189,7 @@
                     });
                 };
 
-                player.addEventListener('play', () => {
+                const startHeartbeat = () => {
                     if (heartbeatTimer) {
                         return;
                     }
@@ -197,9 +200,55 @@
                             is_completed: false,
                         });
                     }, heartbeatSeconds * 1000);
+                };
+
+                const stopHeartbeat = () => {
+                    if (!heartbeatTimer) {
+                        return;
+                    }
+
+                    window.clearInterval(heartbeatTimer);
+                    heartbeatTimer = null;
+                };
+
+                const applyResumeAndAutoplay = () => {
+                    if (resumeApplied) {
+                        return;
+                    }
+
+                    resumeApplied = true;
+
+                    if (resumeSeconds > 0) {
+                        try {
+                            player.currentTime = resumeSeconds;
+                        } catch (_) {
+                            // Ignore resume failures; playback can continue from start.
+                        }
+                    }
+
+                    if (!shouldAutoplay) {
+                        return;
+                    }
+
+                    try {
+                        player.play();
+                    } catch (_) {
+                        try {
+                            player.muted = true;
+                            player.play();
+                        } catch (_) {
+                            // Browser policy can block autoplay; user can start manually.
+                        }
+                    }
+                };
+
+                player.addEventListener('play', () => {
+                    startHeartbeat();
                 });
 
                 player.addEventListener('pause', () => {
+                    stopHeartbeat();
+
                     sendHeartbeat({
                         ...readMetrics(),
                         is_completed: false,
@@ -207,13 +256,25 @@
                 });
 
                 player.addEventListener('ended', () => {
+                    stopHeartbeat();
+
                     sendHeartbeat({
                         ...readMetrics(),
                         is_completed: true,
                     });
                 });
 
+                player.addEventListener('loadedmetadata', () => {
+                    applyResumeAndAutoplay();
+                });
+
+                window.setTimeout(() => {
+                    applyResumeAndAutoplay();
+                }, 1200);
+
                 window.addEventListener('beforeunload', () => {
+                    stopHeartbeat();
+
                     sendHeartbeat({
                         ...readMetrics(),
                         is_completed: false,

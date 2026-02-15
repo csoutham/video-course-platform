@@ -16,6 +16,13 @@ class LessonProgressTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        config()->set('services.cloudflare_stream.signed_urls_enabled', false);
+    }
+
     public function test_entitled_user_viewing_lesson_creates_in_progress_record(): void
     {
         [$user, $course, $lesson] = $this->seedEntitledLesson();
@@ -111,6 +118,11 @@ class LessonProgressTest extends TestCase
             'video_duration_seconds' => 120,
             'percent_complete' => 35,
         ]);
+
+        $this->actingAs($user)
+            ->get(route('learn.show', ['course' => $course->slug, 'lessonSlug' => $lesson->slug]))
+            ->assertOk()
+            ->assertSee('resumeSeconds', false);
     }
 
     public function test_video_progress_auto_completes_when_threshold_reached(): void
@@ -218,6 +230,7 @@ class LessonProgressTest extends TestCase
             'module_id' => $module->id,
             'slug' => 'lesson-progress-1',
             'title' => 'Lesson Progress 1',
+            'stream_video_id' => 'sample-stream-video-id',
             'sort_order' => 1,
         ]);
 
