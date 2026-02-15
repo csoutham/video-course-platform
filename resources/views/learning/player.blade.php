@@ -148,6 +148,19 @@
                 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
                 let lastSentAt = 0;
+                let heartbeatTimer = null;
+
+                const readMetrics = () => {
+                    const rawPosition = Number(player.currentTime ?? 0);
+                    const rawDuration = Number(player.duration ?? 0);
+
+                    return {
+                        position_seconds: Math.max(0, Math.floor(Number.isFinite(rawPosition) ? rawPosition : 0)),
+                        duration_seconds: Number.isFinite(rawDuration) && rawDuration > 0
+                            ? Math.max(1, Math.floor(rawDuration))
+                            : null,
+                    };
+                };
 
                 const sendHeartbeat = (payload = {}) => {
                     const now = Date.now();
@@ -166,25 +179,44 @@
                             'Accept': 'application/json',
                         },
                         credentials: 'same-origin',
+                        keepalive: true,
                         body: JSON.stringify(payload),
                     }).catch(() => {
                         // Do not interrupt playback if telemetry call fails.
                     });
                 };
 
-                player.addEventListener('timeupdate', (event) => {
+                player.addEventListener('play', () => {
+                    if (heartbeatTimer) {
+                        return;
+                    }
+
+                    heartbeatTimer = window.setInterval(() => {
+                        sendHeartbeat({
+                            ...readMetrics(),
+                            is_completed: false,
+                        });
+                    }, heartbeatSeconds * 1000);
+                });
+
+                player.addEventListener('pause', () => {
                     sendHeartbeat({
-                        position_seconds: Math.max(0, Math.floor(event.time || 0)),
-                        duration_seconds: event.duration ? Math.max(1, Math.floor(event.duration)) : null,
+                        ...readMetrics(),
                         is_completed: false,
                     });
                 });
 
-                player.addEventListener('ended', (event) => {
+                player.addEventListener('ended', () => {
                     sendHeartbeat({
-                        position_seconds: Math.max(0, Math.floor(event.time || event.duration || 0)),
-                        duration_seconds: event.duration ? Math.max(1, Math.floor(event.duration)) : null,
+                        ...readMetrics(),
                         is_completed: true,
+                    });
+                });
+
+                window.addEventListener('beforeunload', () => {
+                    sendHeartbeat({
+                        ...readMetrics(),
+                        is_completed: false,
                     });
                 });
             })();
