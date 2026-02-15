@@ -63,8 +63,44 @@ class LessonProgressTest extends TestCase
         $this->actingAs($user)
             ->get(route('learn.show', ['course' => $course->slug, 'lessonSlug' => $lesson->slug]))
             ->assertOk()
-            ->assertSee('Lesson completed')
-            ->assertSee('Completed');
+            ->assertSee('Mark as incomplete');
+    }
+
+    public function test_entitled_user_can_unmark_lesson_as_complete(): void
+    {
+        [$user, $course, $lesson] = $this->seedEntitledLesson();
+
+        LessonProgress::query()->create([
+            'user_id' => $user->id,
+            'lesson_id' => $lesson->id,
+            'status' => 'completed',
+            'percent_complete' => 100,
+            'started_at' => now()->subHour(),
+            'last_viewed_at' => now()->subHour(),
+            'completed_at' => now()->subHour(),
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('learn.progress.complete', ['course' => $course->slug, 'lessonSlug' => $lesson->slug]))
+            ->assertRedirect(route('learn.show', ['course' => $course->slug, 'lessonSlug' => $lesson->slug]));
+
+        $this->assertDatabaseHas('lesson_progress', [
+            'user_id' => $user->id,
+            'lesson_id' => $lesson->id,
+            'status' => 'in_progress',
+            'percent_complete' => 99,
+        ]);
+
+        $this->assertDatabaseHas('lesson_progress', [
+            'user_id' => $user->id,
+            'lesson_id' => $lesson->id,
+            'completed_at' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('learn.show', ['course' => $course->slug, 'lessonSlug' => $lesson->slug]))
+            ->assertOk()
+            ->assertSee('Mark as complete');
     }
 
     public function test_unentitled_user_cannot_write_lesson_progress(): void

@@ -28,7 +28,7 @@
 - `GET /learn/{course}/{lesson?}`
   - Course player; defaults to next incomplete lesson if lesson omitted.
 - `POST /learn/{course}/{lesson}/progress/complete`
-  - Mark lesson progress as completed for entitled learner.
+  - Toggle lesson progress between completed and in-progress for entitled learner.
 - `GET /resources/{resource}/download`
   - Authorize then redirect to signed R2 URL.
 

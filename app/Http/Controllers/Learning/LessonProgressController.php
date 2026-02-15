@@ -34,11 +34,19 @@ class LessonProgressController extends Controller
             'lesson_id' => $lesson->id,
         ]);
 
-        $progress->status = 'completed';
         $progress->started_at ??= now();
         $progress->last_viewed_at = now();
-        $progress->completed_at = now();
-        $progress->percent_complete = 100;
+
+        if ($progress->status === 'completed') {
+            $progress->status = 'in_progress';
+            $progress->completed_at = null;
+            $progress->percent_complete = min(99, (int) ($progress->percent_complete ?? 0));
+        } else {
+            $progress->status = 'completed';
+            $progress->completed_at = now();
+            $progress->percent_complete = max(100, (int) ($progress->percent_complete ?? 0));
+        }
+
         $progress->save();
 
         return redirect()->route('learn.show', [
