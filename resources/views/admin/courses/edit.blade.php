@@ -218,6 +218,9 @@
                                     </option>
                                 @endforeach
                             </select>
+                            <p class="mt-1 text-xs text-slate-500">
+                                Selecting a video enforces signed URLs and syncs duration from Cloudflare.
+                            </p>
                         </div>
                         <div class="sm:col-span-2">
                             <label class="text-sm font-medium text-slate-700">Sort</label>
@@ -277,6 +280,9 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                    <p class="mt-1 text-xs text-slate-500">
+                                        Saving with a selected video enforces signed URLs and refreshes duration.
+                                    </p>
                                 </div>
                                 <div class="sm:col-span-1">
                                     <label class="text-sm font-medium text-slate-700">Sort</label>
@@ -308,10 +314,7 @@
                                     </label>
                                 </div>
                                 <div class="flex items-end sm:col-span-1">
-                                    <label class="flex items-center gap-2 text-sm text-slate-700">
-                                        <input type="checkbox" name="sync_duration" value="1" />
-                                        Sync
-                                    </label>
+                                    <span class="text-xs text-slate-500">Auto sync</span>
                                 </div>
                                 <div class="sm:col-span-9">
                                     <label class="text-sm font-medium text-slate-700">Summary</label>

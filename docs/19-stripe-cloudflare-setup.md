@@ -124,7 +124,7 @@ php artisan videocourses:stream-sync-durations
 
 Admin workflow:
 - In `/admin/courses/{course}/edit`, add/edit lessons and choose Stream videos directly from uploaded assets.
-- Use the `Sync` option on lesson update to pull duration from Stream metadata immediately.
+- When a Stream video is selected and lesson is saved, admin flow automatically enforces Stream signed URLs and syncs duration metadata.
 
 ### Optional Stream hardening with signed URLs
 

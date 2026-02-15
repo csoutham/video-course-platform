@@ -39,6 +39,9 @@ class AdminCourseStructureCrudTest extends TestCase
         $module = CourseModule::factory()->create();
 
         $metadata = Mockery::mock(CloudflareStreamMetadataService::class);
+        $metadata->shouldReceive('requireSignedUrls')
+            ->once()
+            ->with('stream_uid_123');
         $metadata->shouldReceive('durationSeconds')
             ->once()
             ->with('stream_uid_123')
@@ -114,6 +117,40 @@ class AdminCourseStructureCrudTest extends TestCase
 
         $this->assertDatabaseMissing('course_lessons', [
             'id' => $lesson->id,
+        ]);
+    }
+
+    public function test_lesson_update_with_stream_video_enforces_signed_urls_and_syncs_duration(): void
+    {
+        $this->actingAs(User::factory()->admin()->create());
+        $lesson = CourseLesson::factory()->create([
+            'stream_video_id' => 'stream_old',
+            'duration_seconds' => 90,
+        ]);
+
+        $metadata = Mockery::mock(CloudflareStreamMetadataService::class);
+        $metadata->shouldReceive('requireSignedUrls')
+            ->once()
+            ->with('stream_uid_456');
+        $metadata->shouldReceive('durationSeconds')
+            ->once()
+            ->with('stream_uid_456')
+            ->andReturn(640);
+        $this->app->instance(CloudflareStreamMetadataService::class, $metadata);
+
+        $this->put(route('admin.lessons.update', $lesson), [
+            'title' => $lesson->title,
+            'slug' => $lesson->slug,
+            'summary' => $lesson->summary,
+            'stream_video_id' => 'stream_uid_456',
+            'sort_order' => $lesson->sort_order,
+            'is_published' => $lesson->is_published ? '1' : '0',
+        ])->assertRedirect(route('admin.courses.edit', $lesson->course_id));
+
+        $this->assertDatabaseHas('course_lessons', [
+            'id' => $lesson->id,
+            'stream_video_id' => 'stream_uid_456',
+            'duration_seconds' => 640,
         ]);
     }
 }

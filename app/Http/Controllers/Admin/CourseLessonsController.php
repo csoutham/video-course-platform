@@ -30,6 +30,14 @@ class CourseLessonsController extends Controller
         $course = $module->course;
         $streamVideoId = ($validated['stream_video_id'] ?? null) ?: null;
 
+        try {
+            $durationSeconds = $this->resolveDurationSeconds($streamVideoId, $metadataService);
+        } catch (RuntimeException $exception) {
+            return back()
+                ->withErrors(['stream_video_id' => $exception->getMessage()])
+                ->withInput();
+        }
+
         $module->lessons()->create([
             'course_id' => $course->id,
             'title' => $validated['title'],
@@ -40,7 +48,7 @@ class CourseLessonsController extends Controller
             ),
             'summary' => $validated['summary'] ?? null,
             'stream_video_id' => $streamVideoId,
-            'duration_seconds' => $this->resolveDurationSeconds($streamVideoId, $metadataService),
+            'duration_seconds' => $durationSeconds,
             'sort_order' => $validated['sort_order'] ?? ($module->lessons()->max('sort_order') + 1),
             'is_published' => (bool) ($validated['is_published'] ?? false),
         ]);
@@ -62,14 +70,18 @@ class CourseLessonsController extends Controller
             'sort_order' => ['required', 'integer', 'min:0'],
             'duration_seconds' => ['nullable', 'integer', 'min:0'],
             'is_published' => ['nullable', 'boolean'],
-            'sync_duration' => ['nullable', 'boolean'],
         ]);
 
         $streamVideoId = ($validated['stream_video_id'] ?? null) ?: null;
-        $durationSeconds = $validated['duration_seconds'] ?? null;
 
-        if ((bool) ($validated['sync_duration'] ?? false)) {
-            $durationSeconds = $this->resolveDurationSeconds($streamVideoId, $metadataService);
+        try {
+            $durationSeconds = $streamVideoId
+                ? $this->resolveDurationSeconds($streamVideoId, $metadataService)
+                : ($validated['duration_seconds'] ?? null);
+        } catch (RuntimeException $exception) {
+            return back()
+                ->withErrors(['stream_video_id' => $exception->getMessage()])
+                ->withInput();
         }
 
         $lesson->forceFill([
@@ -118,10 +130,8 @@ class CourseLessonsController extends Controller
             return null;
         }
 
-        try {
-            return $metadataService->durationSeconds($streamVideoId);
-        } catch (RuntimeException) {
-            return null;
-        }
+        $metadataService->requireSignedUrls($streamVideoId);
+
+        return $metadataService->durationSeconds($streamVideoId);
     }
 }

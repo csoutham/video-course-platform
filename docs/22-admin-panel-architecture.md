@@ -25,7 +25,9 @@ Replace DB/manual operational workflows with a secure, maintainable admin interf
 - Stripe price provisioning is integrated in admin course creation/edit (`auto-create` and `refresh` paths).
 - `/admin/courses/{course}/edit` includes nested module and lesson CRUD.
 - Lesson forms include Cloudflare Stream video selector from live account uploads.
-- Lesson duration can be synced from Cloudflare Stream metadata during create/update.
+- Lesson create/update with a selected Stream video now always:
+  - enforces `requireSignedURLs=true` in Cloudflare Stream
+  - syncs lesson duration from Cloudflare metadata
 - `/admin/orders` read-only listing with status filter is implemented.
 - Feature tests cover guest/non-admin/admin access control and page visibility.
 

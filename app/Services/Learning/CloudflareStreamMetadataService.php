@@ -7,6 +7,24 @@ use RuntimeException;
 
 class CloudflareStreamMetadataService
 {
+    public function requireSignedUrls(string $streamVideoId): void
+    {
+        $accountId = (string) config('services.cloudflare_stream.account_id');
+        $apiToken = (string) config('services.cloudflare_stream.api_token');
+
+        throw_if($accountId === '' || $apiToken === '', RuntimeException::class, 'CF_STREAM_ACCOUNT_ID and CF_STREAM_API_TOKEN are required to enforce Stream signed URLs.');
+
+        $response = Http::withToken($apiToken)
+            ->acceptJson()
+            ->asJson()
+            ->post('https://api.cloudflare.com/client/v4/accounts/'.$accountId.'/stream/'.$streamVideoId, [
+                'uid' => $streamVideoId,
+                'requireSignedURLs' => true,
+            ]);
+
+        throw_unless($response->successful(), RuntimeException::class, 'Failed to require signed URLs for Cloudflare Stream video '.$streamVideoId.'.');
+    }
+
     public function durationSeconds(string $streamVideoId): ?int
     {
         $accountId = (string) config('services.cloudflare_stream.account_id');

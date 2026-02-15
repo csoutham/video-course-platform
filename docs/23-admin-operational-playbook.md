@@ -35,7 +35,7 @@ Define how operations are executed in the custom `/admin` panel and expanded ove
 2. Add module rows and set sort order.
 3. Add lessons under each module.
 4. Select `Cloudflare Stream video` where available.
-5. Use `Sync` when editing a lesson to pull duration from Stream metadata.
+5. Save lesson updates to automatically enforce signed URLs in Cloudflare and sync duration from Stream metadata.
 
 ## Core Incident Procedures
 
