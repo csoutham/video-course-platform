@@ -10,12 +10,12 @@
 
 - [ ] `composer test`
 - [ ] `./vendor/bin/pint --test`
-- [ ] `npm run build`
+- [ ] `bun run build`
 
 ## Docs Updated
 
 - [ ] `/docs` backlog/tracker updated
-- [ ] Runbook/docs updated if behavior changed
+- [ ] Runbook/docs updated if behaviour changed
 
 ## Compatibility Notes
 
