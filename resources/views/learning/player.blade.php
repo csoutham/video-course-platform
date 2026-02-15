@@ -105,6 +105,30 @@
                     </ul>
                 @endif
             </div>
+
+            <div class="flex items-center justify-between border-t border-slate-200 pt-4">
+                @if ($previousLesson)
+                    <a
+                        href="{{ route('learn.show', ['course' => $course->slug, 'lessonSlug' => $previousLesson->slug]) }}"
+                        class="inline-flex items-center rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                    >
+                        Previous lesson
+                    </a>
+                @else
+                    <span class="text-sm text-slate-400">Previous lesson</span>
+                @endif
+
+                @if ($nextLesson)
+                    <a
+                        href="{{ route('learn.show', ['course' => $course->slug, 'lessonSlug' => $nextLesson->slug]) }}"
+                        class="inline-flex items-center rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+                    >
+                        Next lesson
+                    </a>
+                @else
+                    <span class="text-sm text-slate-400">Next lesson</span>
+                @endif
+            </div>
         </section>
     </div>
 </x-public-layout>

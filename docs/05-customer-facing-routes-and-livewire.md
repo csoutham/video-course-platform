@@ -20,7 +20,7 @@
 - `GET /my-courses`
   - List of user’s active entitlements.
 - `GET /learn/{course}/{lesson?}`
-  - Course player; default first published lesson if lesson omitted.
+  - Course player; defaults to next incomplete lesson if lesson omitted.
 - `POST /learn/{course}/{lesson}/progress/complete`
   - Mark lesson progress as completed for entitled learner.
 - `GET /resources/{resource}/download`

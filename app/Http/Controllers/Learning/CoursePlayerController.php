@@ -36,9 +36,19 @@ class CoursePlayerController extends Controller
 
         abort_if($availableLessons->isEmpty(), 404);
 
+        $progressByLessonId = LessonProgress::query()
+            ->where('user_id', $request->user()->id)
+            ->whereIn('lesson_id', $availableLessons->pluck('id'))
+            ->get()
+            ->keyBy('lesson_id');
+
+        $nextIncompleteLesson = $availableLessons->first(function (CourseLesson $lesson) use ($progressByLessonId): bool {
+            return $progressByLessonId->get($lesson->id)?->status !== 'completed';
+        });
+
         $activeLesson = $lessonSlug
             ? $availableLessons->firstWhere('slug', $lessonSlug)
-            : $availableLessons->first();
+            : ($nextIncompleteLesson ?? $availableLessons->first());
 
         abort_if(! $activeLesson instanceof CourseLesson, 404);
 
@@ -57,17 +67,26 @@ class CoursePlayerController extends Controller
         $activeLessonProgress->last_viewed_at = now();
         $activeLessonProgress->save();
 
-        $progressByLessonId = LessonProgress::query()
-            ->where('user_id', $request->user()->id)
-            ->whereIn('lesson_id', $availableLessons->pluck('id'))
-            ->get()
-            ->keyBy('lesson_id');
+        $progressByLessonId->put($activeLesson->id, $activeLessonProgress);
+
+        $activeLessonIndex = $availableLessons
+            ->search(fn (CourseLesson $lesson): bool => $lesson->id === $activeLesson->id);
+
+        $previousLesson = ($activeLessonIndex !== false && $activeLessonIndex > 0)
+            ? $availableLessons->get($activeLessonIndex - 1)
+            : null;
+
+        $nextLesson = ($activeLessonIndex !== false)
+            ? $availableLessons->get($activeLessonIndex + 1)
+            : null;
 
         return view('learning.player', [
             'course' => $course,
             'activeLesson' => $activeLesson,
             'activeLessonProgress' => $activeLessonProgress,
             'progressByLessonId' => $progressByLessonId,
+            'previousLesson' => $previousLesson,
+            'nextLesson' => $nextLesson,
             'streamEmbedUrl' => $activeLesson->stream_video_id
                 ? $videoPlaybackService->streamEmbedUrl($activeLesson->stream_video_id)
                 : null,
