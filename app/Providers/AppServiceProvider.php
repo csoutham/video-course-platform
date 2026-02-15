@@ -24,12 +24,18 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->configureAuthorization();
         $this->configureCommands();
         $this->configureErrors();
         $this->configureModels();
         $this->configureSecurity();
-        $this->configureVantage();
         $this->configureVite();
+    }
+
+    private function configureAuthorization(): void
+    {
+        Gate::define('access-admin', fn ($user) => $user->isAdmin());
+        Gate::define('viewVantage', fn ($user) => $user->email === 'chris@cjsoutham.com');
     }
 
     private function configureCommands(): void
@@ -56,11 +62,6 @@ class AppServiceProvider extends ServiceProvider
         URL::forceScheme('https');
 
         Password::defaults(fn () => Password::min(8)->uncompromised());
-    }
-
-    private function configureVantage(): void
-    {
-        Gate::define('viewVantage', fn ($user) => $user->email === 'chris@cjsoutham.com');
     }
 
     private function configureVite(): void

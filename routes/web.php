@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Learning\CoursePlayerController;
 use App\Http\Controllers\Learning\LessonProgressController;
 use App\Http\Controllers\Learning\MyCoursesController;
@@ -43,6 +44,13 @@ Route::middleware('auth')->group(function (): void {
         ->middleware('signed')
         ->name('resources.stream');
 });
+
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function (): void {
+        Route::get('/', DashboardController::class)->name('dashboard');
+    });
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])
