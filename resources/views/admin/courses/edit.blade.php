@@ -77,8 +77,12 @@
                 <div>
                     <label for="price_currency" class="text-sm font-medium text-slate-700">Currency</label>
                     <select id="price_currency" name="price_currency" required class="vc-input">
-                        <option value="usd" @selected(old('price_currency', $course->price_currency) === 'usd')>USD</option>
-                        <option value="gbp" @selected(old('price_currency', $course->price_currency) === 'gbp')>GBP</option>
+                        <option value="usd" @selected(old('price_currency', $course->price_currency) === 'usd')>
+                            USD
+                        </option>
+                        <option value="gbp" @selected(old('price_currency', $course->price_currency) === 'gbp')>
+                            GBP
+                        </option>
                     </select>
                     @error('price_currency')
                         <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
