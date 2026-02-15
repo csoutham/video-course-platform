@@ -145,7 +145,6 @@
                 const player = window.Stream(iframe);
                 const heartbeatSeconds = {{ $videoProgressHeartbeatSeconds }};
                 const resumeSeconds = {{ max(0, (int) ($activeLessonProgress->playback_position_seconds ?? 0)) }};
-                const shouldAutoplay = true;
                 const endpoint = @json(route('learn.progress.video', ['course' => $course->slug, 'lessonSlug' => $activeLesson->slug]));
                 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
@@ -225,40 +224,6 @@
                             // Ignore resume failures; playback can continue from start.
                         }
                     }
-
-                    if (!shouldAutoplay) {
-                        return;
-                    }
-
-                    const tryPlay = (muted = false) => {
-                        if (muted) {
-                            try {
-                                player.muted = true;
-                            } catch (_) {
-                                // Ignore inability to set muted.
-                            }
-                        }
-
-                        let playResult;
-
-                        try {
-                            playResult = player.play();
-                        } catch (_) {
-                            return Promise.reject();
-                        }
-
-                        if (playResult && typeof playResult.then === 'function') {
-                            return playResult.catch(() => Promise.reject());
-                        }
-
-                        return Promise.resolve();
-                    };
-
-                    tryPlay(false)
-                        .catch(() => tryPlay(true))
-                        .catch(() => {
-                            // Browser policy can block autoplay; user can start manually.
-                        });
                 };
 
                 player.addEventListener('play', () => {
