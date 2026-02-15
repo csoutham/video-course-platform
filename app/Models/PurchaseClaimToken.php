@@ -12,6 +12,8 @@ class PurchaseClaimToken extends Model
 
     protected $fillable = [
         'order_id',
+        'gift_purchase_id',
+        'purpose',
         'token',
         'expires_at',
         'consumed_at',
@@ -28,5 +30,10 @@ class PurchaseClaimToken extends Model
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function giftPurchase(): BelongsTo
+    {
+        return $this->belongsTo(GiftPurchase::class);
     }
 }

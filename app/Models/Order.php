@@ -50,4 +50,9 @@ class Order extends Model
     {
         return $this->hasOne(PurchaseClaimToken::class);
     }
+
+    public function giftPurchase(): HasOne
+    {
+        return $this->hasOne(GiftPurchase::class);
+    }
 }

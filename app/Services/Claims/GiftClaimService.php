@@ -2,27 +2,28 @@
 
 namespace App\Services\Claims;
 
-use App\Models\Order;
+use App\Models\GiftPurchase;
 use App\Models\PurchaseClaimToken;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Str;
 
-class PurchaseClaimService
+class GiftClaimService
 {
-    public function issueForOrder(Order $order): PurchaseClaimToken
+    public function issueForGift(GiftPurchase $giftPurchase): PurchaseClaimToken
     {
         $expiresAt = CarbonImmutable::now()->addDays(7);
 
-        $existing = PurchaseClaimToken::query()->firstWhere('order_id', $order->id);
+        $existing = PurchaseClaimToken::query()->firstWhere('gift_purchase_id', $giftPurchase->id);
 
         if ($existing && ! $existing->consumed_at && $existing->expires_at && $existing->expires_at->isFuture()) {
             return $existing;
         }
 
         return PurchaseClaimToken::query()->updateOrCreate(
-            ['order_id' => $order->id],
+            ['gift_purchase_id' => $giftPurchase->id],
             [
-                'purpose' => 'order_claim',
+                'order_id' => $giftPurchase->order_id,
+                'purpose' => 'gift_claim',
                 'token' => Str::random(64),
                 'expires_at' => $expiresAt,
                 'consumed_at' => null,
@@ -30,13 +31,14 @@ class PurchaseClaimService
         );
     }
 
-    public function resolveActiveToken(string $token): ?PurchaseClaimToken
+    public function resolveActiveGiftToken(string $token): ?PurchaseClaimToken
     {
         return PurchaseClaimToken::query()
-            ->where('purpose', 'order_claim')
+            ->where('purpose', 'gift_claim')
             ->where('token', $token)
             ->whereNull('consumed_at')
             ->where('expires_at', '>', now())
             ->first();
     }
 }
+
