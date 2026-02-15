@@ -230,16 +230,35 @@
                         return;
                     }
 
-                    try {
-                        player.play();
-                    } catch (_) {
-                        try {
-                            player.muted = true;
-                            player.play();
-                        } catch (_) {
-                            // Browser policy can block autoplay; user can start manually.
+                    const tryPlay = (muted = false) => {
+                        if (muted) {
+                            try {
+                                player.muted = true;
+                            } catch (_) {
+                                // Ignore inability to set muted.
+                            }
                         }
-                    }
+
+                        let playResult;
+
+                        try {
+                            playResult = player.play();
+                        } catch (_) {
+                            return Promise.reject();
+                        }
+
+                        if (playResult && typeof playResult.then === 'function') {
+                            return playResult.catch(() => Promise.reject());
+                        }
+
+                        return Promise.resolve();
+                    };
+
+                    tryPlay(false)
+                        .catch(() => tryPlay(true))
+                        .catch(() => {
+                            // Browser policy can block autoplay; user can start manually.
+                        });
                 };
 
                 player.addEventListener('play', () => {
