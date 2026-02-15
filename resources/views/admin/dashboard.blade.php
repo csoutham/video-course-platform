@@ -35,7 +35,10 @@
     <section class="vc-panel mt-6 p-6">
         <div class="mb-4 flex items-center justify-between gap-2">
             <h2 class="text-lg font-semibold tracking-tight text-slate-900">Recent Orders</h2>
-            <a href="{{ route('admin.courses.index') }}" class="vc-btn-secondary">Manage Courses</a>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('admin.courses.index') }}" class="vc-btn-secondary">Manage Courses</a>
+                <a href="{{ route('admin.orders.index') }}" class="vc-btn-secondary">View Orders</a>
+            </div>
         </div>
 
         @if ($recentOrders->isEmpty())
