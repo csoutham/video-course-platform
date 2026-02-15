@@ -27,7 +27,7 @@ Route::post('/webhooks/stripe', StripeWebhookController::class)->name('webhooks.
 Route::middleware('auth')->group(function (): void {
     Route::get('/my-courses', MyCoursesController::class)->name('my-courses.index');
     Route::get('/receipts', [ReceiptsController::class, 'index'])->name('receipts.index');
-    Route::get('/receipts/{order}/download', [ReceiptsController::class, 'download'])->name('receipts.download');
+    Route::get('/receipts/{order}', [ReceiptsController::class, 'view'])->name('receipts.view');
     Route::get('/learn/{course:slug}/{lessonSlug?}', CoursePlayerController::class)->name('learn.show');
     Route::post('/learn/{course:slug}/{lessonSlug}/progress/complete', [LessonProgressController::class, 'complete'])
         ->name('learn.progress.complete');

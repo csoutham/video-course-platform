@@ -42,10 +42,10 @@ class ReceiptsTest extends TestCase
             ->assertOk()
             ->assertSee('Receipts')
             ->assertSee('Order #'.$order->id)
-            ->assertSee(route('receipts.download', $order), false);
+            ->assertSee(route('receipts.view', $order), false);
     }
 
-    public function test_user_can_download_their_receipt(): void
+    public function test_user_can_redirect_to_their_stripe_receipt(): void
     {
         $user = User::factory()->create();
         $course = Course::factory()->published()->create(['title' => 'Downloadable Receipt Course']);
@@ -54,6 +54,7 @@ class ReceiptsTest extends TestCase
             'user_id' => $user->id,
             'email' => $user->email,
             'stripe_checkout_session_id' => 'cs_receipt_2',
+            'stripe_receipt_url' => 'https://pay.stripe.com/receipts/test_receipt_2',
             'status' => 'paid',
             'subtotal_amount' => 2500,
             'discount_amount' => 0,
@@ -70,17 +71,12 @@ class ReceiptsTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-            ->get(route('receipts.download', $order));
+            ->get(route('receipts.view', $order));
 
-        $response->assertOk();
-        $response->assertHeader('content-type', 'text/plain; charset=UTF-8');
-        $content = $response->streamedContent();
-        $this->assertStringContainsString('VideoCourses Purchase Receipt', $content);
-        $this->assertStringContainsString('Order ID: '.$order->id, $content);
-        $this->assertStringContainsString('Downloadable Receipt Course', $content);
+        $response->assertRedirect('https://pay.stripe.com/receipts/test_receipt_2');
     }
 
-    public function test_user_cannot_download_another_users_receipt(): void
+    public function test_user_cannot_view_another_users_receipt(): void
     {
         $owner = User::factory()->create();
         $otherUser = User::factory()->create();
@@ -98,7 +94,7 @@ class ReceiptsTest extends TestCase
         ]);
 
         $this->actingAs($otherUser)
-            ->get(route('receipts.download', $order))
+            ->get(route('receipts.view', $order))
             ->assertForbidden();
     }
 }

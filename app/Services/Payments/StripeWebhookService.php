@@ -102,12 +102,23 @@ class StripeWebhookService
         $userId = (int) Arr::get($session, 'metadata.user_id');
         $user = $userId > 0 ? User::query()->find($userId) : null;
 
+        $paymentIntentId = Arr::get($session, 'payment_intent');
+
+        if (is_array($paymentIntentId)) {
+            $paymentIntentId = Arr::get($paymentIntentId, 'id');
+        }
+
+        if (! is_string($paymentIntentId) || $paymentIntentId === '') {
+            $paymentIntentId = null;
+        }
+
         $order = Order::query()->updateOrCreate(
             ['stripe_checkout_session_id' => $sessionId],
             [
                 'user_id' => $user?->id,
                 'email' => $email,
                 'stripe_customer_id' => Arr::get($session, 'customer') ?: null,
+                'stripe_payment_intent_id' => $paymentIntentId,
                 'status' => 'paid',
                 'subtotal_amount' => (int) Arr::get($session, 'amount_subtotal', 0),
                 'discount_amount' => max(0, (int) Arr::get($session, 'amount_subtotal', 0) - (int) Arr::get($session, 'amount_total', 0)),

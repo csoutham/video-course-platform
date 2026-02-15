@@ -17,6 +17,8 @@ class Order extends Model
         'email',
         'stripe_checkout_session_id',
         'stripe_customer_id',
+        'stripe_payment_intent_id',
+        'stripe_receipt_url',
         'status',
         'subtotal_amount',
         'discount_amount',

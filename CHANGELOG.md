@@ -30,4 +30,4 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 - Guest homepage now routes to the course catalog grid.
 - Added Cloudflare Stream duration sync command and lesson length display in curriculum/player views.
 - Replaced dashboard-first authenticated flow with `My Courses` defaults and navigation links.
-- Added authenticated receipts index and per-order receipt downloads.
+- Added authenticated receipts index and per-order Stripe-hosted receipt links.

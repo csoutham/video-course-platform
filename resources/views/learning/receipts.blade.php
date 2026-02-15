@@ -24,10 +24,10 @@
                                 </p>
                             </div>
                             <a
-                                href="{{ route('receipts.download', $order) }}"
+                                href="{{ route('receipts.view', $order) }}"
                                 class="inline-flex items-center rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
                             >
-                                Download receipt
+                                View Stripe receipt
                             </a>
                         </div>
                     </article>
