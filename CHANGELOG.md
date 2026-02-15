@@ -16,3 +16,4 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 - Checkout success page now resolves Stripe `session_id` and renders guest claim CTA when available.
 - Feature test coverage for checkout success guest-claim and linked-account states.
 - Added explicit Stripe + Cloudflare environment and operations setup guide in `docs/19-stripe-cloudflare-setup.md`.
+- Added authenticated navigation links to `My Courses` in app and public layouts.

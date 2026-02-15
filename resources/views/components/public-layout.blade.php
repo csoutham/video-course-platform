@@ -19,6 +19,7 @@
                 <nav class="flex items-center gap-4 text-sm font-medium text-slate-600">
                     <a href="{{ route('courses.index') }}" class="hover:text-slate-900">Courses</a>
                     @auth
+                        <a href="{{ route('my-courses.index') }}" class="hover:text-slate-900">My Courses</a>
                         <a href="{{ route('dashboard') }}" class="hover:text-slate-900">Dashboard</a>
                     @else
                         <a href="{{ route('login') }}" class="hover:text-slate-900">Login</a>

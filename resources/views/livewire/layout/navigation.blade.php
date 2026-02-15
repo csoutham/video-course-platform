@@ -33,6 +33,9 @@ new class extends Component
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('my-courses.index')" :active="request()->routeIs('my-courses.*')" wire:navigate>
+                        {{ __('My Courses') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -83,6 +86,9 @@ new class extends Component
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('my-courses.index')" :active="request()->routeIs('my-courses.*')" wire:navigate>
+                {{ __('My Courses') }}
             </x-responsive-nav-link>
         </div>
 
