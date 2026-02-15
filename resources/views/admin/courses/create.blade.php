@@ -65,13 +65,10 @@
                 </div>
                 <div>
                     <label for="price_currency" class="text-sm font-medium text-slate-700">Currency</label>
-                    <input
-                        id="price_currency"
-                        name="price_currency"
-                        maxlength="3"
-                        required
-                        value="{{ old('price_currency', 'usd') }}"
-                        class="vc-input lowercase" />
+                    <select id="price_currency" name="price_currency" required class="vc-input">
+                        <option value="usd" @selected(old('price_currency', 'usd') === 'usd')>USD</option>
+                        <option value="gbp" @selected(old('price_currency', 'usd') === 'gbp')>GBP</option>
+                    </select>
                     @error('price_currency')
                         <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
                     @enderror

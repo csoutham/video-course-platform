@@ -51,6 +51,7 @@ class CloudflareStreamCatalogService
                 ];
             })
             ->filter()
+            ->sortBy(fn (array $video) => mb_strtolower($video['name']))
             ->values()
             ->all();
     }

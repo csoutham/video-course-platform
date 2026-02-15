@@ -9,10 +9,11 @@ use App\Services\Payments\StripeCoursePricingService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use RuntimeException;
-use Stripe\Exception\ApiErrorException;
+use Throwable;
 
 class CoursesController extends Controller
 {
@@ -41,7 +42,7 @@ class CoursesController extends Controller
             'description' => ['nullable', 'string'],
             'thumbnail_url' => ['nullable', 'url', 'max:2048'],
             'price_amount' => ['required', 'integer', 'min:100'],
-            'price_currency' => ['required', 'string', 'size:3'],
+            'price_currency' => ['required', 'string', 'in:usd,gbp'],
             'is_published' => ['nullable', 'boolean'],
             'auto_create_stripe_price' => ['nullable', 'boolean'],
         ]);
@@ -62,9 +63,14 @@ class CoursesController extends Controller
                 $course->forceFill([
                     'stripe_price_id' => $stripePriceId,
                 ])->save();
-            } catch (ApiErrorException) {
+            } catch (Throwable $exception) {
+                Log::warning('admin_stripe_price_provision_failed', [
+                    'course_id' => $course->id,
+                    'message' => $exception->getMessage(),
+                ]);
+
                 return to_route('admin.courses.edit', $course)
-                    ->with('status', 'Course created, but Stripe price provisioning failed. Add a price manually or retry.');
+                    ->with('status', 'Course created, but Stripe price provisioning failed: '.$exception->getMessage());
             }
         }
 
@@ -102,7 +108,7 @@ class CoursesController extends Controller
             'description' => ['nullable', 'string'],
             'thumbnail_url' => ['nullable', 'url', 'max:2048'],
             'price_amount' => ['required', 'integer', 'min:100'],
-            'price_currency' => ['required', 'string', 'size:3'],
+            'price_currency' => ['required', 'string', 'in:usd,gbp'],
             'stripe_price_id' => ['nullable', 'string', 'max:255'],
             'is_published' => ['nullable', 'boolean'],
             'refresh_stripe_price' => ['nullable', 'boolean'],
@@ -124,9 +130,14 @@ class CoursesController extends Controller
                 $course->forceFill([
                     'stripe_price_id' => $pricingService->createPriceForCourse($course),
                 ])->save();
-            } catch (ApiErrorException) {
+            } catch (Throwable $exception) {
+                Log::warning('admin_stripe_price_refresh_failed', [
+                    'course_id' => $course->id,
+                    'message' => $exception->getMessage(),
+                ]);
+
                 return to_route('admin.courses.edit', $course)
-                    ->with('status', 'Course updated, but Stripe price refresh failed.');
+                    ->with('status', 'Course updated, but Stripe price refresh failed: '.$exception->getMessage());
             }
         }
 
