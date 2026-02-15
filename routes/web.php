@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\CoursesController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\CourseLessonsController;
+use App\Http\Controllers\Admin\CourseModulesController;
 use App\Http\Controllers\Admin\OrdersController;
 use App\Http\Controllers\Learning\CoursePlayerController;
 use App\Http\Controllers\Learning\LessonProgressController;
@@ -57,6 +59,12 @@ Route::middleware(['auth', 'admin'])
         Route::get('/courses', [CoursesController::class, 'index'])->name('courses.index');
         Route::get('/courses/{course}/edit', [CoursesController::class, 'edit'])->name('courses.edit');
         Route::put('/courses/{course}', [CoursesController::class, 'update'])->name('courses.update');
+        Route::post('/courses/{course}/modules', [CourseModulesController::class, 'store'])->name('modules.store');
+        Route::put('/modules/{module}', [CourseModulesController::class, 'update'])->name('modules.update');
+        Route::delete('/modules/{module}', [CourseModulesController::class, 'destroy'])->name('modules.destroy');
+        Route::post('/modules/{module}/lessons', [CourseLessonsController::class, 'store'])->name('lessons.store');
+        Route::put('/lessons/{lesson}', [CourseLessonsController::class, 'update'])->name('lessons.update');
+        Route::delete('/lessons/{lesson}', [CourseLessonsController::class, 'destroy'])->name('lessons.destroy');
         Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
     });
 

@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Services\Learning\CloudflareStreamCatalogService;
 use App\Services\Payments\StripeCoursePricingService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use RuntimeException;
 use Stripe\Exception\ApiErrorException;
 
 class CoursesController extends Controller
@@ -70,14 +72,25 @@ class CoursesController extends Controller
             ->with('status', 'Course created.');
     }
 
-    public function edit(Course $course): View
+    public function edit(Course $course, CloudflareStreamCatalogService $streamCatalogService): View
     {
         $course->load([
             'modules.lessons' => fn ($query) => $query->orderBy('sort_order'),
         ]);
 
+        $streamVideos = [];
+        $streamCatalogStatus = null;
+
+        try {
+            $streamVideos = $streamCatalogService->listVideos(200);
+        } catch (RuntimeException $exception) {
+            $streamCatalogStatus = $exception->getMessage();
+        }
+
         return view('admin.courses.edit', [
             'course' => $course,
+            'streamVideos' => $streamVideos,
+            'streamCatalogStatus' => $streamCatalogStatus,
         ]);
     }
 

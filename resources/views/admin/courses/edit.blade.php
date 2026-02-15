@@ -128,8 +128,200 @@
 
     <section class="vc-panel mt-6 p-6">
         <h2 class="text-lg font-semibold tracking-tight text-slate-900">Modules and Lessons</h2>
-        <p class="mt-2 text-sm text-slate-600">
-            Module and lesson CRUD will appear here as the next admin rollout step.
-        </p>
+        <p class="mt-2 text-sm text-slate-600">Create modules and lessons directly from this screen.</p>
+
+        <form action="{{ route('admin.modules.store', $course) }}" method="POST" class="mt-5 grid gap-3 sm:grid-cols-8">
+            @csrf
+            <div class="sm:col-span-5">
+                <label class="text-sm font-medium text-slate-700">New module title</label>
+                <input name="title" class="vc-input" placeholder="Module title" required />
+            </div>
+            <div class="sm:col-span-2">
+                <label class="text-sm font-medium text-slate-700">Sort order</label>
+                <input
+                    type="number"
+                    min="0"
+                    name="sort_order"
+                    value="{{ old('sort_order', ($course->modules->max('sort_order') ?? 0) + 1) }}"
+                    class="vc-input" />
+            </div>
+            <div class="sm:col-span-1 flex items-end">
+                <button type="submit" class="vc-btn-primary w-full justify-center">Add</button>
+            </div>
+        </form>
+
+        @if ($streamCatalogStatus)
+            <div class="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+                Cloudflare Stream list unavailable: {{ $streamCatalogStatus }}
+            </div>
+        @endif
+
+        <div class="mt-6 space-y-6">
+            @forelse ($course->modules as $module)
+                <article class="vc-panel-soft p-4">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <form method="POST" action="{{ route('admin.modules.update', $module) }}" class="grid flex-1 gap-3 sm:grid-cols-6">
+                            @csrf
+                            @method('PUT')
+                            <div class="sm:col-span-4">
+                                <label class="text-sm font-medium text-slate-700">Module title</label>
+                                <input name="title" value="{{ $module->title }}" class="vc-input" required />
+                            </div>
+                            <div class="sm:col-span-1">
+                                <label class="text-sm font-medium text-slate-700">Sort</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    name="sort_order"
+                                    value="{{ $module->sort_order }}"
+                                    class="vc-input"
+                                    required />
+                            </div>
+                            <div class="sm:col-span-1 flex items-end">
+                                <button type="submit" class="vc-btn-secondary w-full justify-center">Save</button>
+                            </div>
+                        </form>
+                        <form method="POST" action="{{ route('admin.modules.destroy', $module) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="vc-btn-secondary">Delete module</button>
+                        </form>
+                    </div>
+
+                    <form
+                        method="POST"
+                        action="{{ route('admin.lessons.store', $module) }}"
+                        class="mt-4 grid gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:grid-cols-12">
+                        @csrf
+                        <div class="sm:col-span-3">
+                            <label class="text-sm font-medium text-slate-700">Lesson title</label>
+                            <input name="title" class="vc-input" required />
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="text-sm font-medium text-slate-700">Slug (optional)</label>
+                            <input name="slug" class="vc-input" />
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label class="text-sm font-medium text-slate-700">Cloudflare Stream video</label>
+                            <select name="stream_video_id" class="vc-input">
+                                <option value="">No video yet</option>
+                                @foreach ($streamVideos as $video)
+                                    <option value="{{ $video['uid'] }}">
+                                        {{ $video['name'] }} ({{ $video['uid'] }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="text-sm font-medium text-slate-700">Sort</label>
+                            <input
+                                type="number"
+                                min="0"
+                                name="sort_order"
+                                value="{{ ($module->lessons->max('sort_order') ?? 0) + 1 }}"
+                                class="vc-input" />
+                        </div>
+                        <div class="sm:col-span-1 flex items-end">
+                            <label class="flex items-center gap-2 text-sm text-slate-700">
+                                <input type="checkbox" name="is_published" value="1" />
+                                Live
+                            </label>
+                        </div>
+                        <div class="sm:col-span-1 flex items-end">
+                            <button type="submit" class="vc-btn-primary w-full justify-center">Add</button>
+                        </div>
+                        <div class="sm:col-span-12">
+                            <label class="text-sm font-medium text-slate-700">Summary</label>
+                            <textarea name="summary" rows="2" class="vc-input"></textarea>
+                        </div>
+                    </form>
+
+                    <div class="mt-4 space-y-3">
+                        @forelse ($module->lessons as $lesson)
+                            <form
+                                method="POST"
+                                action="{{ route('admin.lessons.update', $lesson) }}"
+                                class="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:grid-cols-12">
+                                @csrf
+                                @method('PUT')
+                                <div class="sm:col-span-3">
+                                    <label class="text-sm font-medium text-slate-700">Title</label>
+                                    <input name="title" value="{{ $lesson->title }}" class="vc-input" required />
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="text-sm font-medium text-slate-700">Slug</label>
+                                    <input name="slug" value="{{ $lesson->slug }}" class="vc-input" required />
+                                </div>
+                                <div class="sm:col-span-3">
+                                    <label class="text-sm font-medium text-slate-700">Stream video</label>
+                                    <select name="stream_video_id" class="vc-input">
+                                        <option value="">No video</option>
+                                        @if ($lesson->stream_video_id)
+                                            <option value="{{ $lesson->stream_video_id }}" selected>
+                                                Current: {{ $lesson->stream_video_id }}
+                                            </option>
+                                        @endif
+                                        @foreach ($streamVideos as $video)
+                                            <option
+                                                value="{{ $video['uid'] }}"
+                                                @selected($lesson->stream_video_id === $video['uid'])>
+                                                {{ $video['name'] }} ({{ $video['uid'] }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="sm:col-span-1">
+                                    <label class="text-sm font-medium text-slate-700">Sort</label>
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        name="sort_order"
+                                        value="{{ $lesson->sort_order }}"
+                                        class="vc-input"
+                                        required />
+                                </div>
+                                <div class="sm:col-span-1">
+                                    <label class="text-sm font-medium text-slate-700">Duration</label>
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        name="duration_seconds"
+                                        value="{{ $lesson->duration_seconds }}"
+                                        class="vc-input" />
+                                </div>
+                                <div class="sm:col-span-1 flex items-end">
+                                    <label class="flex items-center gap-2 text-sm text-slate-700">
+                                        <input type="checkbox" name="is_published" value="1" @checked($lesson->is_published) />
+                                        Live
+                                    </label>
+                                </div>
+                                <div class="sm:col-span-1 flex items-end">
+                                    <label class="flex items-center gap-2 text-sm text-slate-700">
+                                        <input type="checkbox" name="sync_duration" value="1" />
+                                        Sync
+                                    </label>
+                                </div>
+                                <div class="sm:col-span-9">
+                                    <label class="text-sm font-medium text-slate-700">Summary</label>
+                                    <textarea name="summary" rows="2" class="vc-input">{{ $lesson->summary }}</textarea>
+                                </div>
+                                <div class="sm:col-span-2 flex items-end">
+                                    <button type="submit" class="vc-btn-secondary w-full justify-center">Save lesson</button>
+                                </div>
+                            </form>
+                            <form method="POST" action="{{ route('admin.lessons.destroy', $lesson) }}" class="mt-2 flex justify-end">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="vc-btn-secondary">Delete lesson</button>
+                            </form>
+                        @empty
+                            <p class="text-sm text-slate-600">No lessons in this module yet.</p>
+                        @endforelse
+                    </div>
+                </article>
+            @empty
+                <p class="text-sm text-slate-600">No modules yet. Create the first module above.</p>
+            @endforelse
+        </div>
     </section>
 </x-public-layout>
