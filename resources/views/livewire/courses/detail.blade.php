@@ -61,8 +61,13 @@
                 @else
                     <ol class="mt-3 space-y-2 text-sm text-slate-700">
                         @foreach ($module->lessons as $lesson)
-                            <li class="rounded-md bg-slate-50 px-3 py-2">
-                                {{ $lesson->title }}
+                            <li class="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2">
+                                <span>{{ $lesson->title }}</span>
+                                @if ($lesson->duration_seconds)
+                                    <span class="text-xs font-semibold text-slate-500">
+                                        {{ gmdate('i:s', $lesson->duration_seconds) }}
+                                    </span>
+                                @endif
                             </li>
                         @endforeach
                     </ol>

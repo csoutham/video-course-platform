@@ -102,6 +102,12 @@ Quick data check:
 php artisan tinker --execute="App\\Models\\Lesson::query()->select('id','slug','video_provider','video_source')->get();"
 ```
 
+Sync stored lesson durations from Cloudflare Stream metadata:
+
+```bash
+php artisan videocourses:stream-sync-durations
+```
+
 ### Optional Stream hardening with signed URLs
 
 1. In Cloudflare Stream, enable signed URL requirement for private delivery.

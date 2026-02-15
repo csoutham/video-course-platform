@@ -36,6 +36,8 @@ For exact setup steps, use `docs/19-stripe-cloudflare-setup.md`.
 - Use DB seeders or Artisan import command.
 - Ensure module/lesson ordering and publish flags are correct.
 - Verify `stream_video_id` and resource object keys exist.
+- Sync lesson durations from Stream metadata when videos are added/updated:
+  - `php artisan videocourses:stream-sync-durations`
 
 ### Reprocess Webhook Event
 

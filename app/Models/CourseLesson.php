@@ -19,6 +19,7 @@ class CourseLesson extends Model
         'slug',
         'summary',
         'stream_video_id',
+        'duration_seconds',
         'sort_order',
         'is_published',
     ];
@@ -27,6 +28,7 @@ class CourseLesson extends Model
     {
         return [
             'is_published' => 'boolean',
+            'duration_seconds' => 'integer',
         ];
     }
 

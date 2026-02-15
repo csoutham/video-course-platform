@@ -55,6 +55,7 @@ class CourseCatalogSeeder extends Seeder
                 'title' => 'Install and Setup',
                 'summary' => 'Environment setup and first request lifecycle.',
                 'stream_video_id' => null,
+                'duration_seconds' => null,
                 'sort_order' => 1,
                 'is_published' => true,
             ]
@@ -67,6 +68,7 @@ class CourseCatalogSeeder extends Seeder
                 'title' => 'Routing Basics',
                 'summary' => 'HTTP routes, controllers, and named routes.',
                 'stream_video_id' => null,
+                'duration_seconds' => null,
                 'sort_order' => 2,
                 'is_published' => true,
             ]
@@ -79,6 +81,7 @@ class CourseCatalogSeeder extends Seeder
                 'title' => 'Eloquent Intro',
                 'summary' => 'Models, queries, and basic relationships.',
                 'stream_video_id' => null,
+                'duration_seconds' => null,
                 'sort_order' => 1,
                 'is_published' => true,
             ]
@@ -94,6 +97,7 @@ class CourseCatalogSeeder extends Seeder
                 'title' => 'Draft Lesson',
                 'summary' => 'Unpublished lesson used for visibility checks.',
                 'stream_video_id' => null,
+                'duration_seconds' => null,
                 'sort_order' => 1,
                 'is_published' => false,
             ]

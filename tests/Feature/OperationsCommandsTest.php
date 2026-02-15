@@ -3,11 +3,14 @@
 namespace Tests\Feature;
 
 use App\Models\Course;
+use App\Models\CourseLesson;
+use App\Models\CourseModule;
 use App\Models\Order;
 use App\Models\StripeEvent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class OperationsCommandsTest extends TestCase
@@ -108,5 +111,38 @@ class OperationsCommandsTest extends TestCase
         $this->assertDatabaseHas('audit_logs', [
             'event_type' => 'stripe_event_reprocessed',
         ]);
+    }
+
+    public function test_stream_sync_durations_command_updates_lesson_lengths(): void
+    {
+        config()->set('services.cloudflare_stream.account_id', 'acct_test_1');
+        config()->set('services.cloudflare_stream.api_token', 'token_test_1');
+
+        $course = Course::factory()->published()->create();
+        $module = CourseModule::factory()->create([
+            'course_id' => $course->id,
+        ]);
+
+        $lesson = CourseLesson::factory()->published()->create([
+            'course_id' => $course->id,
+            'module_id' => $module->id,
+            'stream_video_id' => 'video_sync_1',
+            'duration_seconds' => null,
+        ]);
+
+        Http::fake([
+            'https://api.cloudflare.com/client/v4/accounts/acct_test_1/stream/video_sync_1' => Http::response([
+                'success' => true,
+                'result' => [
+                    'duration' => 132.4,
+                ],
+            ], 200),
+        ]);
+
+        Artisan::call('videocourses:stream-sync-durations');
+
+        $lesson->refresh();
+
+        $this->assertSame(132, $lesson->duration_seconds);
     }
 }

@@ -29,6 +29,7 @@ class CourseLessonFactory extends Factory
             'slug' => Str::slug($title).'-'.fake()->unique()->numberBetween(100, 999),
             'summary' => fake()->sentence(),
             'stream_video_id' => null,
+            'duration_seconds' => null,
             'sort_order' => fake()->numberBetween(1, 24),
             'is_published' => true,
         ];

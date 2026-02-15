@@ -28,11 +28,18 @@
                                             class="flex items-center justify-between rounded-md px-2 py-1 text-sm {{ $activeLesson->id === $lesson->id ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100' }}"
                                         >
                                             <span>{{ $lesson->title }}</span>
-                                            @if ($isCompleted)
-                                                <span class="text-xs font-semibold {{ $activeLesson->id === $lesson->id ? 'text-emerald-200' : 'text-emerald-700' }}">
-                                                    Completed
-                                                </span>
-                                            @endif
+                                            <span class="flex items-center gap-2">
+                                                @if ($lesson->duration_seconds)
+                                                    <span class="text-xs font-semibold {{ $activeLesson->id === $lesson->id ? 'text-slate-200' : 'text-slate-500' }}">
+                                                        {{ gmdate('i:s', $lesson->duration_seconds) }}
+                                                    </span>
+                                                @endif
+                                                @if ($isCompleted)
+                                                    <span class="text-xs font-semibold {{ $activeLesson->id === $lesson->id ? 'text-emerald-200' : 'text-emerald-700' }}">
+                                                        Completed
+                                                    </span>
+                                                @endif
+                                            </span>
                                         </a>
                                     </li>
                                 @endforeach
@@ -49,6 +56,11 @@
                 <h2 class="mt-1 text-2xl font-semibold text-slate-900">{{ $activeLesson->title }}</h2>
                 @if ($activeLesson->summary)
                     <p class="mt-2 text-sm text-slate-600">{{ $activeLesson->summary }}</p>
+                @endif
+                @if ($activeLesson->duration_seconds)
+                    <p class="mt-1 text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">
+                        Length: {{ gmdate('i:s', $activeLesson->duration_seconds) }}
+                    </p>
                 @endif
 
                 <div class="mt-3">

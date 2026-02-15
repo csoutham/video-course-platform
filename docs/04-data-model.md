@@ -54,6 +54,7 @@
 - `slug`
 - `summary`
 - `stream_video_id`
+- `duration_seconds` (nullable; synced from Stream metadata)
 - `sort_order`
 - `is_published`
 - `created_at`, `updated_at`

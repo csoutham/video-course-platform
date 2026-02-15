@@ -1,10 +1,12 @@
 <?php
 
 use App\Models\Course;
+use App\Models\CourseLesson;
 use App\Models\Entitlement;
 use App\Models\Order;
 use App\Models\StripeEvent;
 use App\Models\User;
+use App\Services\Learning\CloudflareStreamMetadataService;
 use App\Services\Payments\EntitlementService;
 use App\Services\Payments\StripeWebhookService;
 use Illuminate\Foundation\Inspiring;
@@ -78,3 +80,50 @@ Artisan::command('videocourses:entitlement-revoke {user_id} {course_id}', functi
 
     return self::SUCCESS;
 })->purpose('Manually revoke entitlement by user and course IDs');
+
+Artisan::command('videocourses:stream-sync-durations {--course_id=} {--force}', function (): int {
+    $query = CourseLesson::query()
+        ->whereNotNull('stream_video_id')
+        ->where('stream_video_id', '!=', '');
+
+    if (! $this->option('force')) {
+        $query->whereNull('duration_seconds');
+    }
+
+    $courseId = $this->option('course_id');
+
+    if ($courseId) {
+        $query->where('course_id', (int) $courseId);
+    }
+
+    $lessons = $query->get();
+
+    if ($lessons->isEmpty()) {
+        $this->info('No lessons matched sync criteria.');
+
+        return self::SUCCESS;
+    }
+
+    $metadataService = app(CloudflareStreamMetadataService::class);
+    $updated = 0;
+
+    foreach ($lessons as $lesson) {
+        try {
+            $durationSeconds = $metadataService->durationSeconds((string) $lesson->stream_video_id);
+        } catch (\Throwable $exception) {
+            $this->error('Failed for lesson '.$lesson->id.' ('.$lesson->slug.'): '.$exception->getMessage());
+
+            return self::FAILURE;
+        }
+
+        $lesson->forceFill([
+            'duration_seconds' => $durationSeconds,
+        ])->save();
+
+        $updated++;
+    }
+
+    $this->info('Updated durations for '.$updated.' lesson(s).');
+
+    return self::SUCCESS;
+})->purpose('Sync lesson durations from Cloudflare Stream metadata API');

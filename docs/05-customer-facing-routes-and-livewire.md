@@ -2,6 +2,8 @@
 
 ## Public Routes
 
+- `GET /`
+  - Redirects to the course catalog (`/courses`).
 - `GET /courses`
   - Catalog list and filters.
 - `GET /courses/{slug}`

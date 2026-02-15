@@ -5,6 +5,7 @@
 ### Lesson Video Model
 
 Each lesson stores `stream_video_id` for playback lookup.
+Each lesson may also store `duration_seconds` for learner-facing lesson length display.
 
 Playback URL resolution:
 
@@ -40,6 +41,10 @@ Implementation behavior:
 
 - Keep unpublished lessons hidden from customer routes.
 - Track unavailable/missing Stream IDs as content integrity errors.
+- Sync lesson durations from Stream API:
+  - `php artisan videocourses:stream-sync-durations`
+  - `php artisan videocourses:stream-sync-durations --course_id={id}`
+  - `php artisan videocourses:stream-sync-durations --force`
 
 ## Resources: Cloudflare R2 Signed URLs
 

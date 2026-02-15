@@ -26,3 +26,6 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 - Added optional Cloudflare Stream signed-token playback mode with configuration and test coverage.
 - Added Phase 2 video progress tracking with heartbeat endpoint and per-lesson playback metrics.
 - Added automatic lesson completion on configurable video progress threshold.
+- Unified logged-in navigation/layout source via shared layout partial across app/public layouts.
+- Guest homepage now routes to the course catalog grid.
+- Added Cloudflare Stream duration sync command and lesson length display in curriculum/player views.
