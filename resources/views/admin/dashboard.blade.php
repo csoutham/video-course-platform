@@ -3,9 +3,7 @@
         <div class="vc-heading-block">
             <p class="vc-eyebrow">Admin</p>
             <h1 class="vc-title">Dashboard</h1>
-            <p class="vc-subtitle">
-                High-level operational metrics for courses, customers, orders, and gift delivery.
-            </p>
+            <p class="vc-subtitle">High-level operational metrics for courses, customers, orders, and gift delivery.</p>
         </div>
     </section>
 
@@ -35,7 +33,10 @@
     </section>
 
     <section class="vc-panel mt-6 p-6">
-        <h2 class="text-lg font-semibold tracking-tight text-slate-900">Recent Orders</h2>
+        <div class="mb-4 flex items-center justify-between gap-2">
+            <h2 class="text-lg font-semibold tracking-tight text-slate-900">Recent Orders</h2>
+            <a href="{{ route('admin.courses.index') }}" class="vc-btn-secondary">Manage Courses</a>
+        </div>
 
         @if ($recentOrders->isEmpty())
             <p class="mt-3 text-sm text-slate-600">No orders recorded yet.</p>

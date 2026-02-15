@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\CoursesController;
 use App\Http\Controllers\Learning\CoursePlayerController;
 use App\Http\Controllers\Learning\LessonProgressController;
 use App\Http\Controllers\Learning\MyCoursesController;
@@ -50,6 +51,7 @@ Route::middleware(['auth', 'admin'])
     ->name('admin.')
     ->group(function (): void {
         Route::get('/', DashboardController::class)->name('dashboard');
+        Route::get('/courses', [CoursesController::class, 'index'])->name('courses.index');
     });
 
 Route::view('profile', 'profile')
