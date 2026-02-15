@@ -5,6 +5,7 @@
             <a href="{{ route('courses.index') }}" class="hover:text-slate-900">Courses</a>
             @auth
                 <a href="{{ route('my-courses.index') }}" class="hover:text-slate-900">My Courses</a>
+                <a href="{{ route('gifts.index') }}" class="hover:text-slate-900">My Gifts</a>
                 <a href="{{ route('receipts.index') }}" class="hover:text-slate-900">Receipts</a>
                 <a href="{{ route('profile') }}" class="hover:text-slate-900">Profile</a>
                 <form method="POST" action="{{ route('logout') }}" class="inline">

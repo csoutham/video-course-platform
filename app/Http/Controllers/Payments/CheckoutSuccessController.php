@@ -15,11 +15,14 @@ class CheckoutSuccessController extends Controller
 
         $order = null;
         $claimUrl = null;
+        $isGiftOrder = false;
 
         if (is_string($sessionId) && $sessionId !== '') {
             $order = Order::query()
-                ->with('purchaseClaimToken')
+                ->with(['purchaseClaimToken', 'giftPurchase'])
                 ->firstWhere('stripe_checkout_session_id', $sessionId);
+
+            $isGiftOrder = (bool) $order?->giftPurchase;
 
             if ($order?->purchaseClaimToken
                 && ! $order->purchaseClaimToken->consumed_at
@@ -32,6 +35,7 @@ class CheckoutSuccessController extends Controller
         return view('checkout.success', [
             'order' => $order,
             'claimUrl' => $claimUrl,
+            'isGiftOrder' => $isGiftOrder,
             'sessionId' => $sessionId,
         ]);
     }

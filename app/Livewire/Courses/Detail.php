@@ -30,6 +30,7 @@ class Detail extends Component
 
         return view('livewire.courses.detail', [
             'course' => $course,
+            'giftsEnabled' => (bool) config('learning.gifts_enabled'),
         ]);
     }
 }

@@ -11,7 +11,16 @@ use Stripe\StripeClient;
 
 class StripeCheckoutService
 {
-    public function createCheckoutUrl(Course $course, ?User $user, string $customerEmail, ?string $promotionCode = null): string
+    public function createCheckoutSession(
+        Course $course,
+        ?User $user,
+        string $customerEmail,
+        ?string $promotionCode = null,
+        bool $isGift = false,
+        ?string $recipientEmail = null,
+        ?string $recipientName = null,
+        bool $giftMessagePresent = false,
+    ): array
     {
         if (! $course->stripe_price_id) {
             throw new InvalidArgumentException('Course is missing stripe_price_id.');
@@ -33,8 +42,19 @@ class StripeCheckoutService
                 'customer_email' => $customerEmail,
                 'source' => 'videocourses-web',
                 'user_id' => $user?->id ? (string) $user->id : null,
+                'is_gift' => $isGift ? '1' : '0',
             ],
         ];
+
+        if ($isGift) {
+            if (! $recipientEmail) {
+                throw new InvalidArgumentException('Recipient email is required for gift checkout.');
+            }
+
+            $params['metadata']['recipient_email'] = $recipientEmail;
+            $params['metadata']['recipient_name'] = $recipientName ?: null;
+            $params['metadata']['gift_message_present'] = $giftMessagePresent ? '1' : '0';
+        }
 
         if ($promotionCode) {
             $promotionCodeId = $this->resolvePromotionCodeId($stripe, $promotionCode);
@@ -51,7 +71,10 @@ class StripeCheckoutService
             throw new InvalidArgumentException('Unable to start checkout with that promotion code.');
         }
 
-        return (string) $session->url;
+        return [
+            'url' => (string) $session->url,
+            'session_id' => (string) $session->id,
+        ];
     }
 
     private function resolvePromotionCodeId(StripeClient $stripe, string $promotionCode): string

@@ -4,7 +4,25 @@
     <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-6">
         <h1 class="text-xl font-semibold text-emerald-900">Payment received</h1>
 
-        @if ($claimUrl)
+        @if ($isGiftOrder)
+            <p class="mt-2 text-sm text-emerald-800">
+                Your gift purchase is confirmed. We sent the gift claim email to the recipient and a confirmation to your email.
+            </p>
+
+            <div class="mt-4 flex flex-wrap gap-3">
+                @auth
+                    <a
+                        href="{{ route('gifts.index') }}"
+                        class="inline-flex items-center rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600"
+                    >
+                        View my gifts
+                    </a>
+                @endauth
+                <a href="{{ route('courses.index') }}" class="inline-flex items-center text-sm font-semibold text-emerald-900 hover:text-emerald-700">
+                    Back to courses
+                </a>
+            </div>
+        @elseif ($claimUrl)
             <p class="mt-2 text-sm text-emerald-800">
                 Your payment has been confirmed. Continue with the secure claim link below to activate access for this purchase.
             </p>

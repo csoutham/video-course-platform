@@ -2,13 +2,17 @@
 
 namespace App\Services\Payments;
 
+use App\Models\GiftPurchase;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\StripeEvent;
 use App\Models\User;
 use App\Services\Audit\AuditLogService;
+use App\Services\Claims\GiftClaimService;
 use App\Services\Claims\PurchaseClaimService;
+use App\Services\Gifts\GiftNotificationService;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
@@ -20,6 +24,8 @@ class StripeWebhookService
     public function __construct(
         private readonly EntitlementService $entitlementService,
         private readonly PurchaseClaimService $purchaseClaimService,
+        private readonly GiftClaimService $giftClaimService,
+        private readonly GiftNotificationService $giftNotificationService,
         private readonly PurchaseReceiptService $purchaseReceiptService,
         private readonly AuditLogService $auditLogService,
     ) {}
@@ -143,8 +149,30 @@ class StripeWebhookService
         );
 
         $claimUrl = null;
+        $isGift = Arr::get($session, 'metadata.is_gift') === '1';
 
-        if (! $order->user_id) {
+        if ($isGift) {
+            $giftCheckoutContext = Cache::pull('gift-checkout:'.$sessionId);
+            $giftPurchase = GiftPurchase::query()->updateOrCreate(
+                ['order_id' => $order->id],
+                [
+                    'course_id' => $courseId,
+                    'buyer_user_id' => $user?->id,
+                    'buyer_email' => $email,
+                    'recipient_email' => (string) (Arr::get($giftCheckoutContext, 'recipient_email')
+                        ?? Arr::get($session, 'metadata.recipient_email')
+                        ?? $email),
+                    'recipient_name' => Arr::get($giftCheckoutContext, 'recipient_name')
+                        ?? Arr::get($session, 'metadata.recipient_name'),
+                    'gift_message' => Arr::get($giftCheckoutContext, 'gift_message'),
+                    'status' => 'delivered',
+                    'delivered_at' => now(),
+                ]
+            );
+
+            $giftClaimToken = $this->giftClaimService->issueForGift($giftPurchase);
+            $claimUrl = URL::route('gift-claim.show', $giftClaimToken->token);
+        } elseif (! $order->user_id) {
             $claimToken = $this->purchaseClaimService->issueForOrder($order);
             $claimUrl = URL::route('claim-purchase.show', $claimToken->token);
 
@@ -158,8 +186,16 @@ class StripeWebhookService
         }
 
         if (! $wasAlreadyPaid) {
-            DB::afterCommit(function () use ($order, $claimUrl): void {
+            DB::afterCommit(function () use ($order, $claimUrl, $isGift): void {
                 $this->purchaseReceiptService->sendPaidReceipt($order->fresh('items.course'), $claimUrl);
+
+                if ($isGift) {
+                    $orderWithGift = $order->fresh('giftPurchase.course');
+
+                    if ($orderWithGift?->giftPurchase) {
+                        $this->giftNotificationService->sendGiftEmails($orderWithGift->giftPurchase, (string) $claimUrl);
+                    }
+                }
             });
         }
     }
@@ -210,6 +246,12 @@ class StripeWebhookService
         ])->save();
 
         $this->entitlementService->revokeForOrder($order);
+
+        if ($order->giftPurchase) {
+            $order->giftPurchase->forceFill([
+                'status' => 'revoked',
+            ])->save();
+        }
     }
 
     public function reprocessStoredEvent(StripeEvent $storedEvent): void

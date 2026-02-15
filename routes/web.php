@@ -5,6 +5,8 @@ use App\Http\Controllers\Learning\LessonProgressController;
 use App\Http\Controllers\Learning\MyCoursesController;
 use App\Http\Controllers\Learning\ReceiptsController;
 use App\Http\Controllers\Learning\ResourceDownloadController;
+use App\Http\Controllers\Gifts\GiftClaimController;
+use App\Http\Controllers\Gifts\MyGiftsController;
 use App\Http\Controllers\Payments\CheckoutController;
 use App\Http\Controllers\Payments\CheckoutSuccessController;
 use App\Http\Controllers\Payments\ClaimPurchaseController;
@@ -22,10 +24,13 @@ Route::get('/checkout/success', CheckoutSuccessController::class)->name('checkou
 Route::view('/checkout/cancel', 'checkout.cancel')->name('checkout.cancel');
 Route::get('/claim-purchase/{token}', [ClaimPurchaseController::class, 'show'])->name('claim-purchase.show');
 Route::post('/claim-purchase/{token}', [ClaimPurchaseController::class, 'store'])->name('claim-purchase.store');
+Route::get('/gift-claim/{token}', [GiftClaimController::class, 'show'])->name('gift-claim.show');
+Route::post('/gift-claim/{token}', [GiftClaimController::class, 'store'])->name('gift-claim.store');
 Route::post('/webhooks/stripe', StripeWebhookController::class)->name('webhooks.stripe');
 
 Route::middleware('auth')->group(function (): void {
     Route::get('/my-courses', MyCoursesController::class)->name('my-courses.index');
+    Route::get('/gifts', MyGiftsController::class)->name('gifts.index');
     Route::get('/receipts', [ReceiptsController::class, 'index'])->name('receipts.index');
     Route::get('/receipts/{order}', [ReceiptsController::class, 'view'])->name('receipts.view');
     Route::get('/learn/{course:slug}/{lessonSlug?}', CoursePlayerController::class)->name('learn.show');

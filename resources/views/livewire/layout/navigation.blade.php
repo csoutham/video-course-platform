@@ -33,6 +33,9 @@ new class extends Component
                     <x-nav-link :href="route('my-courses.index')" :active="request()->routeIs('my-courses.*')" wire:navigate>
                         {{ __('My Courses') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('gifts.index')" :active="request()->routeIs('gifts.*')" wire:navigate>
+                        {{ __('My Gifts') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('receipts.index')" :active="request()->routeIs('receipts.*')" wire:navigate>
                         {{ __('Receipts') }}
                     </x-nav-link>
@@ -86,6 +89,9 @@ new class extends Component
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('my-courses.index')" :active="request()->routeIs('my-courses.*')" wire:navigate>
                 {{ __('My Courses') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('gifts.index')" :active="request()->routeIs('gifts.*')" wire:navigate>
+                {{ __('My Gifts') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('receipts.index')" :active="request()->routeIs('receipts.*')" wire:navigate>
                 {{ __('Receipts') }}
