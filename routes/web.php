@@ -39,10 +39,6 @@ Route::middleware('auth')->group(function (): void {
         ->name('resources.stream');
 });
 
-Route::redirect('dashboard', '/my-courses')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');

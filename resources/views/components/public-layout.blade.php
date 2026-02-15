@@ -1,3 +1,8 @@
+@props([
+    'maxWidth' => 'max-w-6xl',
+    'containerPadding' => 'px-6 py-8',
+])
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -15,7 +20,7 @@
     <body class="bg-slate-50 text-slate-900 antialiased">
         @include('partials.site-nav')
 
-        <main class="mx-auto max-w-6xl px-6 py-8">
+        <main class="mx-auto {{ $maxWidth }} {{ $containerPadding }}">
             {{ $slot }}
         </main>
     </body>

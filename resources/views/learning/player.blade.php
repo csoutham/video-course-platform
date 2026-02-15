@@ -1,7 +1,7 @@
-<x-public-layout>
+<x-public-layout maxWidth="max-w-none" containerPadding="px-4 py-6 lg:px-10">
     <x-slot:title>{{ $course->title }} - Learn</x-slot:title>
 
-    <div class="grid gap-6 lg:grid-cols-[300px_1fr]">
+    <div class="grid gap-6 lg:grid-cols-[340px_1fr]">
         <aside class="space-y-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
             <div>
                 <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Course</p>
