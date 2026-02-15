@@ -17,3 +17,4 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 - Feature test coverage for checkout success guest-claim and linked-account states.
 - Added explicit Stripe + Cloudflare environment and operations setup guide in `docs/19-stripe-cloudflare-setup.md`.
 - Added authenticated navigation links to `My Courses` in app and public layouts.
+- Catalog now routes logged-in users with active entitlements directly to the learner course player.

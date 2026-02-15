@@ -5,6 +5,9 @@ namespace Tests\Feature;
 use App\Models\Course;
 use App\Models\CourseLesson;
 use App\Models\CourseModule;
+use App\Models\Entitlement;
+use App\Models\Order;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -84,5 +87,40 @@ class PublicCoursePagesTest extends TestCase
 
         $this->get('/courses/missing-course')->assertNotFound();
         $this->get('/courses/internal-draft')->assertNotFound();
+    }
+
+    public function test_catalog_links_entitled_logged_in_user_directly_to_learning(): void
+    {
+        $user = User::factory()->create();
+        $course = Course::factory()->published()->create([
+            'slug' => 'owned-course',
+            'title' => 'Owned Course',
+        ]);
+
+        $order = Order::query()->create([
+            'user_id' => $user->id,
+            'email' => $user->email,
+            'stripe_checkout_session_id' => 'cs_catalog_owned_1',
+            'status' => 'paid',
+            'subtotal_amount' => 9900,
+            'discount_amount' => 0,
+            'total_amount' => 9900,
+            'currency' => 'usd',
+            'paid_at' => now(),
+        ]);
+
+        Entitlement::query()->create([
+            'user_id' => $user->id,
+            'course_id' => $course->id,
+            'order_id' => $order->id,
+            'status' => 'active',
+            'granted_at' => now(),
+        ]);
+
+        $this->actingAs($user)
+            ->get('/courses')
+            ->assertOk()
+            ->assertSee('Continue learning')
+            ->assertSee(route('learn.show', ['course' => $course->slug]), false);
     }
 }
