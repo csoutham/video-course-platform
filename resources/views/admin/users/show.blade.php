@@ -28,20 +28,24 @@
                             'last_viewed_at' => null,
                         ]);
                     @endphp
+
                     <article class="vc-panel-soft p-4">
                         <div class="flex flex-wrap items-start justify-between gap-4">
                             <div>
-                                <h3 class="text-base font-semibold text-slate-900">{{ $entitlement->course?->title ?? 'Unknown course' }}</h3>
+                                <h3 class="text-base font-semibold text-slate-900">
+                                    {{ $entitlement->course?->title ?? 'Unknown course' }}
+                                </h3>
                                 <p class="mt-1 text-xs text-slate-600 uppercase">
                                     Entitlement: {{ $entitlement->status }}
                                     @if ($entitlement->granted_at)
-                                        · Granted {{ $entitlement->granted_at->format('Y-m-d H:i') }}
+                                            · Granted {{ $entitlement->granted_at->format('Y-m-d H:i') }}
                                     @endif
                                 </p>
                             </div>
                             @if ($entitlement->order)
                                 <p class="text-xs text-slate-600">
-                                    Order #{{ $entitlement->order->id }} · {{ strtoupper($entitlement->order->currency) }}
+                                    Order #{{ $entitlement->order->id }} ·
+                                    {{ strtoupper($entitlement->order->currency) }}
                                     {{ number_format($entitlement->order->total_amount / 100, 2) }}
                                 </p>
                             @endif
@@ -50,23 +54,33 @@
                         <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
                             <div class="rounded-lg border border-slate-200 bg-white p-3">
                                 <p class="text-xs text-slate-500 uppercase">Lessons</p>
-                                <p class="mt-1 text-lg font-semibold text-slate-900">{{ $progress['total_lessons'] }}</p>
+                                <p class="mt-1 text-lg font-semibold text-slate-900">
+                                    {{ $progress['total_lessons'] }}
+                                </p>
                             </div>
                             <div class="rounded-lg border border-slate-200 bg-white p-3">
                                 <p class="text-xs text-slate-500 uppercase">Completed</p>
-                                <p class="mt-1 text-lg font-semibold text-slate-900">{{ $progress['completed_lessons'] }}</p>
+                                <p class="mt-1 text-lg font-semibold text-slate-900">
+                                    {{ $progress['completed_lessons'] }}
+                                </p>
                             </div>
                             <div class="rounded-lg border border-slate-200 bg-white p-3">
                                 <p class="text-xs text-slate-500 uppercase">In Progress</p>
-                                <p class="mt-1 text-lg font-semibold text-slate-900">{{ $progress['in_progress_lessons'] }}</p>
+                                <p class="mt-1 text-lg font-semibold text-slate-900">
+                                    {{ $progress['in_progress_lessons'] }}
+                                </p>
                             </div>
                             <div class="rounded-lg border border-slate-200 bg-white p-3">
                                 <p class="text-xs text-slate-500 uppercase">Tracked</p>
-                                <p class="mt-1 text-lg font-semibold text-slate-900">{{ $progress['tracked_lessons'] }}</p>
+                                <p class="mt-1 text-lg font-semibold text-slate-900">
+                                    {{ $progress['tracked_lessons'] }}
+                                </p>
                             </div>
                             <div class="rounded-lg border border-slate-200 bg-white p-3">
                                 <p class="text-xs text-slate-500 uppercase">Avg Video Progress</p>
-                                <p class="mt-1 text-lg font-semibold text-slate-900">{{ $progress['avg_percent'] }}%</p>
+                                <p class="mt-1 text-lg font-semibold text-slate-900">
+                                    {{ $progress['avg_percent'] }}%
+                                </p>
                             </div>
                         </div>
 

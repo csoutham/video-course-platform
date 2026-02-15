@@ -28,7 +28,7 @@ class UsersController extends Controller
     {
         $entitlements = $user->entitlements()
             ->with(['course.modules.lessons', 'order'])
-            ->orderByDesc('granted_at')
+            ->latest('granted_at')
             ->get();
 
         $courseIds = $entitlements
