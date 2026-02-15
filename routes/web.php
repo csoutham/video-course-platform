@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CourseLessonsController;
 use App\Http\Controllers\Admin\CourseModulesController;
 use App\Http\Controllers\Admin\OrdersController;
+use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Learning\CoursePlayerController;
 use App\Http\Controllers\Learning\LessonProgressController;
 use App\Http\Controllers\Learning\MyCoursesController;
@@ -66,6 +67,8 @@ Route::middleware(['auth', 'admin'])
         Route::put('/lessons/{lesson}', [CourseLessonsController::class, 'update'])->name('lessons.update');
         Route::delete('/lessons/{lesson}', [CourseLessonsController::class, 'destroy'])->name('lessons.destroy');
         Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
+        Route::get('/users', [UsersController::class, 'index'])->name('users.index');
+        Route::get('/users/{user}', [UsersController::class, 'show'])->name('users.show');
     });
 
 Route::view('profile', 'profile')

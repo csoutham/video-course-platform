@@ -10,6 +10,7 @@ Define how operations are executed in the custom `/admin` panel and expanded ove
 - `/admin/courses` course CRUD with Stripe price provisioning options.
 - `/admin/courses/{course}/edit` module + lesson CRUD with Cloudflare Stream video picker.
 - `/admin/orders` read-only order ledger with status filter.
+- `/admin/users` learner list and per-user progress across purchased courses.
 - All admin routes require `auth` and `is_admin`.
 
 ## Daily Operations
@@ -45,6 +46,7 @@ Define how operations are executed in the custom `/admin` panel and expanded ove
 2. Confirm webhook record exists and is processed.
 3. Trigger Stripe event replay action.
 4. Validate entitlement row and user visibility in `My Courses`.
+5. Open `/admin/users/{user}` and confirm lesson/video progress telemetry is being recorded.
 
 ### Gift purchased, recipient cannot claim
 
