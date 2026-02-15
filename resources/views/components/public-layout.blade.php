@@ -17,11 +17,13 @@
 
         @vite(['resources/app.css', 'resources/app.js'])
     </head>
-    <body class="vc-shell text-slate-900 antialiased">
+    <body class="vc-shell flex min-h-screen flex-col text-slate-900 antialiased">
         @include('partials.navigation')
 
-        <main class="{{ $maxWidth }} {{ $containerPadding }} mx-auto">
+        <main class="{{ $maxWidth }} {{ $containerPadding }} mx-auto w-full flex-1">
             {{ $slot }}
         </main>
+
+        @include('partials.footer')
     </body>
 </html>
