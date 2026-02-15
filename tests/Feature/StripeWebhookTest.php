@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Mail\PurchaseReceiptMail;
 use App\Models\Course;
 use App\Models\Entitlement;
 use App\Models\Order;
@@ -9,6 +10,7 @@ use App\Models\OrderItem;
 use App\Models\StripeEvent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class StripeWebhookTest extends TestCase
@@ -18,6 +20,7 @@ class StripeWebhookTest extends TestCase
     public function test_checkout_completed_webhook_creates_order_and_entitlement(): void
     {
         config()->set('services.stripe.webhook_secret', 'whsec_test');
+        Mail::fake();
 
         $user = User::factory()->create();
         $course = Course::factory()->published()->create();
@@ -81,11 +84,17 @@ class StripeWebhookTest extends TestCase
         $this->assertDatabaseMissing('purchase_claim_tokens', [
             'order_id' => $order->id,
         ]);
+
+        Mail::assertSent(PurchaseReceiptMail::class, function (PurchaseReceiptMail $mail) use ($user): bool {
+            return $mail->hasTo($user->email)
+                && $mail->claimUrl === null;
+        });
     }
 
     public function test_repeated_event_is_idempotent(): void
     {
         config()->set('services.stripe.webhook_secret', 'whsec_test');
+        Mail::fake();
 
         $user = User::factory()->create();
         $course = Course::factory()->published()->create();
@@ -127,6 +136,65 @@ class StripeWebhookTest extends TestCase
         $this->assertNotNull($order);
         $this->assertSame(1, OrderItem::query()->where('order_id', $order->id)->count());
         $this->assertSame(1, Entitlement::query()->where('order_id', $order->id)->count());
+        Mail::assertSent(PurchaseReceiptMail::class, 1);
+    }
+
+    public function test_async_paid_event_after_completed_does_not_send_duplicate_receipt_email(): void
+    {
+        config()->set('services.stripe.webhook_secret', 'whsec_test');
+        Mail::fake();
+
+        $user = User::factory()->create();
+        $course = Course::factory()->published()->create();
+
+        $baseSessionObject = [
+            'id' => 'cs_test_async_duplicate',
+            'object' => 'checkout.session',
+            'currency' => 'usd',
+            'amount_subtotal' => 9900,
+            'amount_total' => 9900,
+            'customer' => 'cus_test_async_duplicate',
+            'customer_email' => $user->email,
+            'metadata' => [
+                'course_id' => (string) $course->id,
+                'user_id' => (string) $user->id,
+                'customer_email' => $user->email,
+            ],
+        ];
+
+        $firstPayload = [
+            'id' => 'evt_async_duplicate_1',
+            'object' => 'event',
+            'type' => 'checkout.session.completed',
+            'data' => ['object' => $baseSessionObject],
+        ];
+
+        $secondPayload = [
+            'id' => 'evt_async_duplicate_2',
+            'object' => 'event',
+            'type' => 'checkout.session.async_payment_succeeded',
+            'data' => ['object' => $baseSessionObject],
+        ];
+
+        $firstSignature = $this->generateSignatureHeader(
+            json_encode($firstPayload, JSON_THROW_ON_ERROR),
+            'whsec_test'
+        );
+
+        $secondSignature = $this->generateSignatureHeader(
+            json_encode($secondPayload, JSON_THROW_ON_ERROR),
+            'whsec_test'
+        );
+
+        $this->withHeaders(['Stripe-Signature' => $firstSignature])
+            ->postJson(route('webhooks.stripe'), $firstPayload)
+            ->assertOk();
+
+        $this->withHeaders(['Stripe-Signature' => $secondSignature])
+            ->postJson(route('webhooks.stripe'), $secondPayload)
+            ->assertOk();
+
+        Mail::assertSent(PurchaseReceiptMail::class, 1);
     }
 
     public function test_invalid_signature_is_rejected(): void
@@ -151,6 +219,7 @@ class StripeWebhookTest extends TestCase
     public function test_guest_checkout_creates_claim_token_without_entitlement(): void
     {
         config()->set('services.stripe.webhook_secret', 'whsec_test');
+        Mail::fake();
 
         $course = Course::factory()->published()->create();
 
@@ -190,6 +259,12 @@ class StripeWebhookTest extends TestCase
         ]);
 
         $this->assertSame(0, Entitlement::query()->where('order_id', $order->id)->count());
+
+        Mail::assertSent(PurchaseReceiptMail::class, function (PurchaseReceiptMail $mail): bool {
+            return $mail->hasTo('guestbuyer@example.com')
+                && is_string($mail->claimUrl)
+                && str_contains($mail->claimUrl, '/claim-purchase/');
+        });
     }
 
     public function test_refund_webhook_revokes_entitlements_for_order(): void

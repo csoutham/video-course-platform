@@ -27,6 +27,10 @@ AWS_DEFAULT_REGION=auto
 AWS_BUCKET=<r2-bucket-name>
 AWS_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
 AWS_USE_PATH_STYLE_ENDPOINT=true
+
+MAIL_MAILER=log
+MAIL_FROM_ADDRESS=hello@example.com
+MAIL_FROM_NAME="VideoCourses"
 ```
 
 Notes:
@@ -34,6 +38,7 @@ Notes:
 - `COURSE_RESOURCES_DISK=s3` is required for Cloudflare R2-backed resource downloads.
 - `CF_STREAM_IFRAME_BASE_URL` can remain the default unless you have a custom delivery domain.
 - For signed Stream playback, configure `CF_STREAM_*` signing values and enable signed URLs in Cloudflare Stream.
+- `MAIL_MAILER` must be configured in each environment to deliver purchase receipt emails.
 
 ## 2) Stripe Product/Price Mapping (Critical)
 
@@ -147,6 +152,7 @@ php artisan tinker --execute="App\\Models\\CourseResource::query()->select('id',
 5. Confirm page shows `Claim your purchase`.
 6. Complete claim flow.
 7. Confirm access appears under `My Courses`.
+8. Confirm receipt email is delivered with Stripe receipt link, and guest purchases include the claim link.
 
 If payment succeeded but no claim button appears:
 - Wait 3-10 seconds and click `Refresh status` on success page.

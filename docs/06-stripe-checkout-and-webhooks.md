@@ -6,6 +6,8 @@
 - Map each course to a Stripe Price ID.
 - Support optional promotion/coupon code entry.
 - Allow guest purchase; bind entitlement after claim/account association.
+- Send purchase receipt email after successful paid webhook processing.
+- Include claim link in receipt email for guest purchases.
 
 ## Session Metadata Requirements
 
@@ -31,7 +33,8 @@ Include metadata sufficient to reconcile internal records:
 4. Resolve associated session/order.
 5. Apply deterministic state transition.
 6. Grant or revoke entitlement accordingly.
-7. Mark event processed timestamp.
+7. Send receipt email after commit for first paid transition.
+8. Mark event processed timestamp.
 
 ## Order State Transitions
 

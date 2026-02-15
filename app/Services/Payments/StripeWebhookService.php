@@ -20,6 +20,7 @@ class StripeWebhookService
     public function __construct(
         private readonly EntitlementService $entitlementService,
         private readonly PurchaseClaimService $purchaseClaimService,
+        private readonly PurchaseReceiptService $purchaseReceiptService,
         private readonly AuditLogService $auditLogService,
     ) {}
 
@@ -101,6 +102,8 @@ class StripeWebhookService
 
         $userId = (int) Arr::get($session, 'metadata.user_id');
         $user = $userId > 0 ? User::query()->find($userId) : null;
+        $existingOrder = Order::query()->firstWhere('stripe_checkout_session_id', $sessionId);
+        $wasAlreadyPaid = $existingOrder?->status === 'paid';
 
         $paymentIntentId = Arr::get($session, 'payment_intent');
 
@@ -139,19 +142,26 @@ class StripeWebhookService
             ]
         );
 
+        $claimUrl = null;
+
         if (! $order->user_id) {
             $claimToken = $this->purchaseClaimService->issueForOrder($order);
+            $claimUrl = URL::route('claim-purchase.show', $claimToken->token);
 
             Log::info('guest_purchase_claim_token_issued', [
                 'order_id' => $order->id,
                 'email' => $order->email,
-                'claim_url' => URL::route('claim-purchase.show', $claimToken->token),
+                'claim_url' => $claimUrl,
             ]);
-
-            return;
+        } else {
+            $this->entitlementService->grantForOrder($order);
         }
 
-        $this->entitlementService->grantForOrder($order);
+        if (! $wasAlreadyPaid) {
+            DB::afterCommit(function () use ($order, $claimUrl): void {
+                $this->purchaseReceiptService->sendPaidReceipt($order->fresh('items.course'), $claimUrl);
+            });
+        }
     }
 
     private function markOrderFailed(array $session): void

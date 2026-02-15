@@ -31,6 +31,8 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 - Added Cloudflare Stream duration sync command and lesson length display in curriculum/player views.
 - Replaced dashboard-first authenticated flow with `My Courses` defaults and navigation links.
 - Added authenticated receipts index and per-order Stripe-hosted receipt links.
+- Added post-purchase receipt email delivery on successful Stripe paid webhooks.
+- Guest purchase receipt emails now include the claim-purchase link.
 
 ### Fixed
 

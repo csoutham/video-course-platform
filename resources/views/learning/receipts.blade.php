@@ -25,6 +25,7 @@
                             </div>
                             <a
                                 href="{{ route('receipts.view', $order) }}"
+                                target="_blank"
                                 class="inline-flex items-center rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
                             >
                                 View Stripe receipt
