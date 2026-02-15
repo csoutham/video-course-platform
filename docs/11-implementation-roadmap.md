@@ -68,6 +68,17 @@ Definition of done:
 
 - Entitled users have deterministic per-lesson progress state and completion markers.
 
+## Milestone 7: UX Upgrade + Admin Panel
+
+- Deliver frontend redesign system and restyle major customer pages.
+- Implement Filament admin panel for content, commerce, access, and operations.
+- Add admin authentication gate, policies, and action-level auditing.
+- Replace direct DB operations for common internal tasks.
+
+Definition of done:
+
+- Customer UI quality is materially improved and admin team can run core workflows without direct DB edits.
+
 ## Release Checklist
 
 1. All acceptance scenarios passing.
@@ -75,3 +86,4 @@ Definition of done:
 3. Entitlement revocation on refund validated.
 4. Documentation in `/docs` reviewed and approved.
 5. CI quality gates and coverage thresholds are enforced.
+6. Admin access control and operations workflow tests are enforced.
