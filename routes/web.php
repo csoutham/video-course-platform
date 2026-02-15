@@ -52,7 +52,11 @@ Route::middleware(['auth', 'admin'])
     ->name('admin.')
     ->group(function (): void {
         Route::get('/', DashboardController::class)->name('dashboard');
+        Route::get('/courses/create', [CoursesController::class, 'create'])->name('courses.create');
+        Route::post('/courses', [CoursesController::class, 'store'])->name('courses.store');
         Route::get('/courses', [CoursesController::class, 'index'])->name('courses.index');
+        Route::get('/courses/{course}/edit', [CoursesController::class, 'edit'])->name('courses.edit');
+        Route::put('/courses/{course}', [CoursesController::class, 'update'])->name('courses.update');
         Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
     });
 

@@ -4,9 +4,12 @@
             <div class="vc-heading-block">
                 <p class="vc-eyebrow">Admin</p>
                 <h1 class="vc-title">Courses</h1>
-                <p class="vc-subtitle">Read-only course catalogue view for operational management.</p>
+                <p class="vc-subtitle">Create and manage courses, then drill into modules and lessons.</p>
             </div>
-            <a href="{{ route('admin.dashboard') }}" class="vc-btn-secondary">Back to Dashboard</a>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('admin.courses.create') }}" class="vc-btn-primary">Create Course</a>
+                <a href="{{ route('admin.dashboard') }}" class="vc-btn-secondary">Back to Dashboard</a>
+            </div>
         </div>
     </section>
 
@@ -23,6 +26,7 @@
                         <th class="px-4 py-3">Published</th>
                         <th class="px-4 py-3">Modules</th>
                         <th class="px-4 py-3">Lessons</th>
+                        <th class="px-4 py-3">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 bg-white text-slate-700">
@@ -37,6 +41,9 @@
                             <td class="px-4 py-3">{{ $course->is_published ? 'Yes' : 'No' }}</td>
                             <td class="px-4 py-3">{{ $course->modules_count }}</td>
                             <td class="px-4 py-3">{{ $course->lessons_count }}</td>
+                            <td class="px-4 py-3">
+                                <a href="{{ route('admin.courses.edit', $course) }}" class="vc-link">Edit</a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
