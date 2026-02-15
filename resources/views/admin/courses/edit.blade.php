@@ -130,7 +130,10 @@
         <h2 class="text-lg font-semibold tracking-tight text-slate-900">Modules and Lessons</h2>
         <p class="mt-2 text-sm text-slate-600">Create modules and lessons directly from this screen.</p>
 
-        <form action="{{ route('admin.modules.store', $course) }}" method="POST" class="mt-5 grid gap-3 sm:grid-cols-8">
+        <form
+            action="{{ route('admin.modules.store', $course) }}"
+            method="POST"
+            class="mt-5 grid gap-3 sm:grid-cols-8">
             @csrf
             <div class="sm:col-span-5">
                 <label class="text-sm font-medium text-slate-700">New module title</label>
@@ -145,7 +148,7 @@
                     value="{{ old('sort_order', ($course->modules->max('sort_order') ?? 0) + 1) }}"
                     class="vc-input" />
             </div>
-            <div class="sm:col-span-1 flex items-end">
+            <div class="flex items-end sm:col-span-1">
                 <button type="submit" class="vc-btn-primary w-full justify-center">Add</button>
             </div>
         </form>
@@ -160,7 +163,10 @@
             @forelse ($course->modules as $module)
                 <article class="vc-panel-soft p-4">
                     <div class="flex flex-wrap items-center justify-between gap-3">
-                        <form method="POST" action="{{ route('admin.modules.update', $module) }}" class="grid flex-1 gap-3 sm:grid-cols-6">
+                        <form
+                            method="POST"
+                            action="{{ route('admin.modules.update', $module) }}"
+                            class="grid flex-1 gap-3 sm:grid-cols-6">
                             @csrf
                             @method('PUT')
                             <div class="sm:col-span-4">
@@ -177,7 +183,7 @@
                                     class="vc-input"
                                     required />
                             </div>
-                            <div class="sm:col-span-1 flex items-end">
+                            <div class="flex items-end sm:col-span-1">
                                 <button type="submit" class="vc-btn-secondary w-full justify-center">Save</button>
                             </div>
                         </form>
@@ -221,13 +227,13 @@
                                 value="{{ ($module->lessons->max('sort_order') ?? 0) + 1 }}"
                                 class="vc-input" />
                         </div>
-                        <div class="sm:col-span-1 flex items-end">
+                        <div class="flex items-end sm:col-span-1">
                             <label class="flex items-center gap-2 text-sm text-slate-700">
                                 <input type="checkbox" name="is_published" value="1" />
                                 Live
                             </label>
                         </div>
-                        <div class="sm:col-span-1 flex items-end">
+                        <div class="flex items-end sm:col-span-1">
                             <button type="submit" class="vc-btn-primary w-full justify-center">Add</button>
                         </div>
                         <div class="sm:col-span-12">
@@ -261,6 +267,7 @@
                                                 Current: {{ $lesson->stream_video_id }}
                                             </option>
                                         @endif
+
                                         @foreach ($streamVideos as $video)
                                             <option
                                                 value="{{ $video['uid'] }}"
@@ -289,13 +296,17 @@
                                         value="{{ $lesson->duration_seconds }}"
                                         class="vc-input" />
                                 </div>
-                                <div class="sm:col-span-1 flex items-end">
+                                <div class="flex items-end sm:col-span-1">
                                     <label class="flex items-center gap-2 text-sm text-slate-700">
-                                        <input type="checkbox" name="is_published" value="1" @checked($lesson->is_published) />
+                                        <input
+                                            type="checkbox"
+                                            name="is_published"
+                                            value="1"
+                                            @checked($lesson->is_published) />
                                         Live
                                     </label>
                                 </div>
-                                <div class="sm:col-span-1 flex items-end">
+                                <div class="flex items-end sm:col-span-1">
                                     <label class="flex items-center gap-2 text-sm text-slate-700">
                                         <input type="checkbox" name="sync_duration" value="1" />
                                         Sync
@@ -303,13 +314,20 @@
                                 </div>
                                 <div class="sm:col-span-9">
                                     <label class="text-sm font-medium text-slate-700">Summary</label>
-                                    <textarea name="summary" rows="2" class="vc-input">{{ $lesson->summary }}</textarea>
+                                    <textarea name="summary" rows="2" class="vc-input">
+{{ $lesson->summary }}</textarea
+                                    >
                                 </div>
-                                <div class="sm:col-span-2 flex items-end">
-                                    <button type="submit" class="vc-btn-secondary w-full justify-center">Save lesson</button>
+                                <div class="flex items-end sm:col-span-2">
+                                    <button type="submit" class="vc-btn-secondary w-full justify-center">
+                                        Save lesson
+                                    </button>
                                 </div>
                             </form>
-                            <form method="POST" action="{{ route('admin.lessons.destroy', $lesson) }}" class="mt-2 flex justify-end">
+                            <form
+                                method="POST"
+                                action="{{ route('admin.lessons.destroy', $lesson) }}"
+                                class="mt-2 flex justify-end">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="vc-btn-secondary">Delete lesson</button>
