@@ -56,6 +56,18 @@ Definition of done:
 
 - Repository can be evaluated and contributed to externally with reproducible results.
 
+## Milestone 6: Learner Progress Tracking
+
+- Phase 1: track per-lesson progress (`in_progress`, `completed`) per user.
+- Surface completed-state indicators in learner navigation.
+- Add explicit complete action in learner player.
+- Add acceptance tests for progress creation and completion authorization.
+- Phase 2 (next): add in-video progress persistence (playback position and percent complete).
+
+Definition of done:
+
+- Entitled users have deterministic per-lesson progress state and completion markers.
+
 ## Release Checklist
 
 1. All acceptance scenarios passing.

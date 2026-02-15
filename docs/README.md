@@ -42,3 +42,4 @@ This folder contains the implementation-ready documentation for VideoCourses v1,
 17. [17-milestone-4-backlog](./17-milestone-4-backlog.md)
 18. [18-milestone-5-backlog](./18-milestone-5-backlog.md)
 19. [19-stripe-cloudflare-setup](./19-stripe-cloudflare-setup.md)
+20. [20-milestone-6-backlog](./20-milestone-6-backlog.md)

@@ -25,12 +25,13 @@ This file is the source of truth for project execution tracking in-repo.
 | Milestone 3 | Learning experience and secure resource delivery | `done` | Chris/Codex | Backlog in `16-milestone-3-backlog.md` |
 | Milestone 4 | Hardening, operations, and expanded tests | `done` | Chris/Codex | Backlog in `17-milestone-4-backlog.md` |
 | Milestone 5 | Open-source preparation | `done` | Chris/Codex | Backlog in `18-milestone-5-backlog.md` |
+| Milestone 6 | Learner progress tracking (Phase 1 lesson progress, Phase 2 video progress) | `in_progress` | Chris/Codex | Backlog in `20-milestone-6-backlog.md` |
 
 ## Active Sprint Focus
 
-- Current focus: Post-milestone stabilization and incremental enhancements.
+- Current focus: Milestone 6 Phase 1 per-lesson learner progress.
 - Exit criteria reference: `11-implementation-roadmap.md`.
-- Execution task list: `18-milestone-5-backlog.md`.
+- Execution task list: `20-milestone-6-backlog.md`.
 
 ## Decision Log
 
@@ -57,3 +58,5 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-14: Completed Milestone 4 with structured audit logs, replay/manual operations commands, and hardening test coverage.
 - 2026-02-14: Completed Milestone 5 open-source readiness artifacts and CI compatibility matrix.
 - 2026-02-14: Added Cloudflare Stream iframe playback URL integration in learner player flow.
+- 2026-02-15: Added Milestone 6 plan and started Phase 1 per-lesson learner progress implementation.
+- 2026-02-15: Completed Milestone 6 Phase 1 (lesson-level progress tracking and completion indicators); Phase 2 video-progress remains planned.
