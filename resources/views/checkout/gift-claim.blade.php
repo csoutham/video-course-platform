@@ -1,9 +1,9 @@
 <x-public-layout>
     <x-slot:title>Claim Gift</x-slot:title>
 
-    <div class="mx-auto max-w-xl space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div class="vc-panel mx-auto max-w-xl space-y-6 p-6">
         <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Gift claim</p>
+            <p class="vc-eyebrow">Gift claim</p>
             <h1 class="mt-1 text-2xl font-semibold text-slate-900">Claim your gifted course</h1>
             <p class="mt-2 text-sm text-slate-600">
                 Course: <span class="font-semibold text-slate-900">{{ $giftPurchase->course->title }}</span>
@@ -21,7 +21,7 @@
             @if ($authenticatedEmailMatches)
                 <form method="POST" action="{{ route('gift-claim.store', $claimToken->token) }}" class="space-y-4">
                     @csrf
-                    <button type="submit" class="w-full rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
+                    <button type="submit" class="vc-btn-primary w-full justify-center">
                         Claim gift
                     </button>
                 </form>
@@ -36,7 +36,7 @@
                     An account already exists for this recipient email. Sign in first, then come back to this claim link.
                 </p>
 
-                <a href="{{ route('login') }}" class="inline-flex items-center rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
+                <a href="{{ route('login') }}" class="vc-btn-primary">
                     Sign in
                 </a>
             @else
@@ -45,7 +45,7 @@
 
                     <div>
                         <label for="name" class="block text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Name</label>
-                        <input id="name" name="name" type="text" required value="{{ old('name') }}" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                        <input id="name" name="name" type="text" required value="{{ old('name') }}" class="vc-input">
                         @error('name')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -53,7 +53,7 @@
 
                     <div>
                         <label for="password" class="block text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Password</label>
-                        <input id="password" name="password" type="password" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                        <input id="password" name="password" type="password" required class="vc-input">
                         @error('password')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -61,10 +61,10 @@
 
                     <div>
                         <label for="password_confirmation" class="block text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Confirm password</label>
-                        <input id="password_confirmation" name="password_confirmation" type="password" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                        <input id="password_confirmation" name="password_confirmation" type="password" required class="vc-input">
                     </div>
 
-                    <button type="submit" class="w-full rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
+                    <button type="submit" class="vc-btn-primary w-full justify-center">
                         Create account and claim gift
                     </button>
                 </form>
@@ -72,4 +72,3 @@
         @endauth
     </div>
 </x-public-layout>
-

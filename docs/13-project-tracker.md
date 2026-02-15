@@ -26,11 +26,11 @@ This file is the source of truth for project execution tracking in-repo.
 | Milestone 4 | Hardening, operations, and expanded tests | `done` | Chris/Codex | Backlog in `17-milestone-4-backlog.md` |
 | Milestone 5 | Open-source preparation | `done` | Chris/Codex | Backlog in `18-milestone-5-backlog.md` |
 | Milestone 6 | Learner progress tracking (Phase 1 lesson progress, Phase 2 video progress) | `in_progress` | Chris/Codex | Backlog in `20-milestone-6-backlog.md` |
-| Milestone 7 | Frontend redesign + Filament admin panel | `todo` | Chris/Codex | Specs in `21-frontend-redesign-spec.md`, `22-admin-panel-architecture.md`, `23-admin-operational-playbook.md` |
+| Milestone 7 | Frontend redesign + Filament admin panel | `in_progress` | Chris/Codex | Specs in `21-frontend-redesign-spec.md`, `22-admin-panel-architecture.md`, `23-admin-operational-playbook.md` |
 
 ## Active Sprint Focus
 
-- Current focus: Finalize Milestone 6 stabilization and prepare Milestone 7 execution.
+- Current focus: Milestone 7 frontend redesign Phase A/B implementation.
 - Exit criteria reference: `11-implementation-roadmap.md`.
 - Execution task list: `20-milestone-6-backlog.md` then Milestone 7 specs (`21-23`).
 
@@ -63,3 +63,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-15: Completed Milestone 6 Phase 1 (lesson-level progress tracking and completion indicators); Phase 2 video-progress remains planned.
 - 2026-02-15: Completed Milestone 6 Phase 2 with video heartbeat persistence, auto-completion thresholds, and player telemetry wiring.
 - 2026-02-16: Added Milestone 7 planning docs for frontend redesign and Filament admin panel architecture.
+- 2026-02-16: Started Milestone 7 frontend redesign implementation with shared visual system and core customer-surface restyling.

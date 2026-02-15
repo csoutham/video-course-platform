@@ -1,8 +1,8 @@
 <div class="space-y-8">
-    <div class="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Course</p>
-        <h1 class="text-3xl font-semibold tracking-tight text-slate-900">{{ $course->title }}</h1>
-        <p class="max-w-3xl text-sm text-slate-600">{{ $course->description }}</p>
+    <div class="vc-panel space-y-4 p-6">
+        <p class="vc-eyebrow">Course</p>
+        <h1 class="vc-title">{{ $course->title }}</h1>
+        <p class="vc-subtitle">{{ $course->description }}</p>
 
         <div class="space-y-4 border-t border-slate-100 pt-4">
             <p class="text-base font-semibold text-slate-900">
@@ -21,7 +21,7 @@
                             type="email"
                             required
                             value="{{ old('email') }}"
-                            class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                            class="vc-input"
                             placeholder="you@example.com"
                         />
                         @error('email')
@@ -31,7 +31,7 @@
                 @endguest
 
                 @if ($giftsEnabled)
-                    <div class="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                    <div class="vc-panel-soft p-3">
                         <label class="inline-flex items-center gap-2 text-sm font-medium text-slate-800">
                             <input type="checkbox" name="is_gift" value="1" class="rounded border-slate-300" @checked(old('is_gift')) x-model="isGift">
                             Gift this course
@@ -39,7 +39,7 @@
                         <p class="mt-1 text-xs text-slate-500">When checked, access is granted to the recipient after they claim the gift.</p>
                     </div>
 
-                    <div class="space-y-3 rounded-lg border border-slate-200 p-3" x-show="isGift" x-cloak>
+                    <div class="vc-panel-soft space-y-3 p-3" x-show="isGift" x-cloak>
                         <div>
                             <label for="recipient_email" class="block text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Recipient email</label>
                             <input
@@ -47,7 +47,7 @@
                                 name="recipient_email"
                                 type="email"
                                 value="{{ old('recipient_email') }}"
-                                class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                                class="vc-input"
                                 placeholder="friend@example.com"
                             />
                             @error('recipient_email')
@@ -62,7 +62,7 @@
                                 name="recipient_name"
                                 type="text"
                                 value="{{ old('recipient_name') }}"
-                                class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                                class="vc-input"
                                 placeholder="Jane Doe"
                             />
                         </div>
@@ -74,7 +74,7 @@
                                 name="gift_message"
                                 rows="3"
                                 maxlength="500"
-                                class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                                class="vc-input"
                                 placeholder="Enjoy this course!"
                             >{{ old('gift_message') }}</textarea>
                             @error('gift_message')
@@ -91,12 +91,12 @@
                         name="promotion_code"
                         type="text"
                         value="{{ old('promotion_code') }}"
-                        class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                        class="vc-input"
                         placeholder="promo_xxx"
                     />
                 </div>
 
-                <button type="submit" class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
+                <button type="submit" class="vc-btn-primary">
                     {{ $giftsEnabled ? 'Continue to checkout' : 'Buy course' }}
                 </button>
             </form>
@@ -104,10 +104,10 @@
     </div>
 
     <section class="space-y-4">
-        <h2 class="text-xl font-semibold text-slate-900">Curriculum preview</h2>
+        <h2 class="vc-card-title">Curriculum preview</h2>
 
         @forelse ($course->modules as $module)
-            <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <article class="vc-panel p-5">
                 <h3 class="text-base font-semibold text-slate-900">{{ $module->title }}</h3>
 
                 @if ($module->lessons->isEmpty())
@@ -115,7 +115,7 @@
                 @else
                     <ol class="mt-3 space-y-2 text-sm text-slate-700">
                         @foreach ($module->lessons as $lesson)
-                            <li class="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2">
+                            <li class="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2">
                                 <span>{{ $lesson->title }}</span>
                                 @if ($lesson->duration_seconds)
                                     <span class="text-xs font-semibold text-slate-500">
@@ -128,7 +128,7 @@
                 @endif
             </article>
         @empty
-            <div class="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-sm text-slate-600">
+            <div class="vc-panel border-dashed p-6 text-sm text-slate-600">
                 Curriculum will be published soon.
             </div>
         @endforelse

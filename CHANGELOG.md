@@ -38,6 +38,7 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 - Added webhook-backed gift purchase records, gift claim token lifecycle, and gift redemption flow.
 - Added gift delivery and buyer confirmation emails plus authenticated `My Gifts` tracking page.
 - Added planning docs for frontend redesign and Filament admin-panel architecture under `/docs/21-23`.
+- Added frontend redesign Phase A/B foundation: shared visual tokens/components and upgraded catalog, course detail, checkout, claim, and library surfaces.
 
 ### Fixed
 

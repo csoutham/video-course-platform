@@ -2,20 +2,20 @@
     <x-slot:title>My Gifts</x-slot:title>
 
     <div class="space-y-6">
-        <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Gifts</p>
-            <h1 class="mt-1 text-3xl font-semibold tracking-tight text-slate-900">My Gifts</h1>
-            <p class="mt-2 text-sm text-slate-600">Track gifts you have purchased and their claim status.</p>
+        <div class="vc-heading-block">
+            <p class="vc-eyebrow">Gifts</p>
+            <h1 class="vc-title">My Gifts</h1>
+            <p class="vc-subtitle">Track gifts you have purchased and their claim status.</p>
         </div>
 
         @if ($gifts->isEmpty())
-            <div class="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-sm text-slate-600">
+            <div class="vc-panel border-dashed p-6 text-sm text-slate-600">
                 You have not sent any gifts yet.
             </div>
         @else
             <div class="space-y-3">
                 @foreach ($gifts as $gift)
-                    <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <article class="vc-panel p-5">
                         <div class="flex flex-wrap items-center justify-between gap-3">
                             <div class="space-y-1">
                                 <p class="text-sm font-semibold text-slate-900">{{ $gift->course->title ?? 'Course #'.$gift->course_id }}</p>
@@ -30,4 +30,3 @@
         @endif
     </div>
 </x-public-layout>
-

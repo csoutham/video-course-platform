@@ -2,20 +2,20 @@
     <x-slot:title>Receipts</x-slot:title>
 
     <div class="space-y-6">
-        <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Billing</p>
-            <h1 class="mt-1 text-3xl font-semibold tracking-tight text-slate-900">Receipts</h1>
-            <p class="mt-2 text-sm text-slate-600">Download receipts for your purchased courses.</p>
+        <div class="vc-heading-block">
+            <p class="vc-eyebrow">Billing</p>
+            <h1 class="vc-title">Receipts</h1>
+            <p class="vc-subtitle">Download receipts for your purchased courses.</p>
         </div>
 
         @if ($orders->isEmpty())
-            <div class="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-sm text-slate-600">
+            <div class="vc-panel border-dashed p-6 text-sm text-slate-600">
                 No receipts available yet.
             </div>
         @else
             <div class="space-y-3">
                 @foreach ($orders as $order)
-                    <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <article class="vc-panel p-5">
                         <div class="flex flex-wrap items-center justify-between gap-3">
                             <div>
                                 <p class="text-sm font-semibold text-slate-900">Order #{{ $order->id }}</p>
@@ -26,7 +26,7 @@
                             <a
                                 href="{{ route('receipts.view', $order) }}"
                                 target="_blank"
-                                class="inline-flex items-center rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                                class="vc-btn-secondary"
                             >
                                 View Stripe receipt
                             </a>

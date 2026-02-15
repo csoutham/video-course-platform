@@ -17,7 +17,7 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="bg-slate-50 text-slate-900 antialiased">
+    <body class="vc-shell text-slate-900 antialiased">
         @include('partials.site-nav')
 
         <main class="mx-auto {{ $maxWidth }} {{ $containerPadding }}">

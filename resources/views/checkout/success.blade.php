@@ -1,7 +1,7 @@
 <x-public-layout>
     <x-slot:title>Checkout Success</x-slot:title>
 
-    <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-6">
+    <div class="vc-panel-soft border-emerald-200 bg-emerald-50 p-6">
         <h1 class="text-xl font-semibold text-emerald-900">Payment received</h1>
 
         @if ($isGiftOrder)
@@ -13,7 +13,7 @@
                 @auth
                     <a
                         href="{{ route('gifts.index') }}"
-                        class="inline-flex items-center rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600"
+                        class="inline-flex items-center rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600"
                     >
                         View my gifts
                     </a>
@@ -29,7 +29,7 @@
 
             <a
                 href="{{ $claimUrl }}"
-                class="mt-4 inline-flex items-center rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600"
+                class="mt-4 inline-flex items-center rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600"
             >
                 Claim your purchase
             </a>
@@ -41,7 +41,7 @@
             <div class="mt-4 flex flex-wrap gap-3">
                 <a
                     href="{{ route('my-courses.index') }}"
-                    class="inline-flex items-center rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600"
+                    class="inline-flex items-center rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600"
                 >
                     Go to my courses
                 </a>
@@ -57,7 +57,7 @@
             <div class="mt-4 flex flex-wrap gap-3">
                 <a
                     href="{{ route('checkout.success', ['session_id' => $sessionId]) }}"
-                    class="inline-flex items-center rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600"
+                    class="inline-flex items-center rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600"
                 >
                     Refresh status
                 </a>

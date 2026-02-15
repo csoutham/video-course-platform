@@ -1,7 +1,7 @@
 <x-public-layout>
     <x-slot:title>Checkout Canceled</x-slot:title>
 
-    <div class="rounded-xl border border-amber-200 bg-amber-50 p-6">
+    <div class="vc-panel-soft border-amber-200 bg-amber-50 p-6">
         <h1 class="text-xl font-semibold text-amber-900">Checkout canceled</h1>
         <p class="mt-2 text-sm text-amber-800">
             Your payment was not completed. You can return to the course and try again.

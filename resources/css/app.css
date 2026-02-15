@@ -1,3 +1,116 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        --vc-bg: #f4f5f8;
+        --vc-panel: #ffffff;
+        --vc-panel-soft: #f8f9fc;
+        --vc-border: #d7dbe4;
+        --vc-text: #0f172a;
+        --vc-muted: #5b6578;
+        --vc-brand: #1e293b;
+        --vc-brand-strong: #0b1220;
+        --vc-accent: #0f766e;
+        --vc-warning: #b45309;
+    }
+
+    html,
+    body {
+        background-color: var(--vc-bg);
+        color: var(--vc-text);
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@layer components {
+    .vc-shell {
+        @apply relative isolate overflow-x-hidden;
+        background-image:
+            radial-gradient(circle at 0% 0%, rgba(14, 116, 144, 0.07), transparent 36%),
+            radial-gradient(circle at 100% 0%, rgba(15, 23, 42, 0.08), transparent 42%);
+    }
+
+    .vc-panel {
+        @apply rounded-2xl border bg-white shadow-sm;
+        border-color: var(--vc-border);
+        background-color: var(--vc-panel);
+    }
+
+    .vc-panel-soft {
+        @apply rounded-2xl border shadow-sm;
+        border-color: #d9deeb;
+        background-color: var(--vc-panel-soft);
+    }
+
+    .vc-heading-block {
+        @apply space-y-2;
+    }
+
+    .vc-eyebrow {
+        @apply text-xs font-semibold uppercase tracking-[0.22em];
+        color: #566078;
+    }
+
+    .vc-title {
+        @apply text-3xl font-semibold tracking-tight;
+        color: var(--vc-text);
+    }
+
+    .vc-subtitle {
+        @apply max-w-3xl text-sm;
+        color: var(--vc-muted);
+    }
+
+    .vc-card-title {
+        @apply text-xl font-semibold tracking-tight;
+        color: var(--vc-text);
+    }
+
+    .vc-card-copy {
+        @apply text-sm leading-relaxed;
+        color: var(--vc-muted);
+    }
+
+    .vc-input {
+        @apply mt-1 w-full rounded-xl border bg-white px-3 py-2 text-sm text-slate-900 shadow-sm;
+        border-color: #cbd5e1;
+    }
+
+    .vc-input:focus {
+        @apply outline-none ring-2 ring-slate-300;
+    }
+
+    .vc-btn-primary {
+        @apply inline-flex items-center rounded-xl px-4 py-2 text-sm font-semibold text-white transition;
+        background-color: var(--vc-brand);
+    }
+
+    .vc-btn-primary:hover {
+        background-color: var(--vc-brand-strong);
+    }
+
+    .vc-btn-secondary {
+        @apply inline-flex items-center rounded-xl border px-4 py-2 text-sm font-semibold transition;
+        border-color: #cbd5e1;
+        color: #334155;
+        background-color: #fff;
+    }
+
+    .vc-btn-secondary:hover {
+        background-color: #f1f5f9;
+    }
+
+    .vc-link {
+        @apply text-sm font-semibold transition;
+        color: var(--vc-brand);
+    }
+
+    .vc-link:hover {
+        color: var(--vc-brand-strong);
+    }
+}
