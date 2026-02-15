@@ -56,3 +56,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-14: Started Milestone 4 hardening and operational tooling implementation.
 - 2026-02-14: Completed Milestone 4 with structured audit logs, replay/manual operations commands, and hardening test coverage.
 - 2026-02-14: Completed Milestone 5 open-source readiness artifacts and CI compatibility matrix.
+- 2026-02-14: Added Cloudflare Stream iframe playback URL integration in learner player flow.

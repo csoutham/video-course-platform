@@ -44,10 +44,13 @@
             </div>
 
             <div class="aspect-video w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
-                @if ($activeLesson->stream_video_id)
-                    <div class="flex h-full items-center justify-center px-6 text-sm text-slate-700">
-                        Cloudflare Stream video id: <span class="ml-1 font-semibold">{{ $activeLesson->stream_video_id }}</span>
-                    </div>
+                @if ($streamEmbedUrl)
+                    <iframe
+                        src="{{ $streamEmbedUrl }}"
+                        class="h-full w-full"
+                        allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+                        allowfullscreen
+                    ></iframe>
                 @else
                     <div class="flex h-full items-center justify-center px-6 text-sm text-slate-500">
                         Video not configured for this lesson yet.

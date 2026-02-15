@@ -67,7 +67,8 @@ class LearningAccessTest extends TestCase
             ->get(route('learn.show', ['course' => $course->slug]))
             ->assertOk()
             ->assertSee($course->title)
-            ->assertSee($lesson->title);
+            ->assertSee($lesson->title)
+            ->assertSee('https://iframe.videodelivery.net/'.$lesson->stream_video_id, false);
     }
 
     public function test_unentitled_user_cannot_access_course_player(): void
@@ -182,6 +183,7 @@ class LearningAccessTest extends TestCase
             'module_id' => $module->id,
             'slug' => 'lesson-1',
             'title' => 'Lesson 1',
+            'stream_video_id' => 'sample-stream-video-id',
             'sort_order' => 1,
         ]);
 

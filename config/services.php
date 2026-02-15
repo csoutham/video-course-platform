@@ -41,4 +41,8 @@ return [
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
 
+    'cloudflare_stream' => [
+        'iframe_base_url' => env('CF_STREAM_IFRAME_BASE_URL', 'https://iframe.videodelivery.net'),
+    ],
+
 ];

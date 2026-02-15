@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\CourseLesson;
 use App\Services\Learning\CourseAccessService;
+use App\Services\Learning\VideoPlaybackService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,7 @@ class CoursePlayerController extends Controller
         Request $request,
         Course $course,
         CourseAccessService $accessService,
+        VideoPlaybackService $videoPlaybackService,
         ?string $lessonSlug = null,
     ): View {
         abort_if(! $course->is_published, 404);
@@ -44,6 +46,9 @@ class CoursePlayerController extends Controller
         return view('learning.player', [
             'course' => $course,
             'activeLesson' => $activeLesson,
+            'streamEmbedUrl' => $activeLesson->stream_video_id
+                ? $videoPlaybackService->streamEmbedUrl($activeLesson->stream_video_id)
+                : null,
         ]);
     }
 }

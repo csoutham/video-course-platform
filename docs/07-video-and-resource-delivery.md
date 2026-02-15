@@ -6,6 +6,11 @@
 
 Each lesson stores `stream_video_id` for playback lookup.
 
+Playback URL resolution:
+
+- Default iframe base: `https://iframe.videodelivery.net`
+- Config override via `CF_STREAM_IFRAME_BASE_URL`
+
 ### Playback Access Rules
 
 1. User requests lesson player.
