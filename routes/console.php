@@ -9,12 +9,7 @@ use App\Models\User;
 use App\Services\Learning\CloudflareStreamMetadataService;
 use App\Services\Payments\EntitlementService;
 use App\Services\Payments\StripeWebhookService;
-use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
-
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
 
 Artisan::command('videocourses:stripe-reprocess {event_id}', function ($event_id): int {
     $event = StripeEvent::query()->firstWhere('stripe_event_id', $event_id);
@@ -25,7 +20,7 @@ Artisan::command('videocourses:stripe-reprocess {event_id}', function ($event_id
         return self::FAILURE;
     }
 
-    $webhookService = app(StripeWebhookService::class);
+    $webhookService = resolve(StripeWebhookService::class);
     $webhookService->reprocessStoredEvent($event);
     $this->info("Reprocessed Stripe event: {$event_id}");
 
@@ -52,7 +47,7 @@ Artisan::command('videocourses:entitlement-grant {user_id} {course_id} {order_id
         ['unit_amount' => $order->total_amount, 'quantity' => 1]
     );
 
-    $entitlementService = app(EntitlementService::class);
+    $entitlementService = resolve(EntitlementService::class);
     $entitlementService->grantForOrder($order);
 
     $this->info("Granted entitlement for user {$user_id} course {$course_id} via order {$order_id}.");
@@ -104,7 +99,7 @@ Artisan::command('videocourses:stream-sync-durations {--course_id=} {--force}', 
         return self::SUCCESS;
     }
 
-    $metadataService = app(CloudflareStreamMetadataService::class);
+    $metadataService = resolve(CloudflareStreamMetadataService::class);
     $updated = 0;
 
     foreach ($lessons as $lesson) {

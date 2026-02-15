@@ -22,6 +22,7 @@ class Course extends Model
         'is_published',
     ];
 
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -39,7 +40,7 @@ class Course extends Model
         return $this->hasMany(CourseLesson::class)->orderBy('sort_order');
     }
 
-    public function scopePublished(Builder $query): Builder
+    protected function scopePublished(Builder $query): Builder
     {
         return $query->where('is_published', true);
     }

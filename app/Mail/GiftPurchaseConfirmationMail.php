@@ -11,12 +11,14 @@ use Illuminate\Queue\SerializesModels;
 
 class GiftPurchaseConfirmationMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public function __construct(
         public readonly GiftPurchase $giftPurchase,
         public readonly string $claimUrl,
-    ) {}
+    ) {
+    }
 
     public function envelope(): Envelope
     {
@@ -33,4 +35,3 @@ class GiftPurchaseConfirmationMail extends Mailable
         return [];
     }
 }
-

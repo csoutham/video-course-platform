@@ -18,8 +18,7 @@ class MyGiftsController extends Controller
             ->where(function ($query) use ($user): void {
                 $query->where('buyer_user_id', $user->id)
                     ->orWhere('buyer_email', $user->email);
-            })
-            ->orderByDesc('created_at')
+            })->latest()
             ->get();
 
         return view('learning.my-gifts', [
@@ -27,4 +26,3 @@ class MyGiftsController extends Controller
         ]);
     }
 }
-

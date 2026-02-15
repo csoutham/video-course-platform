@@ -17,6 +17,7 @@ class StripeEvent extends Model
         'processing_error',
     ];
 
+    #[\Override]
     protected function casts(): array
     {
         return [

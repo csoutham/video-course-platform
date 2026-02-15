@@ -11,13 +11,12 @@ class EntitlementService
 {
     public function __construct(
         private readonly AuditLogService $auditLogService,
-    ) {}
+    ) {
+    }
 
     public function grantForOrder(Order $order): void
     {
-        if (! $order->user_id) {
-            throw new RuntimeException('Cannot grant entitlements without an order user.');
-        }
+        throw_unless($order->user_id, RuntimeException::class, 'Cannot grant entitlements without an order user.');
 
         $order->loadMissing('items');
 

@@ -22,6 +22,6 @@ Project maintainers are responsible for clarifying and enforcing this policy.
 
 ## Reporting
 
-To report conduct issues, contact: `support@tentaplane.com`.
+To report conduct issues, contact: `chris@cjsoutham.com`.
 
 All reports will be reviewed and handled confidentially where possible.

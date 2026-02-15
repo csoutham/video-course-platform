@@ -64,9 +64,7 @@ class ResourceDownloadController extends Controller
 
         $disk = config('filesystems.course_resources_disk', 'local');
 
-        if (! Storage::disk($disk)->exists($resource->storage_key)) {
-            abort(404);
-        }
+        abort_unless(Storage::disk($disk)->exists($resource->storage_key), 404);
 
         $auditLogService->record(
             eventType: 'resource_stream_served',

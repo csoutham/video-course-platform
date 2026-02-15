@@ -13,7 +13,8 @@ class GiftRedemptionService
 {
     public function __construct(
         private readonly AuditLogService $auditLogService,
-    ) {}
+    ) {
+    }
 
     public function redeem(PurchaseClaimToken $claimToken, User $user): void
     {
@@ -79,4 +80,3 @@ class GiftRedemptionService
         });
     }
 }
-

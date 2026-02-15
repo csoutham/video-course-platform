@@ -25,6 +25,7 @@ class GiftPurchase extends Model
         'claimed_at',
     ];
 
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -58,4 +59,3 @@ class GiftPurchase extends Model
         return $this->hasOne(PurchaseClaimToken::class, 'gift_purchase_id');
     }
 }
-

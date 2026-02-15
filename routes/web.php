@@ -16,7 +16,7 @@ use App\Livewire\Courses\Detail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn (): RedirectResponse => redirect()->route('courses.index'));
+Route::get('/', fn (): RedirectResponse => to_route('courses.index'));
 Route::get('/courses', Catalog::class)->name('courses.index');
 Route::get('/courses/{slug}', Detail::class)->name('courses.show');
 Route::post('/checkout/{course}', CheckoutController::class)->name('checkout.start');

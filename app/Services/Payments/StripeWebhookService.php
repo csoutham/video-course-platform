@@ -28,7 +28,8 @@ class StripeWebhookService
         private readonly GiftNotificationService $giftNotificationService,
         private readonly PurchaseReceiptService $purchaseReceiptService,
         private readonly AuditLogService $auditLogService,
-    ) {}
+    ) {
+    }
 
     public function handle(string $payload, string $signature): void
     {

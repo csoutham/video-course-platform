@@ -20,9 +20,7 @@ class LessonProgressController extends Controller
     ): RedirectResponse {
         abort_if(! $course->is_published, 404);
 
-        if (! $accessService->userHasActiveCourseEntitlement($request->user(), $course)) {
-            abort(403);
-        }
+        abort_unless($accessService->userHasActiveCourseEntitlement($request->user(), $course), 403);
 
         $lesson = $course->lessons()
             ->published()
@@ -49,7 +47,7 @@ class LessonProgressController extends Controller
 
         $progress->save();
 
-        return redirect()->route('learn.show', [
+        return to_route('learn.show', [
             'course' => $course->slug,
             'lessonSlug' => $lesson->slug,
         ]);
@@ -63,9 +61,7 @@ class LessonProgressController extends Controller
     ): JsonResponse {
         abort_if(! $course->is_published, 404);
 
-        if (! $accessService->userHasActiveCourseEntitlement($request->user(), $course)) {
-            abort(403);
-        }
+        abort_unless($accessService->userHasActiveCourseEntitlement($request->user(), $course), 403);
 
         $lesson = $course->lessons()
             ->published()

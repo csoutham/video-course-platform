@@ -20,6 +20,7 @@ class Entitlement extends Model
         'revoked_at',
     ];
 
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -43,7 +44,7 @@ class Entitlement extends Model
         return $this->belongsTo(Order::class);
     }
 
-    public function scopeActive(Builder $query): Builder
+    protected function scopeActive(Builder $query): Builder
     {
         return $query->where('status', 'active');
     }

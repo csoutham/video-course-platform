@@ -11,7 +11,8 @@ class PurchaseReceiptService
 {
     public function __construct(
         private readonly StripeReceiptService $stripeReceiptService,
-    ) {}
+    ) {
+    }
 
     public function sendPaidReceipt(Order $order, ?string $claimUrl = null): void
     {
@@ -36,4 +37,3 @@ class PurchaseReceiptService
         }
     }
 }
-

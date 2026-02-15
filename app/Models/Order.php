@@ -28,6 +28,7 @@ class Order extends Model
         'refunded_at',
     ];
 
+    #[\Override]
     protected function casts(): array
     {
         return [

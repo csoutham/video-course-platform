@@ -20,11 +20,8 @@ class StripeCheckoutService
         ?string $recipientEmail = null,
         ?string $recipientName = null,
         bool $giftMessagePresent = false,
-    ): array
-    {
-        if (! $course->stripe_price_id) {
-            throw new InvalidArgumentException('Course is missing stripe_price_id.');
-        }
+    ): array {
+        throw_unless($course->stripe_price_id, InvalidArgumentException::class, 'Course is missing stripe_price_id.');
 
         $stripe = new StripeClient((string) config('services.stripe.secret'));
 
@@ -47,9 +44,7 @@ class StripeCheckoutService
         ];
 
         if ($isGift) {
-            if (! $recipientEmail) {
-                throw new InvalidArgumentException('Recipient email is required for gift checkout.');
-            }
+            throw_unless($recipientEmail, InvalidArgumentException::class, 'Recipient email is required for gift checkout.');
 
             $params['metadata']['recipient_email'] = $recipientEmail;
             $params['metadata']['recipient_name'] = $recipientName ?: null;
@@ -67,7 +62,7 @@ class StripeCheckoutService
 
         try {
             $session = $stripe->checkout->sessions->create($params);
-        } catch (ApiErrorException $exception) {
+        } catch (ApiErrorException) {
             throw new InvalidArgumentException('Unable to start checkout with that promotion code.');
         }
 
@@ -81,9 +76,7 @@ class StripeCheckoutService
     {
         $promotionCode = trim($promotionCode);
 
-        if ($promotionCode === '') {
-            throw new InvalidArgumentException('Promotion code cannot be empty.');
-        }
+        throw_if($promotionCode === '', InvalidArgumentException::class, 'Promotion code cannot be empty.');
 
         if (str_starts_with($promotionCode, 'promo_')) {
             return $promotionCode;
@@ -95,16 +88,14 @@ class StripeCheckoutService
                 'active' => true,
                 'limit' => 1,
             ]);
-        } catch (ApiErrorException $exception) {
+        } catch (ApiErrorException) {
             throw new InvalidArgumentException('Unable to validate the promotion code right now.');
         }
 
         $match = $matches->data[0] ?? null;
         $matchId = is_object($match) ? ($match->id ?? null) : null;
 
-        if (! is_string($matchId) || $matchId === '') {
-            throw new InvalidArgumentException('Promotion code is invalid or inactive.');
-        }
+        throw_if(! is_string($matchId) || $matchId === '', InvalidArgumentException::class, 'Promotion code is invalid or inactive.');
 
         return $matchId;
     }

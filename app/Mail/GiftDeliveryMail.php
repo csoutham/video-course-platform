@@ -11,12 +11,14 @@ use Illuminate\Queue\SerializesModels;
 
 class GiftDeliveryMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public function __construct(
         public readonly GiftPurchase $giftPurchase,
         public readonly string $claimUrl,
-    ) {}
+    ) {
+    }
 
     public function envelope(): Envelope
     {
@@ -33,4 +35,3 @@ class GiftDeliveryMail extends Mailable
         return [];
     }
 }
-

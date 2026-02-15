@@ -22,9 +22,7 @@ class CoursePlayerController extends Controller
     ): View {
         abort_if(! $course->is_published, 404);
 
-        if (! $accessService->userHasActiveCourseEntitlement($request->user(), $course)) {
-            abort(403);
-        }
+        abort_unless($accessService->userHasActiveCourseEntitlement($request->user(), $course), 403);
 
         $course->load([
             'modules.lessons' => fn ($query) => $query->published()->orderBy('sort_order'),
@@ -42,9 +40,7 @@ class CoursePlayerController extends Controller
             ->get()
             ->keyBy('lesson_id');
 
-        $nextIncompleteLesson = $availableLessons->first(function (CourseLesson $lesson) use ($progressByLessonId): bool {
-            return $progressByLessonId->get($lesson->id)?->status !== 'completed';
-        });
+        $nextIncompleteLesson = $availableLessons->first(fn (CourseLesson $lesson): bool => $progressByLessonId->get($lesson->id)?->status !== 'completed');
 
         $activeLesson = $lessonSlug
             ? $availableLessons->firstWhere('slug', $lessonSlug)

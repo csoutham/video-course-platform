@@ -107,4 +107,3 @@ class GiftClaimTest extends TestCase
             ->assertSessionHasErrors('claim');
     }
 }
-

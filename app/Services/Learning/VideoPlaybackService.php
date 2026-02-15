@@ -18,9 +18,7 @@ class VideoPlaybackService
         $token = $this->signedTokenForVideo($streamVideoId);
         $customerCode = (string) config('services.cloudflare_stream.customer_code');
 
-        if ($customerCode === '') {
-            throw new RuntimeException('CF_STREAM_CUSTOMER_CODE is required when signed Stream URLs are enabled.');
-        }
+        throw_if($customerCode === '', RuntimeException::class, 'CF_STREAM_CUSTOMER_CODE is required when signed Stream URLs are enabled.');
 
         return 'https://customer-'.$customerCode.'.cloudflarestream.com/'.$token.'/iframe';
     }
@@ -31,9 +29,7 @@ class VideoPlaybackService
         $apiToken = (string) config('services.cloudflare_stream.api_token');
         $ttl = (int) config('services.cloudflare_stream.token_ttl_seconds', 3600);
 
-        if ($accountId === '' || $apiToken === '') {
-            throw new RuntimeException('CF_STREAM_ACCOUNT_ID and CF_STREAM_API_TOKEN are required when signed Stream URLs are enabled.');
-        }
+        throw_if($accountId === '' || $apiToken === '', RuntimeException::class, 'CF_STREAM_ACCOUNT_ID and CF_STREAM_API_TOKEN are required when signed Stream URLs are enabled.');
 
         $response = Http::withToken($apiToken)
             ->acceptJson()
@@ -41,15 +37,11 @@ class VideoPlaybackService
                 'exp' => now()->addSeconds(max(60, $ttl))->timestamp,
             ]);
 
-        if (! $response->successful()) {
-            throw new RuntimeException('Failed to generate Cloudflare Stream signed token.');
-        }
+        throw_unless($response->successful(), RuntimeException::class, 'Failed to generate Cloudflare Stream signed token.');
 
         $token = $response->json('result.token');
 
-        if (! is_string($token) || $token === '') {
-            throw new RuntimeException('Cloudflare Stream signed token response was invalid.');
-        }
+        throw_if(! is_string($token) || $token === '', RuntimeException::class, 'Cloudflare Stream signed token response was invalid.');
 
         return $token;
     }

@@ -24,6 +24,7 @@ class CourseLesson extends Model
         'is_published',
     ];
 
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -52,7 +53,7 @@ class CourseLesson extends Model
         return $this->hasMany(LessonProgress::class, 'lesson_id');
     }
 
-    public function scopePublished(Builder $query): Builder
+    protected function scopePublished(Builder $query): Builder
     {
         return $query->where('is_published', true);
     }

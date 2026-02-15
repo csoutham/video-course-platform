@@ -24,6 +24,7 @@ class LessonProgress extends Model
         'completed_at',
     ];
 
+    #[\Override]
     protected function casts(): array
     {
         return [

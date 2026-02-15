@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@plugin '@tailwindcss/forms';
+
 @layer base {
     :root {
         --vc-bg: #f4f5f8;

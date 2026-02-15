@@ -1,10 +1,10 @@
 <x-public-layout maxWidth="max-w-none" containerPadding="px-4 py-6 lg:px-10">
-    <x-slot:title>{{ $course->title }} - Learn</x-slot:title>
+    <x-slot:title>{{ $course->title }} - Learn</x-slot>
 
     <div class="grid gap-6 lg:grid-cols-[340px_1fr]">
         <aside class="space-y-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
             <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Course</p>
+                <p class="text-xs font-semibold tracking-[0.2em] text-slate-500 uppercase">Course</p>
                 <h1 class="mt-1 text-xl font-semibold text-slate-900">{{ $course->title }}</h1>
             </div>
 
@@ -22,20 +22,23 @@
                                         $lessonProgress = $progressByLessonId->get($lesson->id);
                                         $isCompleted = $lessonProgress?->status === 'completed';
                                     @endphp
+
                                     <li>
                                         <a
                                             href="{{ route('learn.show', ['course' => $course->slug, 'lessonSlug' => $lesson->slug]) }}"
-                                            class="flex items-center justify-between rounded-md px-2 py-1 text-sm {{ $activeLesson->id === $lesson->id ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100' }}"
-                                        >
+                                            class="{{ $activeLesson->id === $lesson->id ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100' }} flex items-center justify-between rounded-md px-2 py-1 text-sm">
                                             <span>{{ $lesson->title }}</span>
                                             <span class="flex items-center gap-2">
                                                 @if ($lesson->duration_seconds)
-                                                    <span class="text-xs font-semibold {{ $activeLesson->id === $lesson->id ? 'text-slate-200' : 'text-slate-500' }}">
+                                                    <span
+                                                        class="{{ $activeLesson->id === $lesson->id ? 'text-slate-200' : 'text-slate-500' }} text-xs font-semibold">
                                                         {{ gmdate('i:s', $lesson->duration_seconds) }}
                                                     </span>
                                                 @endif
+
                                                 @if ($isCompleted)
-                                                    <span class="text-xs font-semibold {{ $activeLesson->id === $lesson->id ? 'text-emerald-200' : 'text-emerald-700' }}">
+                                                    <span
+                                                        class="{{ $activeLesson->id === $lesson->id ? 'text-emerald-200' : 'text-emerald-700' }} text-xs font-semibold">
                                                         Completed
                                                     </span>
                                                 @endif
@@ -52,13 +55,14 @@
 
         <section class="space-y-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
             <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Lesson</p>
+                <p class="text-xs font-semibold tracking-[0.2em] text-slate-500 uppercase">Lesson</p>
                 <h2 class="mt-1 text-2xl font-semibold text-slate-900">{{ $activeLesson->title }}</h2>
                 @if ($activeLesson->summary)
                     <p class="mt-2 text-sm text-slate-600">{{ $activeLesson->summary }}</p>
                 @endif
+
                 @if ($activeLesson->duration_seconds)
-                    <p class="mt-1 text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">
+                    <p class="mt-1 text-xs font-semibold tracking-[0.1em] text-slate-500 uppercase">
                         Length: {{ gmdate('i:s', $activeLesson->duration_seconds) }}
                     </p>
                 @endif
@@ -70,9 +74,8 @@
                         id="stream-player"
                         src="{{ $streamEmbedUrl }}"
                         class="h-full w-full"
-                        allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-                        allowfullscreen
-                    ></iframe>
+                        allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+                        allowfullscreen></iframe>
                 @else
                     <div class="flex h-full items-center justify-center px-6 text-sm text-slate-500">
                         Video not configured for this lesson yet.
@@ -91,8 +94,7 @@
                             <li>
                                 <a
                                     href="{{ route('resources.download', $resource) }}"
-                                    class="inline-flex items-center rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-                                >
+                                    class="inline-flex items-center rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">
                                     Download {{ $resource->name }}
                                 </a>
                             </li>
@@ -106,8 +108,7 @@
                     @if ($previousLesson)
                         <a
                             href="{{ route('learn.show', ['course' => $course->slug, 'lessonSlug' => $previousLesson->slug]) }}"
-                            class="inline-flex items-center rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-                        >
+                            class="inline-flex items-center rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">
                             Previous lesson
                         </a>
                     @else
@@ -116,12 +117,13 @@
                 </div>
 
                 <div class="justify-self-center">
-                    <form method="POST" action="{{ route('learn.progress.complete', ['course' => $course->slug, 'lessonSlug' => $activeLesson->slug]) }}">
+                    <form
+                        method="POST"
+                        action="{{ route('learn.progress.complete', ['course' => $course->slug, 'lessonSlug' => $activeLesson->slug]) }}">
                         @csrf
                         <button
                             type="submit"
-                            class="inline-flex items-center rounded-md border px-3 py-2 text-sm font-semibold {{ ($activeLessonProgress->status ?? null) === 'completed' ? 'border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100' : 'border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100' }}"
-                        >
+                            class="{{ ($activeLessonProgress->status ?? null) === 'completed' ? 'border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100' : 'border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100' }} inline-flex items-center rounded-md border px-3 py-2 text-sm font-semibold">
                             {{ ($activeLessonProgress->status ?? null) === 'completed' ? 'Mark as incomplete' : 'Mark as complete' }}
                         </button>
                     </form>
@@ -131,8 +133,7 @@
                     @if ($nextLesson)
                         <a
                             href="{{ route('learn.show', ['course' => $course->slug, 'lessonSlug' => $nextLesson->slug]) }}"
-                            class="inline-flex items-center rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800"
-                        >
+                            class="inline-flex items-center rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800">
                             Next lesson
                         </a>
                     @else
@@ -168,9 +169,10 @@
 
                     return {
                         position_seconds: Math.max(0, Math.floor(Number.isFinite(rawPosition) ? rawPosition : 0)),
-                        duration_seconds: Number.isFinite(rawDuration) && rawDuration > 0
-                            ? Math.max(1, Math.floor(rawDuration))
-                            : null,
+                        duration_seconds:
+                            Number.isFinite(rawDuration) && rawDuration > 0
+                                ? Math.max(1, Math.floor(rawDuration))
+                                : null,
                     };
                 };
 
@@ -188,7 +190,7 @@
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': csrfToken || '',
-                            'Accept': 'application/json',
+                            Accept: 'application/json',
                         },
                         credentials: 'same-origin',
                         keepalive: true,

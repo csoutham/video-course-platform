@@ -1,19 +1,28 @@
 {
-    "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
-    "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
-    "license": "MIT",
+    "name": "csoutham/video-course-platform",
+    "authors": [
+        {
+            "name": "Chris Southam",
+            "email": "chris@cjsoutham.com",
+            "homepage": "https://cjsoutham.com"
+        }
+    ],
+    "version": "0.1.0",
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
+        "houdaslassi/vantage": "^0.1.11",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "livewire/livewire": "^3.6.4",
         "livewire/volt": "^1.7.0",
+        "predis/predis": "^2.3",
+        "resend/resend-php": "^0.15.1",
         "stripe/stripe-php": "^19.3"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.14.10",
+        "barryvdh/laravel-ide-helper": "^3.5.4",
+        "driftingly/rector-laravel": "^2.0",
         "fakerphp/faker": "^1.23",
         "laravel/breeze": "^2.3",
         "laravel/pail": "^1.2.2",
@@ -57,7 +66,20 @@
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+            "@php artisan config:clear",
+            "@php artisan cache:clear",
+            "@php artisan route:clear",
+            "@php artisan view:clear",
+            "@php artisan clear-compiled",
+            "@php artisan livewire:publish --assets",
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:meta",
+            "@php artisan ide-helper:models --nowrite",
+            "./vendor/bin/pint --parallel",
+            "./vendor/bin/rector",
+            "@php artisan route:cache",
+            "@php artisan route:clear"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

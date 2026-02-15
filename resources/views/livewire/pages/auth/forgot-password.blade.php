@@ -4,8 +4,7 @@ use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('layouts.guest')] class extends Component
-{
+new #[Layout('components.guest-layout')] class extends Component {
     public string $email = '';
 
     /**
@@ -48,11 +47,18 @@ new #[Layout('layouts.guest')] class extends Component
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus />
+            <x-text-input
+                wire:model="email"
+                id="email"
+                class="mt-1 block w-full"
+                type="email"
+                name="email"
+                required
+                autofocus />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
+        <div class="mt-4 flex items-center justify-end">
             <x-primary-button>
                 {{ __('Email Password Reset Link') }}
             </x-primary-button>

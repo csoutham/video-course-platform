@@ -82,7 +82,6 @@ class GiftClaimController extends Controller
 
         $giftRedemptionService->redeem($claimToken, $user);
 
-        return redirect()->route('my-courses.index')->with('status', 'Gift claimed successfully.');
+        return to_route('my-courses.index')->with('status', 'Gift claimed successfully.');
     }
 }
-

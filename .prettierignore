@@ -1,0 +1,9 @@
+node_modules
+.env*
+vendor/
+public/
+.git
+composer.lock
+pnpm-lock.yaml
+resources/views/emails
+resources/views/rss/feed.blade.php

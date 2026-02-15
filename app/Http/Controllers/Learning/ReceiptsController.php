@@ -17,7 +17,7 @@ class ReceiptsController extends Controller
             ->with('items.course')
             ->where('user_id', $request->user()->id)
             ->whereIn('status', ['paid', 'refunded'])
-            ->orderByDesc('paid_at')
+            ->latest('paid_at')
             ->orderByDesc('id')
             ->get();
 

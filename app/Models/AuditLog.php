@@ -16,6 +16,7 @@ class AuditLog extends Model
         'context',
     ];
 
+    #[\Override]
     protected function casts(): array
     {
         return [

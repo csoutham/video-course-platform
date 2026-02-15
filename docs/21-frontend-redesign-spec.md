@@ -2,7 +2,8 @@
 
 ## Objective
 
-Upgrade the customer-facing UI from functional/basic to a modern premium editorial style while preserving existing behavior and routes.
+Upgrade the customer-facing UI from functional/basic to a modern premium editorial style while preserving existing
+behavior and routes.
 
 ## Design Direction
 
@@ -17,13 +18,13 @@ Upgrade the customer-facing UI from functional/basic to a modern premium editori
 - Shared visual system (tokens + reusable UI primitives).
 - Navigation and page-header consistency.
 - Restyle high-impact customer pages:
-  - catalog
-  - course detail + checkout form
-  - checkout success + claim pages
-  - my courses
-  - my gifts
-  - receipts
-  - player visual polish
+    - catalog
+    - course detail + checkout form
+    - checkout success + claim pages
+    - my courses
+    - my gifts
+    - receipts
+    - player visual polish
 
 ### Out of scope
 
@@ -35,17 +36,17 @@ Upgrade the customer-facing UI from functional/basic to a modern premium editori
 
 ### Phase A: UI Foundation
 
-1. Create design tokens in `resources/css/app.css`:
-   - color roles
-   - spacing scale
-   - border radius and shadows
-   - typography scale
+1. Create design tokens in `resources/app.css`:
+    - color roles
+    - spacing scale
+    - border radius and shadows
+    - typography scale
 2. Create/standardize reusable Blade components:
-   - section header
-   - card variants
-   - button variants
-   - badge/status styles
-   - form field wrappers (label/help/error)
+    - section header
+    - card variants
+    - button variants
+    - badge/status styles
+    - form field wrappers (label/help/error)
 3. Unify container width and spacing rules across app/public layouts.
 
 ### Phase B: Core Commerce Pages
@@ -59,9 +60,9 @@ Upgrade the customer-facing UI from functional/basic to a modern premium editori
 
 1. Restyle `my-courses`, `my-gifts`, and `receipts`.
 2. Improve player page readability:
-   - left curriculum panel scannability
-   - lesson metadata clarity
-   - footer action hierarchy (prev / completion / next)
+    - left curriculum panel scannability
+    - lesson metadata clarity
+    - footer action hierarchy (prev / completion / next)
 
 ### Phase D: QA + Accessibility
 

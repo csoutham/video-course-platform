@@ -19,6 +19,7 @@ class PurchaseClaimToken extends Model
         'consumed_at',
     ];
 
+    #[\Override]
     protected function casts(): array
     {
         return [

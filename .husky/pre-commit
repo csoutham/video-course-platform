@@ -1,0 +1,6 @@
+./vendor/bin/rector
+npx bun install
+npx bun validate-branch-name
+npx bun run prettier resources --write
+npx bun lint-staged
+npx bun run build

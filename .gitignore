@@ -22,3 +22,6 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+/storage/_ide_helper_models.php
+/storage/_ide_helper.php
+/storage/.phpstorm.meta.php

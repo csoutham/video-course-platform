@@ -55,7 +55,7 @@ class AppServiceProvider extends ServiceProvider
     {
         URL::forceScheme('https');
 
-        Password::defaults(fn () => Password::min(8));
+        Password::defaults(fn () => Password::min(8)->uncompromised());
     }
 
     private function configureVantage(): void

@@ -1,0 +1,2 @@
+npx bun install
+npx bun run build

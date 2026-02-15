@@ -90,10 +90,8 @@ class StripeWebhookTest extends TestCase
             'order_id' => $order->id,
         ]);
 
-        Mail::assertSent(PurchaseReceiptMail::class, function (PurchaseReceiptMail $mail) use ($user): bool {
-            return $mail->hasTo($user->email)
-                && $mail->claimUrl === null;
-        });
+        Mail::assertSent(PurchaseReceiptMail::class, fn (PurchaseReceiptMail $mail): bool => $mail->hasTo($user->email)
+            && $mail->claimUrl === null);
     }
 
     public function test_repeated_event_is_idempotent(): void
@@ -265,11 +263,9 @@ class StripeWebhookTest extends TestCase
 
         $this->assertSame(0, Entitlement::query()->where('order_id', $order->id)->count());
 
-        Mail::assertSent(PurchaseReceiptMail::class, function (PurchaseReceiptMail $mail): bool {
-            return $mail->hasTo('guestbuyer@example.com')
-                && is_string($mail->claimUrl)
-                && str_contains($mail->claimUrl, '/claim-purchase/');
-        });
+        Mail::assertSent(PurchaseReceiptMail::class, fn (PurchaseReceiptMail $mail): bool => $mail->hasTo('guestbuyer@example.com')
+            && is_string($mail->claimUrl)
+            && str_contains($mail->claimUrl, '/claim-purchase/'));
     }
 
     public function test_refund_webhook_revokes_entitlements_for_order(): void

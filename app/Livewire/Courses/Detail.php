@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.public')]
+#[Layout('components.public-layout')]
 class Detail extends Component
 {
     public string $slug;

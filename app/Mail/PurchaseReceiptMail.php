@@ -11,13 +11,15 @@ use Illuminate\Queue\SerializesModels;
 
 class PurchaseReceiptMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public function __construct(
         public readonly Order $order,
         public readonly ?string $claimUrl = null,
         public readonly ?string $stripeReceiptUrl = null,
-    ) {}
+    ) {
+    }
 
     public function envelope(): Envelope
     {
@@ -38,4 +40,3 @@ class PurchaseReceiptMail extends Mailable
         return [];
     }
 }
-

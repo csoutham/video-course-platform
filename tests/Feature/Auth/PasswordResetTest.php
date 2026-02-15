@@ -13,6 +13,8 @@ class PasswordResetTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const string NEW_PASSWORD = 'S3cure!Trail-4821';
+
     public function test_reset_password_link_screen_can_be_rendered(): void
     {
         $response = $this->get('/forgot-password');
@@ -69,8 +71,8 @@ class PasswordResetTest extends TestCase
         Notification::assertSentTo($user, ResetPassword::class, function ($notification) use ($user) {
             $component = Volt::test('pages.auth.reset-password', ['token' => $notification->token])
                 ->set('email', $user->email)
-                ->set('password', 'password')
-                ->set('password_confirmation', 'password');
+                ->set('password', self::NEW_PASSWORD)
+                ->set('password_confirmation', self::NEW_PASSWORD);
 
             $component->call('resetPassword');
 

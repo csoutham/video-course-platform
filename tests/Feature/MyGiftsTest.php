@@ -48,4 +48,3 @@ class MyGiftsTest extends TestCase
             ->assertSee('recipient@example.com');
     }
 }
-
