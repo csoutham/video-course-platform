@@ -9,8 +9,9 @@
 - `STRIPE_KEY`
 - `STRIPE_SECRET`
 - `STRIPE_WEBHOOK_SECRET`
-- `CF_STREAM_*`
-- `R2_*`
+- `CF_STREAM_IFRAME_BASE_URL`
+- `COURSE_RESOURCES_DISK`
+- `AWS_*` (for Cloudflare R2 when `COURSE_RESOURCES_DISK=s3`)
 
 ## Pre-Launch Checks
 
@@ -19,6 +20,9 @@
 3. Queue workers running.
 4. Stream and R2 credentials validated.
 5. Seed/imported course content is published and ordered.
+6. Every purchasable course has a non-null `stripe_price_id`.
+
+For exact setup steps, use `docs/19-stripe-cloudflare-setup.md`.
 
 ## Internal Operational Procedures
 
