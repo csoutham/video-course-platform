@@ -7,6 +7,7 @@
 - `course_modules`: grouped sections inside a course.
 - `course_lessons`: ordered lesson items within modules.
 - `lesson_resources`: downloadable files attached to lessons.
+- `lesson_progress`: per-user lesson completion state.
 - `orders`: checkout and payment outcomes.
 - `order_items`: line items, one course per item for v1.
 - `entitlements`: access grants from paid orders.
@@ -68,6 +69,17 @@
 - `sort_order`
 - `created_at`, `updated_at`
 
+### lesson_progress
+
+- `id`
+- `user_id` (index)
+- `lesson_id` (index)
+- `status` (`in_progress|completed`)
+- `started_at` (nullable)
+- `last_viewed_at` (nullable)
+- `completed_at` (nullable)
+- `created_at`, `updated_at`
+
 ### orders
 
 - `id`
@@ -123,6 +135,7 @@ Constraints:
 - One course has many modules and lessons.
 - One module has many lessons.
 - One lesson has many resources.
+- One lesson has many user progress rows.
 - One order has many order items.
 - One paid order creates entitlements for related items.
 

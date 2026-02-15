@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Learning;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\CourseLesson;
+use App\Models\LessonProgress;
 use App\Services\Learning\CourseAccessService;
 use App\Services\Learning\VideoPlaybackService;
 use Illuminate\Contracts\View\View;
@@ -43,9 +44,30 @@ class CoursePlayerController extends Controller
 
         $activeLesson->load('resources');
 
+        $activeLessonProgress = LessonProgress::query()->firstOrNew([
+            'user_id' => $request->user()->id,
+            'lesson_id' => $activeLesson->id,
+        ]);
+
+        if (! $activeLessonProgress->exists) {
+            $activeLessonProgress->status = 'in_progress';
+            $activeLessonProgress->started_at = now();
+        }
+
+        $activeLessonProgress->last_viewed_at = now();
+        $activeLessonProgress->save();
+
+        $progressByLessonId = LessonProgress::query()
+            ->where('user_id', $request->user()->id)
+            ->whereIn('lesson_id', $availableLessons->pluck('id'))
+            ->get()
+            ->keyBy('lesson_id');
+
         return view('learning.player', [
             'course' => $course,
             'activeLesson' => $activeLesson,
+            'activeLessonProgress' => $activeLessonProgress,
+            'progressByLessonId' => $progressByLessonId,
             'streamEmbedUrl' => $activeLesson->stream_video_id
                 ? $videoPlaybackService->streamEmbedUrl($activeLesson->stream_video_id)
                 : null,

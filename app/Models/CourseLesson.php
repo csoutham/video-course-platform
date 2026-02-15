@@ -45,6 +45,11 @@ class CourseLesson extends Model
         return $this->hasMany(LessonResource::class, 'lesson_id')->orderBy('sort_order');
     }
 
+    public function progress(): HasMany
+    {
+        return $this->hasMany(LessonProgress::class, 'lesson_id');
+    }
+
     public function scopePublished(Builder $query): Builder
     {
         return $query->where('is_published', true);

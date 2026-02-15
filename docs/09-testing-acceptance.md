@@ -34,6 +34,9 @@ Current Milestone 1 CI command gates:
 9. Guest purchase linked to existing email account does not create duplicate users.
 10. Course with unpublished lessons never exposes unpublished lesson playback URLs.
 11. Concurrent webhook deliveries for same session remain idempotent under race conditions.
+12. Entitled learner opening a lesson creates `in_progress` lesson progress.
+13. Entitled learner can mark a lesson complete and see completion state.
+14. Unentitled learner cannot write lesson progress for protected lessons.
 12. Policy denial paths return safe responses without leaking resource metadata.
 
 ## Suggested Test Matrix

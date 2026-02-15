@@ -18,3 +18,6 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 - Added explicit Stripe + Cloudflare environment and operations setup guide in `docs/19-stripe-cloudflare-setup.md`.
 - Added authenticated navigation links to `My Courses` in app and public layouts.
 - Catalog now routes logged-in users with active entitlements directly to the learner course player.
+- Added Phase 1 learner progress tracking with per-lesson `in_progress` and `completed` states.
+- Added lesson completion action and completion indicators in learner player navigation.
+- Added feature test coverage for lesson progress creation, completion, and access control.

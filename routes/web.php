@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Learning\CoursePlayerController;
+use App\Http\Controllers\Learning\LessonProgressController;
 use App\Http\Controllers\Learning\MyCoursesController;
 use App\Http\Controllers\Learning\ResourceDownloadController;
 use App\Http\Controllers\Payments\CheckoutController;
@@ -24,6 +25,8 @@ Route::post('/webhooks/stripe', StripeWebhookController::class)->name('webhooks.
 Route::middleware('auth')->group(function (): void {
     Route::get('/my-courses', MyCoursesController::class)->name('my-courses.index');
     Route::get('/learn/{course:slug}/{lessonSlug?}', CoursePlayerController::class)->name('learn.show');
+    Route::post('/learn/{course:slug}/{lessonSlug}/progress/complete', [LessonProgressController::class, 'complete'])
+        ->name('learn.progress.complete');
     Route::get('/resources/{resource}/download', [ResourceDownloadController::class, 'download'])->name('resources.download');
     Route::get('/resources/{resource}/stream', [ResourceDownloadController::class, 'stream'])
         ->middleware('signed')

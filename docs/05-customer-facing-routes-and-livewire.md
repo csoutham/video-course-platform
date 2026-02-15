@@ -21,6 +21,8 @@
   - List of user’s active entitlements.
 - `GET /learn/{course}/{lesson?}`
   - Course player; default first published lesson if lesson omitted.
+- `POST /learn/{course}/{lesson}/progress/complete`
+  - Mark lesson progress as completed for entitled learner.
 - `GET /resources/{resource}/download`
   - Authorize then redirect to signed R2 URL.
 

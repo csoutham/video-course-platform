@@ -18,12 +18,21 @@
                         @else
                             <ul class="space-y-1">
                                 @foreach ($module->lessons as $lesson)
+                                    @php
+                                        $lessonProgress = $progressByLessonId->get($lesson->id);
+                                        $isCompleted = $lessonProgress?->status === 'completed';
+                                    @endphp
                                     <li>
                                         <a
                                             href="{{ route('learn.show', ['course' => $course->slug, 'lessonSlug' => $lesson->slug]) }}"
-                                            class="block rounded-md px-2 py-1 text-sm {{ $activeLesson->id === $lesson->id ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100' }}"
+                                            class="flex items-center justify-between rounded-md px-2 py-1 text-sm {{ $activeLesson->id === $lesson->id ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100' }}"
                                         >
-                                            {{ $lesson->title }}
+                                            <span>{{ $lesson->title }}</span>
+                                            @if ($isCompleted)
+                                                <span class="text-xs font-semibold {{ $activeLesson->id === $lesson->id ? 'text-emerald-200' : 'text-emerald-700' }}">
+                                                    Completed
+                                                </span>
+                                            @endif
                                         </a>
                                     </li>
                                 @endforeach
@@ -41,6 +50,24 @@
                 @if ($activeLesson->summary)
                     <p class="mt-2 text-sm text-slate-600">{{ $activeLesson->summary }}</p>
                 @endif
+
+                <div class="mt-3">
+                    @if (($activeLessonProgress->status ?? null) === 'completed')
+                        <span class="inline-flex items-center rounded-md bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                            Lesson completed
+                        </span>
+                    @else
+                        <form method="POST" action="{{ route('learn.progress.complete', ['course' => $course->slug, 'lessonSlug' => $activeLesson->slug]) }}">
+                            @csrf
+                            <button
+                                type="submit"
+                                class="inline-flex items-center rounded-md border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-100"
+                            >
+                                Mark as complete
+                            </button>
+                        </form>
+                    @endif
+                </div>
             </div>
 
             <div class="aspect-video w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
