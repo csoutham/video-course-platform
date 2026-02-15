@@ -31,3 +31,8 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 - Added Cloudflare Stream duration sync command and lesson length display in curriculum/player views.
 - Replaced dashboard-first authenticated flow with `My Courses` defaults and navigation links.
 - Added authenticated receipts index and per-order Stripe-hosted receipt links.
+
+### Fixed
+
+- Stripe checkout no longer sends mutually exclusive `allow_promotion_codes` and `discounts` parameters together when a promotion code is provided.
+- Promotion code checkout now resolves human-entered code strings to active Stripe `promo_...` identifiers and returns a validation error for invalid/inactive codes.

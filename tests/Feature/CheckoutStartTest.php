@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\User;
 use App\Services\Payments\StripeCheckoutService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use InvalidArgumentException;
 use Mockery;
 use Tests\TestCase;
 
@@ -68,5 +69,27 @@ class CheckoutStartTest extends TestCase
         $this->actingAs($user)
             ->post(route('checkout.start', $course))
             ->assertRedirect('https://checkout.stripe.test/session/cs_test_456');
+    }
+
+    public function test_invalid_promotion_code_returns_validation_error(): void
+    {
+        $course = Course::factory()->published()->create([
+            'stripe_price_id' => 'price_test_123',
+        ]);
+
+        $mock = Mockery::mock(StripeCheckoutService::class);
+        $mock->shouldReceive('createCheckoutUrl')
+            ->once()
+            ->andThrow(new InvalidArgumentException('Promotion code is invalid or inactive.'));
+
+        $this->app->instance(StripeCheckoutService::class, $mock);
+
+        $this->from(route('courses.show', $course->slug))
+            ->post(route('checkout.start', $course), [
+                'email' => 'guest@example.com',
+                'promotion_code' => 'BADCODE',
+            ])
+            ->assertRedirect(route('courses.show', $course->slug))
+            ->assertSessionHasErrors('promotion_code');
     }
 }

@@ -4,7 +4,7 @@
 
 - Use Stripe Checkout hosted page.
 - Map each course to a Stripe Price ID.
-- Support optional coupon code entry.
+- Support optional promotion/coupon code entry.
 - Allow guest purchase; bind entitlement after claim/account association.
 
 ## Session Metadata Requirements
@@ -13,7 +13,7 @@ Include metadata sufficient to reconcile internal records:
 
 - `course_id` (or order draft key)
 - `customer_email`
-- `coupon_code` (if provided)
+- `promotion_code` (if provided)
 - `source` (optional analytics)
 
 ## Webhook Events Consumed

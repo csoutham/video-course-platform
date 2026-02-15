@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\User;
 use Illuminate\Support\Facades\URL;
 use InvalidArgumentException;
+use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 
 class StripeCheckoutService
@@ -25,7 +26,6 @@ class StripeCheckoutService
                 'quantity' => 1,
             ]],
             'customer_email' => $customerEmail,
-            'allow_promotion_codes' => true,
             'success_url' => URL::route('checkout.success').'?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => URL::route('checkout.cancel'),
             'metadata' => [
@@ -37,13 +37,52 @@ class StripeCheckoutService
         ];
 
         if ($promotionCode) {
+            $promotionCodeId = $this->resolvePromotionCodeId($stripe, $promotionCode);
             $params['discounts'] = [[
-                'promotion_code' => $promotionCode,
+                'promotion_code' => $promotionCodeId,
             ]];
+        } else {
+            $params['allow_promotion_codes'] = true;
         }
 
-        $session = $stripe->checkout->sessions->create($params);
+        try {
+            $session = $stripe->checkout->sessions->create($params);
+        } catch (ApiErrorException $exception) {
+            throw new InvalidArgumentException('Unable to start checkout with that promotion code.');
+        }
 
         return (string) $session->url;
+    }
+
+    private function resolvePromotionCodeId(StripeClient $stripe, string $promotionCode): string
+    {
+        $promotionCode = trim($promotionCode);
+
+        if ($promotionCode === '') {
+            throw new InvalidArgumentException('Promotion code cannot be empty.');
+        }
+
+        if (str_starts_with($promotionCode, 'promo_')) {
+            return $promotionCode;
+        }
+
+        try {
+            $matches = $stripe->promotionCodes->all([
+                'code' => $promotionCode,
+                'active' => true,
+                'limit' => 1,
+            ]);
+        } catch (ApiErrorException $exception) {
+            throw new InvalidArgumentException('Unable to validate the promotion code right now.');
+        }
+
+        $match = $matches->data[0] ?? null;
+        $matchId = is_object($match) ? ($match->id ?? null) : null;
+
+        if (! is_string($matchId) || $matchId === '') {
+            throw new InvalidArgumentException('Promotion code is invalid or inactive.');
+        }
+
+        return $matchId;
     }
 }

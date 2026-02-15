@@ -8,6 +8,7 @@ use App\Services\Audit\AuditLogService;
 use App\Services\Payments\StripeCheckoutService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use InvalidArgumentException;
 
 class CheckoutController extends Controller
 {
@@ -33,12 +34,18 @@ class CheckoutController extends Controller
             ]);
         }
 
-        $checkoutUrl = $checkoutService->createCheckoutUrl(
-            course: $course,
-            user: $request->user(),
-            customerEmail: $customerEmail,
-            promotionCode: $validated['promotion_code'] ?? null,
-        );
+        try {
+            $checkoutUrl = $checkoutService->createCheckoutUrl(
+                course: $course,
+                user: $request->user(),
+                customerEmail: $customerEmail,
+                promotionCode: $validated['promotion_code'] ?? null,
+            );
+        } catch (InvalidArgumentException $exception) {
+            return back()->withErrors([
+                'promotion_code' => $exception->getMessage(),
+            ])->withInput();
+        }
 
         $auditLogService->record(
             eventType: 'checkout_started',
