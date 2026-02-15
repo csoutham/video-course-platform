@@ -16,7 +16,9 @@
             <select id="status" name="status" class="vc-input mt-0 max-w-xs">
                 <option value="">All statuses</option>
                 @foreach ($statuses as $status)
-                    <option value="{{ $status }}" @selected($selectedStatus === $status)>{{ strtoupper($status) }}</option>
+                    <option value="{{ $status }}" @selected($selectedStatus === $status)>
+                        {{ strtoupper($status) }}
+                    </option>
                 @endforeach
             </select>
             <button type="submit" class="vc-btn-primary">Apply</button>
@@ -53,7 +55,9 @@
                                 {{ strtoupper($order->currency) }}
                                 {{ number_format($order->total_amount / 100, 2) }}
                             </td>
-                            <td class="px-4 py-3">{{ $order->giftPurchase ? strtoupper($order->giftPurchase->status) : 'No' }}</td>
+                            <td class="px-4 py-3">
+                                {{ $order->giftPurchase ? strtoupper($order->giftPurchase->status) : 'No' }}
+                            </td>
                             <td class="px-4 py-3">{{ $order->created_at?->format('Y-m-d H:i') }}</td>
                         </tr>
                     @endforeach
