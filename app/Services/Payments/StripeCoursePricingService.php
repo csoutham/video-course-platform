@@ -25,11 +25,11 @@ class StripeCoursePricingService
     }
 
     /**
-     * @return array{name: string, description?: string, metadata: array<string, string>}
+     * @return array{name: string, metadata: array<string, string>}
      */
     private function productData(Course $course): array
     {
-        $payload = [
+        return [
             'name' => $course->title,
             'metadata' => [
                 'course_id' => (string) $course->id,
@@ -37,11 +37,5 @@ class StripeCoursePricingService
                 'source' => 'videocourses-admin',
             ],
         ];
-
-        if ($course->description) {
-            $payload['description'] = $course->description;
-        }
-
-        return $payload;
     }
 }
