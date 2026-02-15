@@ -39,11 +39,9 @@
 
             <div>
                 <label for="description" class="text-sm font-medium text-slate-700">Description</label>
-                <textarea
-                    id="description"
-                    name="description"
-                    rows="4"
-                    class="vc-input">{{ old('description', $course->description) }}</textarea>
+                <textarea id="description" name="description" rows="4" class="vc-input">
+{{ old('description', $course->description) }}</textarea
+                >
                 @error('description')
                     <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
                 @enderror
@@ -104,11 +102,19 @@
 
             <div class="space-y-2">
                 <label class="flex items-center gap-2 text-sm text-slate-700">
-                    <input type="checkbox" name="is_published" value="1" @checked(old('is_published', $course->is_published)) />
+                    <input
+                        type="checkbox"
+                        name="is_published"
+                        value="1"
+                        @checked(old('is_published', $course->is_published)) />
                     Published
                 </label>
                 <label class="flex items-center gap-2 text-sm text-slate-700">
-                    <input type="checkbox" name="refresh_stripe_price" value="1" @checked(old('refresh_stripe_price')) />
+                    <input
+                        type="checkbox"
+                        name="refresh_stripe_price"
+                        value="1"
+                        @checked(old('refresh_stripe_price')) />
                     Create and assign a new Stripe price now
                 </label>
             </div>

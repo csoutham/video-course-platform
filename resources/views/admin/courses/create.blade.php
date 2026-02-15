@@ -32,7 +32,9 @@
 
             <div>
                 <label for="description" class="text-sm font-medium text-slate-700">Description</label>
-                <textarea id="description" name="description" rows="4" class="vc-input">{{ old('description') }}</textarea>
+                <textarea id="description" name="description" rows="4" class="vc-input">
+{{ old('description') }}</textarea
+                >
                 @error('description')
                     <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
                 @enderror
@@ -82,7 +84,11 @@
                     Publish course now
                 </label>
                 <label class="flex items-center gap-2 text-sm text-slate-700">
-                    <input type="checkbox" name="auto_create_stripe_price" value="1" @checked(old('auto_create_stripe_price', '1')) />
+                    <input
+                        type="checkbox"
+                        name="auto_create_stripe_price"
+                        value="1"
+                        @checked(old('auto_create_stripe_price', '1')) />
                     Auto-create Stripe price
                 </label>
             </div>

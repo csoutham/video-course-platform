@@ -44,17 +44,15 @@ class CoursesController extends Controller
             'auto_create_stripe_price' => ['nullable', 'boolean'],
         ]);
 
-        $course = DB::transaction(function () use ($validated): Course {
-            return Course::query()->create([
-                'title' => $validated['title'],
-                'slug' => $this->resolveCourseSlug($validated['slug'] ?? null, $validated['title']),
-                'description' => $validated['description'] ?? null,
-                'thumbnail_url' => $validated['thumbnail_url'] ?? null,
-                'price_amount' => (int) $validated['price_amount'],
-                'price_currency' => strtolower((string) $validated['price_currency']),
-                'is_published' => (bool) ($validated['is_published'] ?? false),
-            ]);
-        });
+        $course = DB::transaction(fn(): Course => Course::query()->create([
+            'title' => $validated['title'],
+            'slug' => $this->resolveCourseSlug($validated['slug'] ?? null, $validated['title']),
+            'description' => $validated['description'] ?? null,
+            'thumbnail_url' => $validated['thumbnail_url'] ?? null,
+            'price_amount' => (int) $validated['price_amount'],
+            'price_currency' => strtolower((string) $validated['price_currency']),
+            'is_published' => (bool) ($validated['is_published'] ?? false),
+        ]));
 
         if ((bool) ($validated['auto_create_stripe_price'] ?? true)) {
             try {
