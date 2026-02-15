@@ -25,6 +25,13 @@
                     class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
                     Receipts
                 </a>
+                @can('access-admin')
+                    <a
+                        href="{{ route('admin.dashboard') }}"
+                        class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
+                        Admin
+                    </a>
+                @endcan
                 <a href="{{ route('profile') }}" class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
                     Profile
                 </a>

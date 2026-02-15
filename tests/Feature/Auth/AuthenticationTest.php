@@ -67,7 +67,21 @@ class AuthenticationTest extends TestCase
             ->assertSee('Courses')
             ->assertSee('My Courses')
             ->assertSee('My Gifts')
+            ->assertDontSee('Admin')
             ->assertSee('Profile');
+    }
+
+    public function test_admin_users_can_see_admin_navigation_link(): void
+    {
+        $user = User::factory()->admin()->create();
+
+        $this->actingAs($user);
+
+        $response = $this->get('/my-courses');
+
+        $response
+            ->assertOk()
+            ->assertSee('Admin');
     }
 
     public function test_users_can_logout(): void

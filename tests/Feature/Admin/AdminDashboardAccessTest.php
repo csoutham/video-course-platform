@@ -30,6 +30,6 @@ class AdminDashboardAccessTest extends TestCase
 
         $this->get(route('admin.dashboard'))
             ->assertOk()
-            ->assertSeeText('Admin area is active.');
+            ->assertSeeText('High-level operational metrics');
     }
 }
