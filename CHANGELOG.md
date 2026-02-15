@@ -24,3 +24,5 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 - Course player now defaults `/learn/{course}` to the next incomplete lesson for returning learners.
 - Added previous/next lesson navigation controls in the learner player.
 - Added optional Cloudflare Stream signed-token playback mode with configuration and test coverage.
+- Added Phase 2 video progress tracking with heartbeat endpoint and per-lesson playback metrics.
+- Added automatic lesson completion on configurable video progress threshold.

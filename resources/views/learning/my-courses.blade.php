@@ -21,8 +21,7 @@
 
                         <a
                             href="{{ route('learn.show', ['course' => $course->slug]) }}"
-                            class="mt-4 inline-flex rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
-                        >
+                            class="mt-4 inline-flex rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
                             Continue learning
                         </a>
                     </article>

@@ -22,7 +22,10 @@ Local task IDs use `VC-M6-XX`.
 | VC-M6-03 | Implement explicit lesson completion action in player UI | High | `done` | VC-M6-01 |
 | VC-M6-04 | Surface per-lesson completion indicators in module navigation | Medium | `done` | VC-M6-01 |
 | VC-M6-05 | Add acceptance tests for progress creation/completion/authorization | Urgent | `done` | VC-M6-02, VC-M6-03 |
-| VC-M6-06 | Plan Phase 2 video-progress event ingestion contract | Medium | `todo` | VC-M6-05 |
+| VC-M6-06 | Plan Phase 2 video-progress event ingestion contract | Medium | `done` | VC-M6-05 |
+| VC-M6-07 | Implement video heartbeat progress endpoint and persistence fields | High | `done` | VC-M6-06 |
+| VC-M6-08 | Wire player telemetry events to progress heartbeat endpoint | High | `done` | VC-M6-07 |
+| VC-M6-09 | Add Phase 2 acceptance tests for video progress + auto-complete | Urgent | `done` | VC-M6-07, VC-M6-08 |
 
 ## Progress State Rules (Phase 1)
 
@@ -36,7 +39,15 @@ Local task IDs use `VC-M6-XX`.
 - Add throttled heartbeat endpoint for player telemetry updates.
 - Keep provider integration abstract to support future non-Cloudflare players.
 
+## Phase 2 Implementation (Done)
+
+- Added `playback_position_seconds`, `video_duration_seconds`, and `percent_complete` to `lesson_progress`.
+- Added `POST /learn/{course}/{lesson}/progress/video` for entitled heartbeat writes.
+- Added player telemetry updates via Cloudflare Stream SDK time/ended events.
+- Added automatic lesson completion when configured completion threshold is reached.
+
 ## Change Log
 
 - 2026-02-15: Created Milestone 6 backlog and started VC-M6-01.
 - 2026-02-15: Marked VC-M6-01 through VC-M6-05 done after lesson-progress schema, player UX updates, and feature tests were implemented.
+- 2026-02-15: Marked VC-M6-06 through VC-M6-09 done after shipping video heartbeat telemetry, persistence, and tests.

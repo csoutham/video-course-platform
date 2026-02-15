@@ -73,6 +73,7 @@
             <div class="aspect-video w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
                 @if ($streamEmbedUrl)
                     <iframe
+                        id="stream-player"
                         src="{{ $streamEmbedUrl }}"
                         class="h-full w-full"
                         allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
@@ -131,4 +132,62 @@
             </div>
         </section>
     </div>
+
+    @if ($streamEmbedUrl)
+        <script src="https://embed.videodelivery.net/embed/sdk.latest.js"></script>
+        <script>
+            (() => {
+                const iframe = document.getElementById('stream-player');
+                if (!iframe || typeof window.Stream !== 'function') {
+                    return;
+                }
+
+                const player = window.Stream(iframe);
+                const heartbeatSeconds = {{ $videoProgressHeartbeatSeconds }};
+                const endpoint = @json(route('learn.progress.video', ['course' => $course->slug, 'lessonSlug' => $activeLesson->slug]));
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+                let lastSentAt = 0;
+
+                const sendHeartbeat = (payload = {}) => {
+                    const now = Date.now();
+
+                    if (!payload.is_completed && now - lastSentAt < heartbeatSeconds * 1000) {
+                        return;
+                    }
+
+                    lastSentAt = now;
+
+                    fetch(endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken || '',
+                            'Accept': 'application/json',
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify(payload),
+                    }).catch(() => {
+                        // Do not interrupt playback if telemetry call fails.
+                    });
+                };
+
+                player.addEventListener('timeupdate', (event) => {
+                    sendHeartbeat({
+                        position_seconds: Math.max(0, Math.floor(event.time || 0)),
+                        duration_seconds: event.duration ? Math.max(1, Math.floor(event.duration)) : null,
+                        is_completed: false,
+                    });
+                });
+
+                player.addEventListener('ended', (event) => {
+                    sendHeartbeat({
+                        position_seconds: Math.max(0, Math.floor(event.time || event.duration || 0)),
+                        duration_seconds: event.duration ? Math.max(1, Math.floor(event.duration)) : null,
+                        is_completed: true,
+                    });
+                });
+            })();
+        </script>
+    @endif
 </x-public-layout>

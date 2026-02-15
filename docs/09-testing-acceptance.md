@@ -37,6 +37,8 @@ Current Milestone 1 CI command gates:
 12. Entitled learner opening a lesson creates `in_progress` lesson progress.
 13. Entitled learner can mark a lesson complete and see completion state.
 14. Unentitled learner cannot write lesson progress for protected lessons.
+15. Entitled learner video heartbeat persists playback position and percent complete.
+16. Lesson auto-completes when video progress crosses configured threshold.
 12. Policy denial paths return safe responses without leaking resource metadata.
 
 ## Suggested Test Matrix

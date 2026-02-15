@@ -88,6 +88,89 @@ class LessonProgressTest extends TestCase
         ]);
     }
 
+    public function test_entitled_user_can_store_video_progress_heartbeat(): void
+    {
+        [$user, $course, $lesson] = $this->seedEntitledLesson();
+
+        $this->actingAs($user)
+            ->postJson(route('learn.progress.video', ['course' => $course->slug, 'lessonSlug' => $lesson->slug]), [
+                'position_seconds' => 42,
+                'duration_seconds' => 120,
+            ])
+            ->assertOk()
+            ->assertJson([
+                'status' => 'in_progress',
+                'percent_complete' => 35,
+            ]);
+
+        $this->assertDatabaseHas('lesson_progress', [
+            'user_id' => $user->id,
+            'lesson_id' => $lesson->id,
+            'status' => 'in_progress',
+            'playback_position_seconds' => 42,
+            'video_duration_seconds' => 120,
+            'percent_complete' => 35,
+        ]);
+    }
+
+    public function test_video_progress_auto_completes_when_threshold_reached(): void
+    {
+        [$user, $course, $lesson] = $this->seedEntitledLesson();
+
+        config()->set('learning.video_autocomplete_percent', 90);
+
+        $this->actingAs($user)
+            ->postJson(route('learn.progress.video', ['course' => $course->slug, 'lessonSlug' => $lesson->slug]), [
+                'position_seconds' => 95,
+                'duration_seconds' => 100,
+            ])
+            ->assertOk()
+            ->assertJson([
+                'status' => 'completed',
+                'percent_complete' => 100,
+            ]);
+
+        $this->assertDatabaseHas('lesson_progress', [
+            'user_id' => $user->id,
+            'lesson_id' => $lesson->id,
+            'status' => 'completed',
+            'percent_complete' => 100,
+        ]);
+
+        $this->assertNotNull(LessonProgress::query()->firstWhere('lesson_id', $lesson->id)?->completed_at);
+    }
+
+    public function test_unentitled_user_cannot_store_video_progress_heartbeat(): void
+    {
+        $course = Course::factory()->published()->create();
+
+        $module = CourseModule::factory()->create([
+            'course_id' => $course->id,
+            'sort_order' => 1,
+        ]);
+
+        $lesson = CourseLesson::factory()->published()->create([
+            'course_id' => $course->id,
+            'module_id' => $module->id,
+            'slug' => 'video-restricted-lesson',
+            'sort_order' => 1,
+        ]);
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->postJson(route('learn.progress.video', ['course' => $course->slug, 'lessonSlug' => $lesson->slug]), [
+                'position_seconds' => 10,
+                'duration_seconds' => 100,
+            ])
+            ->assertForbidden();
+
+        $this->assertDatabaseMissing('lesson_progress', [
+            'user_id' => $user->id,
+            'lesson_id' => $lesson->id,
+        ]);
+    }
+
     public function test_default_player_route_uses_next_incomplete_lesson(): void
     {
         [$user, $course, $lessonOne, $lessonTwo] = $this->seedEntitledLessons();

@@ -18,6 +18,13 @@ class LearningAccessTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        config()->set('services.cloudflare_stream.signed_urls_enabled', false);
+    }
+
     public function test_my_courses_lists_only_entitled_published_courses(): void
     {
         $user = User::factory()->create();

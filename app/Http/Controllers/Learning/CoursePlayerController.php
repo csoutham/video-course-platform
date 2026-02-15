@@ -87,6 +87,7 @@ class CoursePlayerController extends Controller
             'progressByLessonId' => $progressByLessonId,
             'previousLesson' => $previousLesson,
             'nextLesson' => $nextLesson,
+            'videoProgressHeartbeatSeconds' => max(5, (int) config('learning.video_heartbeat_seconds', 15)),
             'streamEmbedUrl' => $activeLesson->stream_video_id
                 ? $videoPlaybackService->streamEmbedUrl($activeLesson->stream_video_id)
                 : null,

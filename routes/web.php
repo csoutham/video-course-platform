@@ -27,6 +27,8 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/learn/{course:slug}/{lessonSlug?}', CoursePlayerController::class)->name('learn.show');
     Route::post('/learn/{course:slug}/{lessonSlug}/progress/complete', [LessonProgressController::class, 'complete'])
         ->name('learn.progress.complete');
+    Route::post('/learn/{course:slug}/{lessonSlug}/progress/video', [LessonProgressController::class, 'video'])
+        ->name('learn.progress.video');
     Route::get('/resources/{resource}/download', [ResourceDownloadController::class, 'download'])->name('resources.download');
     Route::get('/resources/{resource}/stream', [ResourceDownloadController::class, 'stream'])
         ->middleware('signed')

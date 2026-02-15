@@ -60,3 +60,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-14: Added Cloudflare Stream iframe playback URL integration in learner player flow.
 - 2026-02-15: Added Milestone 6 plan and started Phase 1 per-lesson learner progress implementation.
 - 2026-02-15: Completed Milestone 6 Phase 1 (lesson-level progress tracking and completion indicators); Phase 2 video-progress remains planned.
+- 2026-02-15: Completed Milestone 6 Phase 2 with video heartbeat persistence, auto-completion thresholds, and player telemetry wiring.

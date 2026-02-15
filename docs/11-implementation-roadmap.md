@@ -62,7 +62,7 @@ Definition of done:
 - Surface completed-state indicators in learner navigation.
 - Add explicit complete action in learner player.
 - Add acceptance tests for progress creation and completion authorization.
-- Phase 2 (next): add in-video progress persistence (playback position and percent complete).
+- Phase 2: add in-video progress persistence (playback position and percent complete).
 
 Definition of done:
 
