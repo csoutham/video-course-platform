@@ -34,6 +34,9 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 - Added post-purchase receipt email delivery on successful Stripe paid webhooks.
 - Guest purchase receipt emails now include the claim-purchase link.
 - Added logout action to shared logged-in navigation.
+- Added gift purchase flow with recipient checkout fields and gift claim links.
+- Added webhook-backed gift purchase records, gift claim token lifecycle, and gift redemption flow.
+- Added gift delivery and buyer confirmation emails plus authenticated `My Gifts` tracking page.
 
 ### Fixed
 

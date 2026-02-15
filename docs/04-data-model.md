@@ -10,6 +10,7 @@
 - `lesson_progress`: per-user lesson completion state.
 - `orders`: checkout and payment outcomes.
 - `order_items`: line items, one course per item for v1.
+- `gift_purchases`: gift order metadata and recipient claim status.
 - `entitlements`: access grants from paid orders.
 - `stripe_events`: idempotent webhook processing ledger.
 
@@ -124,6 +125,28 @@ Constraints:
 
 - Unique active entitlement per `user_id + course_id`.
 
+### gift_purchases
+
+- `id`
+- `order_id` (unique)
+- `course_id` (index)
+- `buyer_user_id` (nullable index)
+- `buyer_email`
+- `recipient_email` (index)
+- `recipient_name` (nullable)
+- `gift_message` (nullable text)
+- `status` (`pending|delivered|claimed|revoked`)
+- `delivered_at` (nullable)
+- `claimed_by_user_id` (nullable index)
+- `claimed_at` (nullable)
+- `created_at`, `updated_at`
+
+### purchase_claim_tokens
+
+- Existing table supports both order and gift claims.
+- `purpose` (`order_claim|gift_claim`)
+- `gift_purchase_id` (nullable unique for gift claim tokens)
+
 ### stripe_events
 
 - `id`
@@ -142,6 +165,7 @@ Constraints:
 - One lesson has many user progress rows.
 - One order has many order items.
 - One paid order creates entitlements for related items.
+- Gift purchases map one-to-one to orders and may later create entitlement for recipient user.
 
 ## Soft Delete / Audit Policy
 

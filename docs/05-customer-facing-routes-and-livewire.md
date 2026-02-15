@@ -9,18 +9,24 @@
 - `GET /courses/{slug}`
   - Course detail and buy CTA.
 - `POST /checkout/{course}`
-  - Creates Stripe Checkout Session.
+  - Creates Stripe Checkout Session for self-purchase or gift purchase.
 - `GET /checkout/success`
   - User-facing confirmation state pending webhook finalization.
 - `GET /checkout/cancel`
   - Payment canceled message and retry CTA.
-- `GET /claim-purchase`
+- `GET /claim-purchase/{token}`
   - Claim account from purchase email token.
+- `GET /gift-claim/{token}`
+  - Claim gifted course from recipient claim token.
+- `POST /gift-claim/{token}`
+  - Redeem gifted course into recipient account.
 
 ## Authenticated Routes
 
 - `GET /my-courses`
   - List of user’s active entitlements.
+- `GET /gifts`
+  - List of gifts purchased by current authenticated user.
 - `GET /receipts`
   - List of user's paid/refunded order receipts.
 - `GET /receipts/{order}`
@@ -41,7 +47,7 @@
   - Inputs: course slug.
   - Outputs: overview, curriculum preview, purchase CTA.
 - `CheckoutButton`
-  - Inputs: course ID, optional coupon code.
+  - Inputs: course ID, optional coupon code, optional gift recipient fields.
   - Action: create Stripe session and redirect.
 - `MyCourses`
   - Inputs: authenticated user.

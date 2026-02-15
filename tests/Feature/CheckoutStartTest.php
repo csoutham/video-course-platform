@@ -33,9 +33,12 @@ class CheckoutStartTest extends TestCase
         ]);
 
         $mock = Mockery::mock(StripeCheckoutService::class);
-        $mock->shouldReceive('createCheckoutUrl')
+        $mock->shouldReceive('createCheckoutSession')
             ->once()
-            ->andReturn('https://checkout.stripe.test/session/cs_test_123');
+            ->andReturn([
+                'url' => 'https://checkout.stripe.test/session/cs_test_123',
+                'session_id' => 'cs_test_123',
+            ]);
 
         $this->app->instance(StripeCheckoutService::class, $mock);
 
@@ -60,9 +63,12 @@ class CheckoutStartTest extends TestCase
         ]);
 
         $mock = Mockery::mock(StripeCheckoutService::class);
-        $mock->shouldReceive('createCheckoutUrl')
+        $mock->shouldReceive('createCheckoutSession')
             ->once()
-            ->andReturn('https://checkout.stripe.test/session/cs_test_456');
+            ->andReturn([
+                'url' => 'https://checkout.stripe.test/session/cs_test_456',
+                'session_id' => 'cs_test_456',
+            ]);
 
         $this->app->instance(StripeCheckoutService::class, $mock);
 
@@ -78,7 +84,7 @@ class CheckoutStartTest extends TestCase
         ]);
 
         $mock = Mockery::mock(StripeCheckoutService::class);
-        $mock->shouldReceive('createCheckoutUrl')
+        $mock->shouldReceive('createCheckoutSession')
             ->once()
             ->andThrow(new InvalidArgumentException('Promotion code is invalid or inactive.'));
 
@@ -91,5 +97,40 @@ class CheckoutStartTest extends TestCase
             ])
             ->assertRedirect(route('courses.show', $course->slug))
             ->assertSessionHasErrors('promotion_code');
+    }
+
+    public function test_gift_checkout_requires_recipient_email_when_enabled(): void
+    {
+        config()->set('learning.gifts_enabled', true);
+
+        $course = Course::factory()->published()->create([
+            'stripe_price_id' => 'price_test_123',
+        ]);
+
+        $this->from(route('courses.show', $course->slug))
+            ->post(route('checkout.start', $course), [
+                'email' => 'buyer@example.com',
+                'is_gift' => '1',
+            ])
+            ->assertRedirect(route('courses.show', $course->slug))
+            ->assertSessionHasErrors('recipient_email');
+    }
+
+    public function test_gift_checkout_is_blocked_when_feature_is_disabled(): void
+    {
+        config()->set('learning.gifts_enabled', false);
+
+        $course = Course::factory()->published()->create([
+            'stripe_price_id' => 'price_test_123',
+        ]);
+
+        $this->from(route('courses.show', $course->slug))
+            ->post(route('checkout.start', $course), [
+                'email' => 'buyer@example.com',
+                'is_gift' => '1',
+                'recipient_email' => 'friend@example.com',
+            ])
+            ->assertRedirect(route('courses.show', $course->slug))
+            ->assertSessionHasErrors('recipient_email');
     }
 }

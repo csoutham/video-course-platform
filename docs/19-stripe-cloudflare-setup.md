@@ -31,6 +31,7 @@ AWS_USE_PATH_STYLE_ENDPOINT=true
 MAIL_MAILER=log
 MAIL_FROM_ADDRESS=hello@example.com
 MAIL_FROM_NAME="VideoCourses"
+GIFTS_ENABLED=false
 ```
 
 Notes:
@@ -39,6 +40,7 @@ Notes:
 - `CF_STREAM_IFRAME_BASE_URL` can remain the default unless you have a custom delivery domain.
 - For signed Stream playback, configure `CF_STREAM_*` signing values and enable signed URLs in Cloudflare Stream.
 - `MAIL_MAILER` must be configured in each environment to deliver purchase receipt emails.
+- Set `GIFTS_ENABLED=true` only when gift flows are ready for production use.
 
 ## 2) Stripe Product/Price Mapping (Critical)
 
@@ -153,6 +155,7 @@ php artisan tinker --execute="App\\Models\\CourseResource::query()->select('id',
 6. Complete claim flow.
 7. Confirm access appears under `My Courses`.
 8. Confirm receipt email is delivered with Stripe receipt link, and guest purchases include the claim link.
+9. (If gifts enabled) run a gift checkout and confirm recipient + buyer gift emails are delivered.
 
 If payment succeeded but no claim button appears:
 - Wait 3-10 seconds and click `Refresh status` on success page.

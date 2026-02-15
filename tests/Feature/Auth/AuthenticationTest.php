@@ -66,6 +66,7 @@ class AuthenticationTest extends TestCase
             ->assertOk()
             ->assertSee('Courses')
             ->assertSee('My Courses')
+            ->assertSee('My Gifts')
             ->assertSee('Profile');
     }
 

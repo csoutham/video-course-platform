@@ -6,6 +6,7 @@ This folder contains the implementation-ready documentation for VideoCourses v1,
 
 - Curated course catalog for a single creator, business, or project deployment.
 - One-time course purchases via Stripe Checkout with coupon support.
+- Optional gift purchases with recipient claim links and email delivery.
 - Guest checkout with post-purchase account claim flow.
 - Authenticated learner area for course playback.
 - Authenticated receipt downloads for paid orders.

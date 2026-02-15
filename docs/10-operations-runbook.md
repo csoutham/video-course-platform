@@ -15,6 +15,7 @@
 - `CF_STREAM_ACCOUNT_ID` (if signed URLs enabled)
 - `CF_STREAM_API_TOKEN` (if signed URLs enabled)
 - `CF_STREAM_CUSTOMER_CODE` (if signed URLs enabled)
+- `GIFTS_ENABLED`
 - `COURSE_RESOURCES_DISK`
 - `AWS_*` (for Cloudflare R2 when `COURSE_RESOURCES_DISK=s3`)
 
@@ -45,6 +46,12 @@ For exact setup steps, use `docs/19-stripe-cloudflare-setup.md`.
 - Run deterministic replay command:
   - `php artisan videocourses:stripe-reprocess {stripe_event_id}`
 
+### Resend Gift Claim Email (manual)
+
+1. Find gift row and current claim token by `gift_purchases.id` / `order_id`.
+2. If token is expired, issue a new one using `GiftClaimService` in Tinker.
+3. Resend delivery email with `GiftDeliveryMail` and claim URL.
+
 ### Manual Entitlement Override
 
 - Grant via command:
@@ -66,6 +73,7 @@ For exact setup steps, use `docs/19-stripe-cloudflare-setup.md`.
   - `resource_stream_served`
   - `resource_download_denied`
   - `purchase_claim_completed`
+  - `gift_claim_completed`
 
 ## Common Incident Playbooks
 

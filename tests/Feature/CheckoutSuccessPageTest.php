@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Course;
+use App\Models\GiftPurchase;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\PurchaseClaimToken;
@@ -76,5 +77,34 @@ class CheckoutSuccessPageTest extends TestCase
             ->assertOk()
             ->assertSee('finalizing your purchase', false)
             ->assertSee('Refresh status');
+    }
+
+    public function test_gift_order_shows_gift_sent_guidance(): void
+    {
+        $course = Course::factory()->published()->create();
+
+        $order = Order::query()->create([
+            'email' => 'buyer@example.com',
+            'stripe_checkout_session_id' => 'cs_success_gift_1',
+            'status' => 'paid',
+            'subtotal_amount' => 9900,
+            'discount_amount' => 0,
+            'total_amount' => 9900,
+            'currency' => 'usd',
+            'paid_at' => now(),
+        ]);
+
+        GiftPurchase::query()->create([
+            'order_id' => $order->id,
+            'course_id' => $course->id,
+            'buyer_email' => 'buyer@example.com',
+            'recipient_email' => 'recipient@example.com',
+            'status' => 'delivered',
+            'delivered_at' => now(),
+        ]);
+
+        $this->get(route('checkout.success', ['session_id' => 'cs_success_gift_1']))
+            ->assertOk()
+            ->assertSee('gift purchase is confirmed', false);
     }
 }

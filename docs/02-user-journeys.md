@@ -59,6 +59,21 @@ Success criteria:
 
 - No protected media or files are leaked.
 
+## Journey F: Gift Purchase and Recipient Claim
+
+1. Buyer opens course page and enables `Gift this course`.
+2. Buyer enters recipient details and optional message.
+3. Buyer completes Stripe checkout.
+4. Webhook marks order paid, creates gift record, and issues gift claim token.
+5. Recipient receives gift email with claim link.
+6. Recipient opens claim link and either logs in or creates account with recipient email.
+7. Gift is marked claimed and entitlement is granted to recipient account.
+
+Success criteria:
+
+- Buyer does not receive entitlement for gift orders.
+- Recipient receives entitlement only after successful claim.
+
 ## Payment Failure and Cancel Path
 
 - If checkout is canceled, no entitlement is created.

@@ -5,6 +5,7 @@
 - Use Stripe Checkout hosted page.
 - Map each course to a Stripe Price ID.
 - Support optional promotion/coupon code entry.
+- Support optional gift checkout mode with recipient details.
 - Allow guest purchase; bind entitlement after claim/account association.
 - Send purchase receipt email after successful paid webhook processing.
 - Include claim link in receipt email for guest purchases.
@@ -16,6 +17,10 @@ Include metadata sufficient to reconcile internal records:
 - `course_id` (or order draft key)
 - `customer_email`
 - `promotion_code` (if provided)
+- `is_gift` (`0|1`)
+- `recipient_email` (if gift)
+- `recipient_name` (if gift and provided)
+- `gift_message_present` (`0|1`)
 - `source` (optional analytics)
 
 ## Webhook Events Consumed
@@ -34,7 +39,8 @@ Include metadata sufficient to reconcile internal records:
 5. Apply deterministic state transition.
 6. Grant or revoke entitlement accordingly.
 7. Send receipt email after commit for first paid transition.
-8. Mark event processed timestamp.
+8. For gift orders, create gift record and send recipient + buyer gift emails.
+9. Mark event processed timestamp.
 
 ## Order State Transitions
 
@@ -47,6 +53,7 @@ Include metadata sufficient to reconcile internal records:
 - Grant `active` entitlement on first successful paid state.
 - Ensure duplicate events do not create duplicate entitlements.
 - Revoke entitlement on refunded order according to policy.
+- Gift order: skip buyer entitlement grant; grant entitlement only when recipient claims.
 
 ## Error Handling
 
