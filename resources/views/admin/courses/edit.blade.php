@@ -1,4 +1,4 @@
-<x-public-layout title="Edit Course">
+<x-public-layout maxWidth="max-w-none" containerPadding="px-4 py-6 lg:px-8" title="Edit Course">
     <section class="vc-panel p-6">
         <div class="flex flex-wrap items-start justify-between gap-3">
             <div class="vc-heading-block">

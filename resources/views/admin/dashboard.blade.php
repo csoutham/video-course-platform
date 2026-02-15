@@ -1,4 +1,4 @@
-<x-public-layout title="Admin Dashboard">
+<x-public-layout maxWidth="max-w-none" containerPadding="px-4 py-6 lg:px-8" title="Admin Dashboard">
     <section class="vc-panel p-6">
         <div class="vc-heading-block">
             <p class="vc-eyebrow">Admin</p>
