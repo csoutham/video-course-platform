@@ -10,6 +10,11 @@
 - `STRIPE_SECRET`
 - `STRIPE_WEBHOOK_SECRET`
 - `CF_STREAM_IFRAME_BASE_URL`
+- `CF_STREAM_SIGNED_URLS_ENABLED` (optional hardening)
+- `CF_STREAM_TOKEN_TTL_SECONDS` (if signed URLs enabled)
+- `CF_STREAM_ACCOUNT_ID` (if signed URLs enabled)
+- `CF_STREAM_API_TOKEN` (if signed URLs enabled)
+- `CF_STREAM_CUSTOMER_CODE` (if signed URLs enabled)
 - `COURSE_RESOURCES_DISK`
 - `AWS_*` (for Cloudflare R2 when `COURSE_RESOURCES_DISK=s3`)
 

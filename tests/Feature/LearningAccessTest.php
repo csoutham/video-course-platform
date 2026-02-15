@@ -10,6 +10,7 @@ use App\Models\LessonResource;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -79,6 +80,30 @@ class LearningAccessTest extends TestCase
         $this->actingAs($user)
             ->get(route('learn.show', ['course' => $course->slug]))
             ->assertForbidden();
+    }
+
+    public function test_signed_stream_url_is_used_when_enabled(): void
+    {
+        [$user, $course, $lesson] = $this->seedEntitledLesson();
+
+        config()->set('services.cloudflare_stream.signed_urls_enabled', true);
+        config()->set('services.cloudflare_stream.account_id', 'acct_test_1');
+        config()->set('services.cloudflare_stream.api_token', 'token_test_1');
+        config()->set('services.cloudflare_stream.customer_code', 'abc123');
+
+        Http::fake([
+            'https://api.cloudflare.com/client/v4/accounts/acct_test_1/stream/sample-stream-video-id/token' => Http::response([
+                'success' => true,
+                'result' => [
+                    'token' => 'signed_stream_token_1',
+                ],
+            ], 200),
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('learn.show', ['course' => $course->slug]))
+            ->assertOk()
+            ->assertSee('https://customer-abc123.cloudflarestream.com/signed_stream_token_1/iframe', false);
     }
 
     public function test_resource_download_generates_signed_url_and_allows_entitled_user_download(): void

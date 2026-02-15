@@ -14,6 +14,11 @@ STRIPE_SECRET=sk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 
 CF_STREAM_IFRAME_BASE_URL=https://iframe.videodelivery.net
+CF_STREAM_SIGNED_URLS_ENABLED=false
+CF_STREAM_TOKEN_TTL_SECONDS=3600
+CF_STREAM_ACCOUNT_ID=
+CF_STREAM_API_TOKEN=
+CF_STREAM_CUSTOMER_CODE=
 
 COURSE_RESOURCES_DISK=s3
 AWS_ACCESS_KEY_ID=<r2-access-key-id>
@@ -28,6 +33,7 @@ Notes:
 - `STRIPE_WEBHOOK_SECRET` must match the currently active endpoint secret from Stripe CLI or Stripe Dashboard.
 - `COURSE_RESOURCES_DISK=s3` is required for Cloudflare R2-backed resource downloads.
 - `CF_STREAM_IFRAME_BASE_URL` can remain the default unless you have a custom delivery domain.
+- For signed Stream playback, configure `CF_STREAM_*` signing values and enable signed URLs in Cloudflare Stream.
 
 ## 2) Stripe Product/Price Mapping (Critical)
 
@@ -94,6 +100,22 @@ Quick data check:
 
 ```bash
 php artisan tinker --execute="App\\Models\\Lesson::query()->select('id','slug','video_provider','video_source')->get();"
+```
+
+### Optional Stream hardening with signed URLs
+
+1. In Cloudflare Stream, enable signed URL requirement for private delivery.
+2. Create Stream API token with permissions needed to create playback tokens.
+3. Set:
+   - `CF_STREAM_SIGNED_URLS_ENABLED=true`
+   - `CF_STREAM_ACCOUNT_ID`
+   - `CF_STREAM_API_TOKEN`
+   - `CF_STREAM_CUSTOMER_CODE`
+   - `CF_STREAM_TOKEN_TTL_SECONDS` (for example `900`)
+4. Clear config cache:
+
+```bash
+php artisan config:clear
 ```
 
 ## 5) Cloudflare R2 Setup

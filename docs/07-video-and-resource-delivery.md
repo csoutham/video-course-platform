@@ -18,6 +18,24 @@ Playback URL resolution:
 3. App renders player context only for authorized users.
 4. Unentitled users are blocked before video context is emitted.
 
+### Optional Hardening: Signed Stream URLs
+
+Use signed Stream URLs for production hardening.
+
+Required env when enabled:
+
+- `CF_STREAM_SIGNED_URLS_ENABLED=true`
+- `CF_STREAM_ACCOUNT_ID`
+- `CF_STREAM_API_TOKEN`
+- `CF_STREAM_CUSTOMER_CODE`
+- `CF_STREAM_TOKEN_TTL_SECONDS` (recommended short TTL)
+
+Implementation behavior:
+
+1. App requests a signed Stream token from Cloudflare API per playback request.
+2. App renders tokenized embed URL at `https://customer-{code}.cloudflarestream.com/{token}/iframe`.
+3. Missing/invalid signing config fails closed.
+
 ### Operational Notes
 
 - Keep unpublished lessons hidden from customer routes.

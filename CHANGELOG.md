@@ -21,3 +21,6 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 - Added Phase 1 learner progress tracking with per-lesson `in_progress` and `completed` states.
 - Added lesson completion action and completion indicators in learner player navigation.
 - Added feature test coverage for lesson progress creation, completion, and access control.
+- Course player now defaults `/learn/{course}` to the next incomplete lesson for returning learners.
+- Added previous/next lesson navigation controls in the learner player.
+- Added optional Cloudflare Stream signed-token playback mode with configuration and test coverage.

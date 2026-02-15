@@ -43,6 +43,11 @@ return [
 
     'cloudflare_stream' => [
         'iframe_base_url' => env('CF_STREAM_IFRAME_BASE_URL', 'https://iframe.videodelivery.net'),
+        'signed_urls_enabled' => (bool) env('CF_STREAM_SIGNED_URLS_ENABLED', false),
+        'token_ttl_seconds' => (int) env('CF_STREAM_TOKEN_TTL_SECONDS', 3600),
+        'account_id' => env('CF_STREAM_ACCOUNT_ID'),
+        'api_token' => env('CF_STREAM_API_TOKEN'),
+        'customer_code' => env('CF_STREAM_CUSTOMER_CODE'),
     ],
 
 ];
