@@ -49,7 +49,14 @@ A course is purchasable only when `courses.stripe_price_id` is populated.
 If missing, checkout returns:
 - `Course is not purchasable yet.`
 
-### Create product and one-time price in Stripe (Dashboard)
+### Option A: Create via admin (recommended)
+
+1. Open `/admin/courses/create`.
+2. Enter course fields and keep `Auto-create Stripe price` enabled.
+3. Save course and verify `stripe_price_id` exists on `/admin/courses/{course}/edit`.
+4. Publish course when ready.
+
+### Option B: Create product and one-time price in Stripe Dashboard (manual)
 
 1. Create Product for each course.
 2. Add one-time Price in USD.
@@ -98,7 +105,7 @@ Recommended events for this app:
 
 ## 4) Cloudflare Stream Setup
 
-Per lesson, set `video_provider=cloudflare_stream` and store the Stream video UID in `video_source`.
+Per lesson, set `course_lessons.stream_video_id` to the Stream video UID.
 
 Expected embed URL shape:
 - `https://iframe.videodelivery.net/<video_uid>`
@@ -106,7 +113,7 @@ Expected embed URL shape:
 Quick data check:
 
 ```bash
-php artisan tinker --execute="App\\Models\\Lesson::query()->select('id','slug','video_provider','video_source')->get();"
+php artisan tinker --execute="App\\Models\\CourseLesson::query()->select('id','course_id','slug','stream_video_id')->get();"
 ```
 
 Sync stored lesson durations from Cloudflare Stream metadata:
@@ -114,6 +121,10 @@ Sync stored lesson durations from Cloudflare Stream metadata:
 ```bash
 php artisan videocourses:stream-sync-durations
 ```
+
+Admin workflow:
+- In `/admin/courses/{course}/edit`, add/edit lessons and choose Stream videos directly from uploaded assets.
+- Use the `Sync` option on lesson update to pull duration from Stream metadata immediately.
 
 ### Optional Stream hardening with signed URLs
 
@@ -142,7 +153,7 @@ php artisan config:clear
 Quick check:
 
 ```bash
-php artisan tinker --execute="App\\Models\\CourseResource::query()->select('id','disk','path')->get();"
+php artisan tinker --execute="App\\Models\\LessonResource::query()->select('id','lesson_id','disk','path')->get();"
 ```
 
 ## 6) End-to-End Test Recipe

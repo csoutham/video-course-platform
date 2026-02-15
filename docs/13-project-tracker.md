@@ -65,3 +65,5 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-16: Added Milestone 7 planning docs for frontend redesign and Filament admin panel architecture.
 - 2026-02-16: Started Milestone 7 frontend redesign implementation with shared visual system and core customer-surface restyling.
 - 2026-02-16: Started Milestone 7 admin implementation with custom `auth + is_admin` dashboard foundation (`/admin`, `/admin/courses`, `/admin/orders`) and access-control tests.
+- 2026-02-16: Added admin course CRUD with automatic Stripe price provisioning and manual refresh flow.
+- 2026-02-16: Added nested module/lesson CRUD in admin course editor with Cloudflare Stream video lookup and duration sync support.

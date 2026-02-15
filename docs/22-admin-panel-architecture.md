@@ -21,7 +21,11 @@ Replace DB/manual operational workflows with a secure, maintainable admin interf
 
 - `users.is_admin` is implemented and enforced through `auth + admin` middleware.
 - `/admin` dashboard is implemented with operational metrics and recent orders.
-- `/admin/courses` read-only listing is implemented.
+- `/admin/courses` CRUD is implemented for course create/edit/update.
+- Stripe price provisioning is integrated in admin course creation/edit (`auto-create` and `refresh` paths).
+- `/admin/courses/{course}/edit` includes nested module and lesson CRUD.
+- Lesson forms include Cloudflare Stream video selector from live account uploads.
+- Lesson duration can be synced from Cloudflare Stream metadata during create/update.
 - `/admin/orders` read-only listing with status filter is implemented.
 - Feature tests cover guest/non-admin/admin access control and page visibility.
 
@@ -65,10 +69,11 @@ Replace DB/manual operational workflows with a secure, maintainable admin interf
 ## Admin Actions (Phase 1)
 
 1. Publish/unpublish courses and lessons.
-2. Reorder modules/lessons.
-3. Manual entitlement grant/revoke (with reason logging).
-4. Stripe event replay.
-5. Gift support actions:
+2. Create/edit course pricing and Stripe price IDs.
+3. Create/edit/delete modules and lessons.
+4. Manual entitlement grant/revoke (with reason logging).
+5. Stripe event replay.
+6. Gift support actions:
    - resend gift claim email
    - revoke gift status where needed
 
@@ -93,7 +98,7 @@ No advanced analytics in phase 1.
 ## Rollout Plan
 
 1. Ship custom read-only operational screens (`dashboard`, `courses`, `orders`) with tests.
-2. Add editable course/module/lesson/resource forms with audit logging.
+2. Add editable course/module/lesson/resource forms with Stripe + Cloudflare integrations.
 3. Add commerce operations (gift resend, entitlement adjustments, webhook replay).
 4. Add policy tests and admin mutation regression tests.
 5. Re-evaluate Filament migration after phase 1 once operational workload is known.

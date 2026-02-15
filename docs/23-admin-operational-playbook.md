@@ -7,7 +7,8 @@ Define how operations are executed in the custom `/admin` panel and expanded ove
 ## Current Admin Surface (Implemented)
 
 - `/admin` dashboard with key operational metrics.
-- `/admin/courses` read-only catalogue view.
+- `/admin/courses` course CRUD with Stripe price provisioning options.
+- `/admin/courses/{course}/edit` module + lesson CRUD with Cloudflare Stream video picker.
 - `/admin/orders` read-only order ledger with status filter.
 - All admin routes require `auth` and `is_admin`.
 
@@ -17,6 +18,24 @@ Define how operations are executed in the custom `/admin` panel and expanded ove
 2. Review paid orders and gifts for anomalies.
 3. Review entitlement exceptions.
 4. Check audit logs for admin-side mutations.
+5. Validate new lesson uploads appear in the Cloudflare Stream selector in course edit.
+
+## Course Content Operations
+
+### Create a new paid course
+
+1. Open `/admin/courses/create`.
+2. Enter title, slug/description, and pricing.
+3. Keep `Auto-create Stripe price` enabled for first publish.
+4. Save and confirm `stripe_price_id` is populated on the edit page.
+
+### Add modules and lessons
+
+1. Open `/admin/courses/{course}/edit`.
+2. Add module rows and set sort order.
+3. Add lessons under each module.
+4. Select `Cloudflare Stream video` where available.
+5. Use `Sync` when editing a lesson to pull duration from Stream metadata.
 
 ## Core Incident Procedures
 
