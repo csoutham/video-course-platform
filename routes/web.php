@@ -3,6 +3,7 @@
 use App\Http\Controllers\Learning\CoursePlayerController;
 use App\Http\Controllers\Learning\LessonProgressController;
 use App\Http\Controllers\Learning\MyCoursesController;
+use App\Http\Controllers\Learning\ReceiptsController;
 use App\Http\Controllers\Learning\ResourceDownloadController;
 use App\Http\Controllers\Payments\CheckoutController;
 use App\Http\Controllers\Payments\CheckoutSuccessController;
@@ -25,6 +26,8 @@ Route::post('/webhooks/stripe', StripeWebhookController::class)->name('webhooks.
 
 Route::middleware('auth')->group(function (): void {
     Route::get('/my-courses', MyCoursesController::class)->name('my-courses.index');
+    Route::get('/receipts', [ReceiptsController::class, 'index'])->name('receipts.index');
+    Route::get('/receipts/{order}/download', [ReceiptsController::class, 'download'])->name('receipts.download');
     Route::get('/learn/{course:slug}/{lessonSlug?}', CoursePlayerController::class)->name('learn.show');
     Route::post('/learn/{course:slug}/{lessonSlug}/progress/complete', [LessonProgressController::class, 'complete'])
         ->name('learn.progress.complete');
@@ -36,7 +39,7 @@ Route::middleware('auth')->group(function (): void {
         ->name('resources.stream');
 });
 
-Route::view('dashboard', 'dashboard')
+Route::redirect('dashboard', '/my-courses')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 

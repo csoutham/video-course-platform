@@ -46,7 +46,7 @@ class ClaimPurchaseTest extends TestCase
             'name' => 'New Buyer',
             'password' => 'password123',
             'password_confirmation' => 'password123',
-        ])->assertRedirect(route('dashboard'));
+        ])->assertRedirect(route('my-courses.index'));
 
         $user = User::query()->firstWhere('email', 'newbuyer@example.com');
         $this->assertNotNull($user);
@@ -99,7 +99,7 @@ class ClaimPurchaseTest extends TestCase
 
         $this->actingAs($user)
             ->post(route('claim-purchase.store', $claimToken->token))
-            ->assertRedirect(route('dashboard'));
+            ->assertRedirect(route('my-courses.index'));
 
         $this->assertDatabaseHas('orders', [
             'id' => $order->id,

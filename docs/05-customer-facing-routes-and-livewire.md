@@ -21,6 +21,10 @@
 
 - `GET /my-courses`
   - List of user’s active entitlements.
+- `GET /receipts`
+  - List of user's paid/refunded order receipts.
+- `GET /receipts/{order}/download`
+  - Download text receipt for a purchased order (owner-only).
 - `GET /learn/{course}/{lesson?}`
   - Course player; defaults to next incomplete lesson if lesson omitted.
 - `POST /learn/{course}/{lesson}/progress/complete`

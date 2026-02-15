@@ -101,6 +101,6 @@ class ClaimPurchaseController extends Controller
             ]
         );
 
-        return redirect()->route('dashboard')->with('status', 'Purchase claimed successfully.');
+        return redirect()->route('my-courses.index')->with('status', 'Purchase claimed successfully.');
     }
 }

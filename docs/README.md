@@ -8,6 +8,7 @@ This folder contains the implementation-ready documentation for VideoCourses v1,
 - One-time course purchases via Stripe Checkout with coupon support.
 - Guest checkout with post-purchase account claim flow.
 - Authenticated learner area for course playback.
+- Authenticated receipt downloads for paid orders.
 - Course structure with modules, lessons, and downloadable resources.
 - Cloudflare Stream for video delivery.
 - Cloudflare R2 signed URLs for downloadable resources.

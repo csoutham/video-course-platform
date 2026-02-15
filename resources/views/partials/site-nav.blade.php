@@ -5,7 +5,7 @@
             <a href="{{ route('courses.index') }}" class="hover:text-slate-900">Courses</a>
             @auth
                 <a href="{{ route('my-courses.index') }}" class="hover:text-slate-900">My Courses</a>
-                <a href="{{ route('dashboard') }}" class="hover:text-slate-900">Dashboard</a>
+                <a href="{{ route('receipts.index') }}" class="hover:text-slate-900">Receipts</a>
                 <a href="{{ route('profile') }}" class="hover:text-slate-900">Profile</a>
             @else
                 <a href="{{ route('login') }}" class="hover:text-slate-900">Login</a>
