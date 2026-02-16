@@ -39,7 +39,7 @@ test('guest order with active claim token shows claim link', function (): void {
 
     $this->get(route('checkout.success', ['session_id' => 'cs_success_guest_1']))
         ->assertOk()
-        ->assertSee('Claim your purchase')
+        ->assertSee('Add purchase to my account')
         ->assertSee(route('claim-purchase.show', $claimToken->token), false);
 
 });
@@ -99,6 +99,6 @@ test('gift order shows gift sent guidance', function (): void {
 
     $this->get(route('checkout.success', ['session_id' => 'cs_success_gift_1']))
         ->assertOk()
-        ->assertSee('gift purchase is confirmed', false);
+        ->assertSee('Your gift is confirmed.', false);
 
 });

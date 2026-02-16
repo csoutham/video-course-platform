@@ -5,7 +5,7 @@
         <div class="vc-heading-block">
             <p class="vc-eyebrow">Gifts</p>
             <h1 class="vc-title">My Gifts</h1>
-            <p class="vc-subtitle">Track gifts you have purchased and their claim status.</p>
+            <p class="vc-subtitle">Track gifts you have sent and whether they have been claimed.</p>
         </div>
 
         @if ($gifts->isEmpty())

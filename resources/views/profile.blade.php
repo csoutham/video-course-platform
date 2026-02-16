@@ -5,6 +5,7 @@
         <div class="vc-heading-block">
             <p class="vc-eyebrow">Account</p>
             <h1 class="vc-title">Profile</h1>
+            <p class="vc-subtitle">Manage your account details, password, and security settings.</p>
         </div>
 
         <div class="vc-panel p-5">

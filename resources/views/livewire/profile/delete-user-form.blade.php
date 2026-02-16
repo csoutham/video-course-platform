@@ -29,7 +29,7 @@ new class () extends Component {
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.') }}
+            {{ __('Deleting your account is permanent and will remove your access and data. Please make sure you have downloaded anything you want to keep first.') }}
         </p>
     </header>
 
@@ -44,7 +44,7 @@ new class () extends Component {
             </h2>
 
             <p class="mt-1 text-sm text-gray-600">
-                {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
+                {{ __('This action cannot be undone. Enter your password to confirm account deletion.') }}
             </p>
 
             <div class="mt-6">

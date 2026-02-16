@@ -44,7 +44,7 @@ new class () extends Component {
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __('Ensure your account is using a long, random password to stay secure.') }}
+            {{ __('Use a strong password you do not use anywhere else.') }}
         </p>
     </header>
 
@@ -89,7 +89,7 @@ new class () extends Component {
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 
             <x-action-message class="me-3" on="password-updated">
-                {{ __('Saved.') }}
+                {{ __('Password updated.') }}
             </x-action-message>
         </div>
     </form>

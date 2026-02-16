@@ -23,19 +23,18 @@
             @if ($authenticatedEmailMatches)
                 <form method="POST" action="{{ route('gift-claim.store', $claimToken->token) }}" class="space-y-4">
                     @csrf
-                    <button type="submit" class="vc-btn-primary w-full justify-center">Claim gift</button>
+                    <button type="submit" class="vc-btn-primary w-full justify-center">Add gift to my account</button>
                 </form>
             @else
                 <p class="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-700">
-                    You are signed in as {{ auth()->user()->email }}. Sign in with
+                    You are signed in as {{ auth()->user()->email }}. Please sign in with
                     {{ $giftPurchase->recipient_email }} to claim this gift.
                 </p>
             @endif
         @else
             @if ($existingUser)
                 <p class="rounded-md bg-slate-100 px-3 py-2 text-sm text-slate-700">
-                    An account already exists for this recipient email. Sign in first, then come back to this claim
-                    link.
+                    An account already exists for this recipient email. Sign in first, then reopen this claim link.
                 </p>
 
                 <a href="{{ route('login') }}" class="vc-btn-primary">Sign in</a>

@@ -11,7 +11,7 @@
     $pageTitle = $metaTitle ?? $title ?? config('app.name', 'VideoCourses');
     $pageDescription =
         $metaDescription ??
-        'VideoCourses delivers focused professional training with instant checkout and guided course progression.';
+        'Learn with practical video courses, instant checkout, and clear step-by-step progress.';
     $pageImage = $metaImage ?: asset('favicon.ico');
     $pageUrl = $canonicalUrl ?: url()->current();
 @endphp

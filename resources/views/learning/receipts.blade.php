@@ -5,7 +5,7 @@
         <div class="vc-heading-block">
             <p class="vc-eyebrow">Billing</p>
             <h1 class="vc-title">Receipts</h1>
-            <p class="vc-subtitle">Download receipts for your purchased courses.</p>
+            <p class="vc-subtitle">Open Stripe receipts for your purchases.</p>
         </div>
 
         @if ($orders->isEmpty())
@@ -26,7 +26,7 @@
                                 </p>
                             </div>
                             <a href="{{ route('receipts.view', $order) }}" target="_blank" class="vc-btn-secondary">
-                                View Stripe receipt
+                                Open receipt
                             </a>
                         </div>
                     </article>

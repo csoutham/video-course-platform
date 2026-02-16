@@ -14,7 +14,7 @@
                         <h2 class="text-sm font-semibold text-slate-800">{{ $module->title }}</h2>
 
                         @if ($module->lessons->isEmpty())
-                            <p class="text-xs text-slate-500">No published lessons.</p>
+                            <p class="text-xs text-slate-500">No lessons are live in this module yet.</p>
                         @else
                             <ul class="space-y-1">
                                 @foreach ($module->lessons as $lesson)
@@ -78,7 +78,7 @@
                         allowfullscreen></iframe>
                 @else
                     <div class="flex h-full items-center justify-center px-6 text-sm text-slate-500">
-                        Video not configured for this lesson yet.
+                        This lesson video is not available yet.
                     </div>
                 @endif
             </div>
@@ -87,7 +87,7 @@
                 <h3 class="text-sm font-semibold text-slate-900">Resources</h3>
 
                 @if ($activeLesson->resources->isEmpty())
-                    <p class="text-sm text-slate-500">No resources attached to this lesson.</p>
+                    <p class="text-sm text-slate-500">No downloads are available for this lesson yet.</p>
                 @else
                     <ul class="space-y-2">
                         @foreach ($activeLesson->resources as $resource)

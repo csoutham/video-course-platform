@@ -69,6 +69,10 @@ new #[Layout('components.guest-layout')] class extends Component {
 }; ?>
 
 <div>
+    <div class="mb-4 text-sm text-gray-600">
+        {{ __('Choose a new password for your account.') }}
+    </div>
+
     <form wire:submit="resetPassword">
         <!-- Email Address -->
         <div>
@@ -117,7 +121,7 @@ new #[Layout('components.guest-layout')] class extends Component {
 
         <div class="mt-4 flex items-center justify-end">
             <x-primary-button>
-                {{ __('Reset Password') }}
+                {{ __('Save new password') }}
             </x-primary-button>
         </div>
     </form>

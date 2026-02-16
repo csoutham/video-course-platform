@@ -36,6 +36,10 @@ new #[Layout('components.guest-layout')] class extends Component {
 }; ?>
 
 <div>
+    <div class="mb-4 text-sm text-gray-600">
+        {{ __('Create your account to start learning right away.') }}
+    </div>
+
     <form wire:submit="register">
         <!-- Name -->
         <div>
@@ -103,11 +107,11 @@ new #[Layout('components.guest-layout')] class extends Component {
                 class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
                 href="{{ route('login') }}"
                 wire:navigate>
-                {{ __('Already registered?') }}
+                {{ __('Already have an account?') }}
             </a>
 
             <x-primary-button class="ms-4">
-                {{ __('Register') }}
+                {{ __('Create account') }}
             </x-primary-button>
         </div>
     </form>

@@ -24,6 +24,10 @@ new #[Layout('components.guest-layout')] class extends Component {
 }; ?>
 
 <div>
+    <div class="mb-4 text-sm text-gray-600">
+        {{ __('Welcome back. Sign in to continue your courses.') }}
+    </div>
+
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -78,12 +82,12 @@ new #[Layout('components.guest-layout')] class extends Component {
                     class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
                     href="{{ route('password.request') }}"
                     wire:navigate>
-                    {{ __('Forgot your password?') }}
+                    {{ __('Forgot password?') }}
                 </a>
             @endif
 
             <x-primary-button class="ms-3">
-                {{ __('Log in') }}
+                {{ __('Sign in') }}
             </x-primary-button>
         </div>
     </form>

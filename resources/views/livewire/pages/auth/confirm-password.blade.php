@@ -34,7 +34,7 @@ new #[Layout('components.guest-layout')] class extends Component {
 
 <div>
     <div class="mb-4 text-sm text-gray-600">
-        {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
+        {{ __('For security, please confirm your password to continue.') }}
     </div>
 
     <form wire:submit="confirmPassword">
@@ -56,7 +56,7 @@ new #[Layout('components.guest-layout')] class extends Component {
 
         <div class="mt-4 flex justify-end">
             <x-primary-button>
-                {{ __('Confirm') }}
+                {{ __('Continue') }}
             </x-primary-button>
         </div>
     </form>

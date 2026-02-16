@@ -2,12 +2,12 @@
     <x-slot:title>Checkout Success</x-slot>
 
     <div class="vc-panel-soft border-emerald-200 bg-emerald-50 p-6">
-        <h1 class="text-xl font-semibold text-emerald-900">Payment received</h1>
+        <h1 class="text-xl font-semibold text-emerald-900">Payment successful</h1>
 
         @if ($isGiftOrder)
             <p class="mt-2 text-sm text-emerald-800">
-                Your gift purchase is confirmed. We sent the gift claim email to the recipient and a confirmation to
-                your email.
+                Your gift is confirmed. We have emailed the claim link to the recipient, and sent you a confirmation
+                email too.
             </p>
 
             <div class="mt-4 flex flex-wrap gap-3">
@@ -22,23 +22,22 @@
                 <a
                     href="{{ route('courses.index') }}"
                     class="inline-flex items-center text-sm font-semibold text-emerald-900 hover:text-emerald-700">
-                    Back to courses
+                    Browse courses
                 </a>
             </div>
         @elseif ($claimUrl)
             <p class="mt-2 text-sm text-emerald-800">
-                Your payment has been confirmed. Continue with the secure claim link below to activate access for this
-                purchase.
+                Your payment is confirmed. Use the secure link below to add this purchase to your account.
             </p>
 
             <a
                 href="{{ $claimUrl }}"
                 class="mt-4 inline-flex items-center rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600">
-                Claim your purchase
+                Add purchase to my account
             </a>
         @elseif ($order?->user_id)
             <p class="mt-2 text-sm text-emerald-800">
-                This purchase is linked to an account. Sign in to continue to your course library.
+                This purchase is already linked to an account. Sign in to continue to your course library.
             </p>
 
             <div class="mt-4 flex flex-wrap gap-3">
@@ -50,12 +49,12 @@
                 <a
                     href="{{ route('login') }}"
                     class="inline-flex items-center text-sm font-semibold text-emerald-900 hover:text-emerald-700">
-                    Sign in
+                    Sign in now
                 </a>
             </div>
         @elseif ($sessionId)
             <p class="mt-2 text-sm text-emerald-800">
-                We are finalizing your purchase. If your claim link is not visible yet, refresh this page in a few
+                We are still finalizing your purchase. If the claim link is not visible yet, refresh this page in a few
                 seconds.
             </p>
 
@@ -68,17 +67,17 @@
                 <a
                     href="{{ route('courses.index') }}"
                     class="inline-flex items-center text-sm font-semibold text-emerald-900 hover:text-emerald-700">
-                    Back to courses
+                    Browse courses
                 </a>
             </div>
         @else
             <p class="mt-2 text-sm text-emerald-800">
-                Your order is being finalized. Access will appear in your account after webhook processing.
+                Your order is being finalized. Course access will appear in your account shortly.
             </p>
             <a
                 href="{{ route('courses.index') }}"
                 class="mt-4 inline-block text-sm font-semibold text-emerald-900 hover:text-emerald-700">
-                Back to courses
+                Browse courses
             </a>
         @endif
     </div>

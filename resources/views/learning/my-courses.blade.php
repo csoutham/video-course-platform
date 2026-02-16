@@ -5,11 +5,13 @@
         <div class="vc-heading-block">
             <p class="vc-eyebrow">Learner Library</p>
             <h1 class="vc-title">My courses</h1>
-            <p class="vc-subtitle">Courses currently available under your active entitlements.</p>
+            <p class="vc-subtitle">Courses you can start or continue right now.</p>
         </div>
 
         @if ($courses->isEmpty())
-            <div class="vc-panel border-dashed p-6 text-sm text-slate-600">No active course access found yet.</div>
+            <div class="vc-panel border-dashed p-6 text-sm text-slate-600">
+                You do not have any courses yet. Buy a course to get started.
+            </div>
         @else
             <div class="grid gap-6 md:grid-cols-2">
                 @foreach ($courses as $course)

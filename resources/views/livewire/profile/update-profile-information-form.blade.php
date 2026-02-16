@@ -68,7 +68,7 @@ new class () extends Component {
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __("Update your account's profile information and email address.") }}
+            {{ __("Keep your name and email up to date so receipts and access emails reach you.") }}
         </p>
     </header>
 
@@ -107,13 +107,13 @@ new class () extends Component {
                         <button
                             wire:click.prevent="sendVerification"
                             class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none">
-                            {{ __('Click here to re-send the verification email.') }}
+                            {{ __('Resend verification email') }}
                         </button>
                     </p>
 
                     @if (session('status') === 'verification-link-sent')
                         <p class="mt-2 text-sm font-medium text-green-600">
-                            {{ __('A new verification link has been sent to your email address.') }}
+                            {{ __('We sent a new verification email.') }}
                         </p>
                     @endif
                 </div>
@@ -124,7 +124,7 @@ new class () extends Component {
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 
             <x-action-message class="me-3" on="profile-updated">
-                {{ __('Saved.') }}
+                {{ __('Changes saved.') }}
             </x-action-message>
         </div>
     </form>
