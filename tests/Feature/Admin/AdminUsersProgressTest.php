@@ -113,6 +113,11 @@ class AdminUsersProgressTest extends TestCase
             ->assertSeeText('1')
             ->assertSeeText('In Progress')
             ->assertSeeText('Avg Video Progress')
-            ->assertSeeText('69%');
+            ->assertSeeText('69%')
+            ->assertSeeText('Lesson Activity Log')
+            ->assertSeeText('Lesson A')
+            ->assertSeeText('120s')
+            ->assertSeeText('Lesson B')
+            ->assertSeeText('45s');
     }
 }

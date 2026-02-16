@@ -29,7 +29,7 @@ Replace DB/manual operational workflows with a secure, maintainable admin interf
   - enforces `requireSignedURLs=true` in Cloudflare Stream
   - syncs lesson duration from Cloudflare metadata
 - `/admin/orders` read-only listing with status filter is implemented.
-- `/admin/users` list + per-user progress page is implemented, showing purchased courses and aggregated lesson/video progress.
+- `/admin/users` list + per-user progress page is implemented, showing purchased courses, aggregated lesson/video progress, and per-course lesson activity logs.
 - Feature tests cover guest/non-admin/admin access control and page visibility.
 
 ## Admin Scope (Phase 1)

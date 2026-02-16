@@ -47,14 +47,18 @@ class UsersController extends Controller
                 ->map(fn ($rows) => $rows->pluck('id')->values());
 
             $progressRows = $user->lessonProgress()
+                ->with('lesson:id,course_id,title')
                 ->whereIn('lesson_id', $lessonIdsByCourse->flatten()->values())
+                ->orderByDesc('last_viewed_at')
+                ->orderByDesc('updated_at')
                 ->get()
-                ->keyBy('lesson_id');
+                ->filter(fn ($row) => $row->lesson !== null);
 
-            $progressByCourse = $lessonIdsByCourse->map(function ($lessonIds) use ($progressRows): array {
-                $rows = $lessonIds
-                    ->map(fn ($lessonId) => $progressRows->get($lessonId))
-                    ->filter();
+            $progressRowsByCourse = $progressRows
+                ->groupBy(fn ($row) => (int) $row->lesson->course_id);
+
+            $progressByCourse = $lessonIdsByCourse->map(function ($lessonIds, $courseId) use ($progressRowsByCourse): array {
+                $rows = $progressRowsByCourse->get((int) $courseId, collect());
 
                 $completed = $rows->where('status', 'completed')->count();
                 $inProgress = $rows->where('status', 'in_progress')->count();
@@ -76,12 +80,25 @@ class UsersController extends Controller
                     'last_viewed_at' => $lastViewedAt,
                 ];
             });
+
+            $progressLogByCourse = $progressRowsByCourse->map(fn ($rows) => $rows
+                ->map(fn ($row) => [
+                    'lesson_title' => $row->lesson->title,
+                    'status' => $row->status,
+                    'watched_seconds' => $row->playback_position_seconds,
+                    'duration_seconds' => $row->video_duration_seconds,
+                    'percent_complete' => $row->percent_complete,
+                    'last_viewed_at' => $row->last_viewed_at,
+                    'completed_at' => $row->completed_at,
+                ])
+                ->values());
         }
 
         return view('admin.users.show', [
             'targetUser' => $user,
             'entitlements' => $entitlements,
             'progressByCourse' => $progressByCourse,
+            'progressLogByCourse' => $progressLogByCourse ?? collect(),
         ]);
     }
 }

@@ -10,7 +10,7 @@ Define how operations are executed in the custom `/admin` panel and expanded ove
 - `/admin/courses` course CRUD with Stripe price provisioning options.
 - `/admin/courses/{course}/edit` module + lesson CRUD with Cloudflare Stream video picker.
 - `/admin/orders` read-only order ledger with status filter.
-- `/admin/users` learner list and per-user progress across purchased courses.
+- `/admin/users` learner list and per-user progress across purchased courses, including lesson activity logs (watched seconds, duration, percent, last viewed).
 - All admin routes require `auth` and `is_admin`.
 
 ## Daily Operations
