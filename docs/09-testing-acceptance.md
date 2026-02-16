@@ -17,7 +17,7 @@
 
 Current Milestone 1 CI command gates:
 
-- `composer test`
+- `composer test` (Pest runner)
 - `./vendor/bin/pint --test`
 - `npm run build`
 
