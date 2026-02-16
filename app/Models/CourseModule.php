@@ -15,7 +15,17 @@ class CourseModule extends Model
         'course_id',
         'title',
         'sort_order',
+        'is_imported_shell',
+        'source_external_key',
     ];
+
+    #[\Override]
+    protected function casts(): array
+    {
+        return [
+            'is_imported_shell' => 'boolean',
+        ];
+    }
 
     public function course(): BelongsTo
     {

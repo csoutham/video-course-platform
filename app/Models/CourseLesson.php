@@ -22,6 +22,8 @@ class CourseLesson extends Model
         'duration_seconds',
         'sort_order',
         'is_published',
+        'is_imported_shell',
+        'source_external_key',
     ];
 
     #[\Override]
@@ -29,6 +31,7 @@ class CourseLesson extends Model
     {
         return [
             'is_published' => 'boolean',
+            'is_imported_shell' => 'boolean',
             'duration_seconds' => 'integer',
         ];
     }

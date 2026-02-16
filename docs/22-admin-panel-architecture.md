@@ -22,12 +22,14 @@ Replace DB/manual operational workflows with a secure, maintainable admin interf
 - `users.is_admin` is implemented and enforced through `auth + admin` middleware.
 - `/admin` dashboard is implemented with operational metrics and recent orders.
 - `/admin/courses` CRUD is implemented for course create/edit/update.
+- Course metadata includes marketing thumbnail and optional intro video (Cloudflare Stream UID).
 - Stripe price provisioning is integrated in admin course creation/edit (`auto-create` and `refresh` paths).
 - `/admin/courses/{course}/edit` includes nested module and lesson CRUD.
+- `/admin/imports/udemy` preview+commit URL importer is implemented for metadata + lesson shell migration without API credentials.
 - Lesson forms include Cloudflare Stream video selector from live account uploads.
 - Lesson create/update with a selected Stream video now always:
-  - enforces `requireSignedURLs=true` in Cloudflare Stream
-  - syncs lesson duration from Cloudflare metadata
+    - enforces `requireSignedURLs=true` in Cloudflare Stream
+    - syncs lesson duration from Cloudflare metadata
 - `/admin/orders` read-only listing with status filter is implemented.
 - `/admin/users` list + per-user progress page is implemented, showing purchased courses, aggregated lesson/video progress, and per-course lesson activity logs.
 - Feature tests cover guest/non-admin/admin access control and page visibility.
@@ -77,8 +79,11 @@ Replace DB/manual operational workflows with a secure, maintainable admin interf
 4. Manual entitlement grant/revoke (with reason logging).
 5. Stripe event replay.
 6. Gift support actions:
-   - resend gift claim email
-   - revoke gift status where needed
+    - resend gift claim email
+    - revoke gift status where needed
+7. URL import actions:
+    - preview public Udemy course metadata/syllabus
+    - commit import into local course/module/lesson shells with overwrite modes
 
 ## Dashboard (Phase 1)
 

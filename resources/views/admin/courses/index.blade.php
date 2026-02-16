@@ -8,6 +8,7 @@
             </div>
             <div class="flex items-center gap-2">
                 <a href="{{ route('admin.courses.create') }}" class="vc-btn-primary">Create Course</a>
+                <a href="{{ route('admin.imports.udemy.show') }}" class="vc-btn-secondary">Import from Udemy URL</a>
                 <a href="{{ route('admin.dashboard') }}" class="vc-btn-secondary">Back to Dashboard</a>
             </div>
         </div>

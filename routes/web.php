@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CourseLessonsController;
 use App\Http\Controllers\Admin\CourseModulesController;
 use App\Http\Controllers\Admin\OrdersController;
+use App\Http\Controllers\Admin\UdemyImportsController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Learning\CoursePlayerController;
 use App\Http\Controllers\Learning\LessonProgressController;
@@ -38,7 +39,7 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/my-courses', MyCoursesController::class)->name('my-courses.index');
     Route::get('/gifts', MyGiftsController::class)->name('gifts.index');
     Route::get('/receipts', [ReceiptsController::class, 'index'])->name('receipts.index');
-    Route::get('/receipts/{order}', [ReceiptsController::class, 'view'])->name('receipts.view');
+    Route::get('/receipts/{order:public_id}', [ReceiptsController::class, 'view'])->name('receipts.view');
     Route::get('/learn/{course:slug}/{lessonSlug?}', CoursePlayerController::class)->name('learn.show');
     Route::post('/learn/{course:slug}/{lessonSlug}/progress/complete', [LessonProgressController::class, 'complete'])
         ->name('learn.progress.complete');
@@ -58,6 +59,9 @@ Route::middleware(['auth', 'admin'])
         Route::get('/courses/create', [CoursesController::class, 'create'])->name('courses.create');
         Route::post('/courses', [CoursesController::class, 'store'])->name('courses.store');
         Route::get('/courses', [CoursesController::class, 'index'])->name('courses.index');
+        Route::get('/imports/udemy', [UdemyImportsController::class, 'show'])->name('imports.udemy.show');
+        Route::post('/imports/udemy/preview', [UdemyImportsController::class, 'preview'])->name('imports.udemy.preview');
+        Route::post('/imports/udemy/commit', [UdemyImportsController::class, 'commit'])->name('imports.udemy.commit');
         Route::get('/courses/{course}/edit', [CoursesController::class, 'edit'])->name('courses.edit');
         Route::put('/courses/{course}', [CoursesController::class, 'update'])->name('courses.update');
         Route::post('/courses/{course}/modules', [CourseModulesController::class, 'store'])->name('modules.store');

@@ -28,10 +28,16 @@
 ### courses
 
 - `id`
+- `source_platform` (nullable, indexed; e.g. `udemy`)
+- `source_url` (nullable, unique)
+- `source_external_id` (nullable, indexed)
 - `slug` (unique)
 - `title`
 - `description`
 - `thumbnail_url`
+- `intro_video_id` (nullable; Cloudflare Stream UID for public course intro video)
+- `source_payload_json` (nullable)
+- `source_last_imported_at` (nullable timestamp)
 - `price_amount`
 - `price_currency`
 - `stripe_price_id`
@@ -44,6 +50,8 @@
 - `course_id` (index)
 - `title`
 - `sort_order`
+- `is_imported_shell` (default false)
+- `source_external_key` (nullable; deterministic import key)
 - `created_at`, `updated_at`
 
 ### course_lessons
@@ -58,6 +66,8 @@
 - `duration_seconds` (nullable; synced from Stream metadata)
 - `sort_order`
 - `is_published`
+- `is_imported_shell` (default false)
+- `source_external_key` (nullable; deterministic import key)
 - `created_at`, `updated_at`
 
 ### lesson_resources
@@ -88,6 +98,7 @@
 ### orders
 
 - `id`
+- `public_id` (unique non-sequential reference, example `ord_01kh...`, used in customer-facing URLs/receipts)
 - `user_id` (nullable for initial guest purchase)
 - `email`
 - `stripe_checkout_session_id` (unique)
