@@ -28,7 +28,7 @@
 
 <div class="space-y-8">
     <section class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-        <div class="grid gap-0 lg:grid-cols-[1.1fr_minmax(0,1fr)]">
+        <div class="grid gap-0 lg:grid-cols-[1.35fr_minmax(320px,0.65fr)]">
             <div class="space-y-4 p-7 sm:p-8">
                 <p class="vc-eyebrow">Course</p>
                 <h1 class="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">{{ $course->title }}</h1>
@@ -50,12 +50,31 @@
                 </div>
             </div>
 
-            <div class="relative min-h-56 overflow-hidden bg-slate-900 lg:min-h-full">
+            <div class="border-t border-slate-200 bg-slate-50 p-7 sm:p-8 lg:border-t-0 lg:border-l">
+                <p class="text-xs font-semibold tracking-[0.14em] text-slate-500 uppercase">Pricing</p>
+                <p class="mt-3 text-4xl font-semibold tracking-tight text-slate-900">
+                    {{ strtoupper($course->price_currency) }} {{ number_format($course->price_amount / 100, 2) }}
+                </p>
+                <p class="mt-2 text-sm text-slate-600">
+                    One-time purchase. Instant access to all published lessons and resources in this course.
+                </p>
+                <ul class="mt-5 space-y-2 text-sm text-slate-600">
+                    <li>Full curriculum access after checkout</li>
+                    <li>Track progress lesson-by-lesson</li>
+                    <li>Watch from any modern browser</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
+        <section class="space-y-4">
+            <article class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-900 shadow-sm">
                 @if ($introVideoEmbedUrl)
                     <iframe
                         src="{{ $introVideoEmbedUrl }}"
                         title="{{ $course->title }} intro video"
-                        class="h-full min-h-56 w-full lg:min-h-full"
+                        class="aspect-video w-full"
                         loading="lazy"
                         allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
                         allowfullscreen></iframe>
@@ -63,24 +82,22 @@
                     <img
                         src="{{ $course->thumbnail_url }}"
                         alt="{{ $course->title }} thumbnail"
-                        class="h-full w-full object-cover" />
+                        class="aspect-video w-full object-cover" />
                 @else
-                    <div
-                        class="absolute inset-0 bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-700"
-                        aria-hidden="true"></div>
-                    <div
-                        class="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(56,189,248,0.35),transparent_38%)]"></div>
-                    <div
-                        class="relative flex h-full items-center justify-center p-8 text-center text-2xl font-semibold text-white">
-                        {{ $course->title }}
+                    <div class="relative aspect-video">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-700"
+                            aria-hidden="true"></div>
+                        <div
+                            class="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(56,189,248,0.35),transparent_38%)]"></div>
+                        <div
+                            class="relative flex h-full items-center justify-center p-8 text-center text-2xl font-semibold text-white">
+                            {{ $course->title }}
+                        </div>
                     </div>
                 @endif
-            </div>
-        </div>
-    </section>
+            </article>
 
-    <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
-        <section class="space-y-4">
             <h2 class="vc-card-title">What you’ll learn</h2>
 
             @forelse ($course->modules as $module)
@@ -112,9 +129,7 @@
         <aside class="lg:sticky lg:top-4">
             <div class="vc-panel space-y-4 p-6">
                 <p class="text-xs font-semibold tracking-[0.14em] text-slate-500 uppercase">Enrollment</p>
-                <p class="text-3xl font-semibold tracking-tight text-slate-900">
-                    {{ strtoupper($course->price_currency) }} {{ number_format($course->price_amount / 100, 2) }}
-                </p>
+                <p class="text-sm text-slate-600">Complete checkout to unlock this course immediately.</p>
 
                 <form
                     method="POST"
