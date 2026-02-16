@@ -29,6 +29,7 @@ class Order extends Model
         'refunded_at',
     ];
 
+    #[\Override]
     protected static function booted(): void
     {
         static::creating(function (self $order): void {
@@ -47,6 +48,7 @@ class Order extends Model
         ];
     }
 
+    #[\Override]
     public function getRouteKeyName(): string
     {
         return 'public_id';
