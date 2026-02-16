@@ -24,6 +24,7 @@ class CourseFactory extends Factory
             'title' => $title,
             'description' => fake()->paragraph(),
             'thumbnail_url' => fake()->imageUrl(1280, 720),
+            'intro_video_id' => null,
             'price_amount' => fake()->numberBetween(4900, 19900),
             'price_currency' => 'usd',
             'stripe_price_id' => null,

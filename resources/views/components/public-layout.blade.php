@@ -1,7 +1,20 @@
 @props([
 'maxWidth' => 'max-w-6xl',
 'containerPadding' => 'px-6 py-8',
+'metaTitle' => null,
+'metaDescription' => null,
+'metaImage' => null,
+'canonicalUrl' => null,
 ])
+
+@php
+    $pageTitle = $metaTitle ?? $title ?? config('app.name', 'VideoCourses');
+    $pageDescription =
+        $metaDescription ??
+        'VideoCourses delivers focused professional training with instant checkout and guided course progression.';
+    $pageImage = $metaImage ?: asset('favicon.ico');
+    $pageUrl = $canonicalUrl ?: url()->current();
+@endphp
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -10,12 +23,26 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-        <title>{{ $title ?? config('app.name', 'VideoCourses') }}</title>
+        <title>{{ $pageTitle }}</title>
+        <meta name="description" content="{{ $pageDescription }}" />
+        <link rel="canonical" href="{{ $pageUrl }}" />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="{{ $pageTitle }}" />
+        <meta property="og:description" content="{{ $pageDescription }}" />
+        <meta property="og:url" content="{{ $pageUrl }}" />
+        <meta property="og:image" content="{{ $pageImage }}" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="{{ $pageTitle }}" />
+        <meta name="twitter:description" content="{{ $pageDescription }}" />
+        <meta name="twitter:image" content="{{ $pageImage }}" />
 
         <link rel="preconnect" href="https://fonts.bunny.net" />
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
 
         @vite(['resources/app.css', 'resources/app.js'])
+        @stack('head')
     </head>
     <body class="vc-shell flex min-h-screen flex-col text-slate-900 antialiased">
         @include('partials.navigation')

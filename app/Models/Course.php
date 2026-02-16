@@ -12,10 +12,16 @@ class Course extends Model
     use HasFactory;
 
     protected $fillable = [
+        'source_platform',
+        'source_url',
+        'source_external_id',
         'slug',
         'title',
         'description',
         'thumbnail_url',
+        'intro_video_id',
+        'source_payload_json',
+        'source_last_imported_at',
         'price_amount',
         'price_currency',
         'stripe_price_id',
@@ -27,6 +33,8 @@ class Course extends Model
     {
         return [
             'is_published' => 'boolean',
+            'source_payload_json' => 'array',
+            'source_last_imported_at' => 'datetime',
         ];
     }
 

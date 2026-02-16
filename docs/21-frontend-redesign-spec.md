@@ -10,6 +10,15 @@ behavior and routes.
 - Visual style: modern premium editorial.
 - Keep interaction calm and focused (no heavy motion).
 - Prioritize readability, hierarchy, and trust in purchase/claim flows.
+- Sales orientation on public pages:
+    - catalog cards must highlight visual identity (thumbnail/hero treatment)
+    - detail hero should support an intro video (when configured) with thumbnail fallback
+    - pricing must be immediately visible in both list and detail surfaces
+    - course detail should use a two-column sales layout (content left, purchase panel right)
+- SEO-first implementation for public sales pages:
+    - unique title + description per page
+    - Open Graph/Twitter tags for social sharing previews
+    - canonical URL on catalog and detail pages
 
 ## Scope
 
@@ -52,9 +61,10 @@ behavior and routes.
 ### Phase B: Core Commerce Pages
 
 1. Restyle `courses/catalog`.
-2. Restyle `courses/detail` (including gift form state clarity).
+2. Restyle `courses/detail` (including gift form state clarity and right-side purchase rail).
 3. Restyle checkout success + claim + gift-claim pages.
 4. Ensure empty/loading/error states are consistent.
+5. Add/verify SEO metadata coverage for catalog + detail.
 
 ### Phase C: Library and Learning Surfaces
 
@@ -90,4 +100,3 @@ behavior and routes.
 
 - Existing feature suite remains green.
 - Add focused UI assertions where practical (critical labels/CTAs/feedback states).
-

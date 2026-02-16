@@ -118,3 +118,45 @@ test('catalog links entitled logged in user directly to learning', function (): 
         ->assertSee(route('learn.show', ['course' => $course->slug]), false);
 
 });
+
+test('catalog and detail include seo meta tags', function (): void {
+    $course = Course::factory()->create([
+        'title' => 'SEO Course',
+        'slug' => 'seo-course',
+        'description' => 'A practical course focused on SEO-friendly sales pages.',
+        'is_published' => true,
+    ]);
+
+    $this->get('/courses')
+        ->assertOk()
+        ->assertSee('name="description"', false)
+        ->assertSee('property="og:title"', false)
+        ->assertSee('type="application/ld+json"', false)
+        ->assertSee('"@type":"ItemList"', false);
+
+    $this->get('/courses/seo-course')
+        ->assertOk()
+        ->assertSee('<title>SEO Course | '.config('app.name').'</title>', false)
+        ->assertSee('property="og:title" content="SEO Course | '.config('app.name').'"', false)
+        ->assertSee('property="og:description"', false)
+        ->assertSee('type="application/ld+json"', false)
+        ->assertSee('"@type":"Course"', false);
+});
+
+test('detail page renders intro video when configured', function (): void {
+    config()->set('services.cloudflare_stream.signed_urls_enabled', false);
+    config()->set('services.cloudflare_stream.iframe_base_url', 'https://iframe.videodelivery.net');
+
+    Course::factory()->create([
+        'title' => 'Intro Video Course',
+        'slug' => 'intro-video-course',
+        'description' => 'Course with intro video.',
+        'intro_video_id' => 'intro_video_uid_123',
+        'is_published' => true,
+    ]);
+
+    $this->get('/courses/intro-video-course')
+        ->assertOk()
+        ->assertSee('iframe.videodelivery.net/intro_video_uid_123', false)
+        ->assertSee('intro video', false);
+});

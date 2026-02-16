@@ -33,8 +33,8 @@
             <div>
                 <label for="description" class="text-sm font-medium text-slate-700">Description</label>
                 <textarea id="description" name="description" rows="4" class="vc-input">
-{{ old('description') }}</textarea
-                >
+{{ old('description') }}
+                </textarea>
                 @error('description')
                     <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
                 @enderror
@@ -48,9 +48,40 @@
                 @enderror
             </div>
 
+            <div>
+                <label for="intro_video_id" class="text-sm font-medium text-slate-700">
+                    Intro video (Cloudflare Stream)
+                </label>
+                @if (!empty($streamVideos))
+                    <select id="intro_video_id" name="intro_video_id" class="vc-input">
+                        <option value="">No intro video</option>
+                        @foreach ($streamVideos as $video)
+                            <option value="{{ $video['uid'] }}" @selected(old('intro_video_id') === $video['uid'])>
+                                {{ $video['name'] }} ({{ $video['uid'] }})
+                            </option>
+                        @endforeach
+                    </select>
+                @else
+                    <input
+                        id="intro_video_id"
+                        name="intro_video_id"
+                        value="{{ old('intro_video_id') }}"
+                        class="vc-input"
+                        placeholder="Cloudflare Stream UID" />
+                @endif
+                <p class="mt-1 text-xs text-slate-500">This intro video is shown on the public course sales page.</p>
+                @if (!empty($streamCatalogStatus))
+                    <p class="mt-1 text-xs text-amber-700">Stream catalog unavailable: {{ $streamCatalogStatus }}</p>
+                @endif
+
+                @error('intro_video_id')
+                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div class="grid gap-4 sm:grid-cols-2">
                 <div>
-                    <label for="price_amount" class="text-sm font-medium text-slate-700">Price (cents)</label>
+                    <label for="price_amount" class="text-sm font-medium text-slate-700">Price (cents/pence)</label>
                     <input
                         id="price_amount"
                         name="price_amount"

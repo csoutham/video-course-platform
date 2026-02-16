@@ -1,4 +1,9 @@
 <x-public-layout maxWidth="max-w-none" containerPadding="px-4 py-6 lg:px-8" title="Edit Course">
+    @php
+        $moduleCount = $course->modules->count();
+        $lessonCount = $course->modules->sum(fn ($module) => $module->lessons->count());
+    @endphp
+
     <section class="vc-panel p-6">
         <div class="flex flex-wrap items-start justify-between gap-3">
             <div class="vc-heading-block">
@@ -16,7 +21,34 @@
         </section>
     @endif
 
-    <section class="vc-panel mt-6 p-6">
+    <section class="vc-panel sticky top-2 z-20 mt-6 border border-slate-200/90 bg-white/90 p-3 backdrop-blur">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="inline-flex rounded-xl border border-slate-200 bg-white p-1">
+                <button
+                    type="button"
+                    data-admin-tab-button="details"
+                    class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
+                    Course Details
+                </button>
+                <button
+                    type="button"
+                    data-admin-tab-button="curriculum"
+                    class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
+                    Curriculum
+                </button>
+                <button
+                    type="button"
+                    data-admin-tab-button="assets"
+                    class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
+                    Assets
+                </button>
+            </div>
+
+            <p class="text-xs text-slate-600">{{ $moduleCount }} modules · {{ $lessonCount }} lessons</p>
+        </div>
+    </section>
+
+    <section class="vc-panel mt-6 p-6" data-admin-tab-panel="details">
         <form method="POST" action="{{ route('admin.courses.update', $course) }}" class="space-y-5">
             @csrf
             @method('PUT')
@@ -40,8 +72,8 @@
             <div>
                 <label for="description" class="text-sm font-medium text-slate-700">Description</label>
                 <textarea id="description" name="description" rows="4" class="vc-input">
-{{ old('description', $course->description) }}</textarea
-                >
+{{ old('description', $course->description) }}
+                </textarea>
                 @error('description')
                     <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
                 @enderror
@@ -59,9 +91,43 @@
                 @enderror
             </div>
 
+            <div>
+                <label for="intro_video_id" class="text-sm font-medium text-slate-700">
+                    Intro video (Cloudflare Stream)
+                </label>
+                <input
+                    type="text"
+                    data-stream-search
+                    class="vc-input mb-2"
+                    placeholder="Search videos by name or UID"
+                    autocomplete="off" />
+                <select id="intro_video_id" name="intro_video_id" class="vc-input" data-stream-select>
+                    <option value="">No intro video</option>
+                    @if ($course->intro_video_id)
+                        <option value="{{ $course->intro_video_id }}" selected>
+                            Current: {{ $course->intro_video_id }}
+                        </option>
+                    @endif
+
+                    @foreach ($streamVideos as $video)
+                        <option
+                            value="{{ $video['uid'] }}"
+                            @selected(old('intro_video_id', $course->intro_video_id) === $video['uid'])>
+                            {{ $video['name'] }} ({{ $video['uid'] }})
+                        </option>
+                    @endforeach
+                </select>
+                <p class="mt-1 text-xs text-slate-500">
+                    Intro video appears on public course page and is forced to signed URLs on save.
+                </p>
+                @error('intro_video_id')
+                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <div>
-                    <label for="price_amount" class="text-sm font-medium text-slate-700">Price (cents)</label>
+                    <label for="price_amount" class="text-sm font-medium text-slate-700">Price (cents/pence)</label>
                     <input
                         id="price_amount"
                         name="price_amount"
@@ -127,7 +193,7 @@
         </form>
     </section>
 
-    <section class="vc-panel mt-6 p-6">
+    <section class="vc-panel mt-6 hidden p-6" data-admin-tab-panel="curriculum">
         <h2 class="text-lg font-semibold tracking-tight text-slate-900">Modules and Lessons</h2>
         <p class="mt-2 text-sm text-slate-600">Create modules and lessons directly from this screen.</p>
 
@@ -210,7 +276,13 @@
                         </div>
                         <div class="sm:col-span-3">
                             <label class="text-sm font-medium text-slate-700">Cloudflare Stream video</label>
-                            <select name="stream_video_id" class="vc-input">
+                            <input
+                                type="text"
+                                data-stream-search
+                                class="vc-input mb-2"
+                                placeholder="Search videos by name or UID"
+                                autocomplete="off" />
+                            <select name="stream_video_id" class="vc-input" data-stream-select>
                                 <option value="">No video yet</option>
                                 @foreach ($streamVideos as $video)
                                     <option value="{{ $video['uid'] }}">
@@ -264,7 +336,13 @@
                                 </div>
                                 <div class="sm:col-span-3">
                                     <label class="text-sm font-medium text-slate-700">Stream video</label>
-                                    <select name="stream_video_id" class="vc-input">
+                                    <input
+                                        type="text"
+                                        data-stream-search
+                                        class="vc-input mb-2"
+                                        placeholder="Search videos by name or UID"
+                                        autocomplete="off" />
+                                    <select name="stream_video_id" class="vc-input" data-stream-select>
                                         <option value="">No video</option>
                                         @if ($lesson->stream_video_id)
                                             <option value="{{ $lesson->stream_video_id }}" selected>
@@ -346,4 +424,143 @@
             @endforelse
         </div>
     </section>
+
+    <section class="vc-panel mt-6 hidden p-6" data-admin-tab-panel="assets">
+        <h2 class="text-lg font-semibold tracking-tight text-slate-900">Assets</h2>
+        <p class="mt-2 text-sm text-slate-600">
+            Browse Stream assets available to this course and verify durations before assigning lessons.
+        </p>
+
+        @if ($streamCatalogStatus)
+            <div class="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+                Cloudflare Stream list unavailable: {{ $streamCatalogStatus }}
+            </div>
+        @elseif (count($streamVideos) === 0)
+            <div class="mt-4 rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
+                No Cloudflare Stream assets found for this account.
+            </div>
+        @else
+            <div class="mt-4 rounded-xl border border-slate-200 bg-white p-4">
+                <label class="text-sm font-medium text-slate-700">Search assets</label>
+                <input
+                    type="text"
+                    data-assets-search
+                    class="vc-input mt-2"
+                    placeholder="Filter by video name or UID"
+                    autocomplete="off" />
+            </div>
+
+            <div class="mt-4 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                <table class="min-w-full divide-y divide-slate-200 text-sm">
+                    <thead class="bg-slate-50">
+                        <tr>
+                            <th class="px-4 py-3 text-left font-semibold text-slate-700">Video Name</th>
+                            <th class="px-4 py-3 text-left font-semibold text-slate-700">UID</th>
+                            <th class="px-4 py-3 text-left font-semibold text-slate-700">Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @foreach ($streamVideos as $video)
+                            <tr data-assets-row>
+                                <td class="px-4 py-3 text-slate-900">{{ $video['name'] ?: 'Untitled Video' }}</td>
+                                <td class="px-4 py-3 font-mono text-xs text-slate-600">{{ $video['uid'] }}</td>
+                                <td class="px-4 py-3 text-slate-600">
+                                    {{ $video['duration_seconds'] ? $video['duration_seconds'].'s' : 'Unknown' }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
+    </section>
+
+    <script>
+        (() => {
+            const storageKey = 'admin-course-edit-tab';
+            const tabButtons = Array.from(document.querySelectorAll('[data-admin-tab-button]'));
+            const tabPanels = Array.from(document.querySelectorAll('[data-admin-tab-panel]'));
+
+            const setActiveTab = (tab) => {
+                const target = tabPanels.some((panel) => panel.dataset.adminTabPanel === tab) ? tab : 'details';
+
+                tabButtons.forEach((button) => {
+                    const active = button.dataset.adminTabButton === target;
+                    button.classList.toggle('bg-slate-900', active);
+                    button.classList.toggle('text-white', active);
+                    button.classList.toggle('shadow-sm', active);
+                    button.classList.toggle('text-slate-700', !active);
+                    button.setAttribute('aria-selected', active ? 'true' : 'false');
+                });
+
+                tabPanels.forEach((panel) => {
+                    const active = panel.dataset.adminTabPanel === target;
+                    panel.classList.toggle('hidden', !active);
+                });
+
+                localStorage.setItem(storageKey, target);
+            };
+
+            tabButtons.forEach((button) => {
+                button.addEventListener('click', () => setActiveTab(button.dataset.adminTabButton));
+            });
+
+            const hashTab =
+                window.location.hash === '#curriculum'
+                    ? 'curriculum'
+                    : window.location.hash === '#assets'
+                      ? 'assets'
+                      : null;
+            const savedTab = localStorage.getItem(storageKey);
+            setActiveTab(hashTab ?? savedTab ?? 'details');
+
+            const normalize = (value) => (value ?? '').toString().trim().toLowerCase();
+
+            document.querySelectorAll('input[data-stream-search]').forEach((searchInput) => {
+                const container = searchInput.closest('div');
+                const select = container?.querySelector('select[data-stream-select]');
+
+                if (!select) {
+                    return;
+                }
+
+                const filterOptions = () => {
+                    const term = normalize(searchInput.value);
+                    const selectedValue = select.value;
+
+                    Array.from(select.options).forEach((option, index) => {
+                        if (index === 0 || option.value === selectedValue || term === '') {
+                            option.hidden = false;
+                            return;
+                        }
+
+                        option.hidden = !normalize(option.textContent).includes(term);
+                    });
+                };
+
+                searchInput.addEventListener('input', filterOptions);
+                filterOptions();
+            });
+
+            const assetsSearchInput = document.querySelector('input[data-assets-search]');
+            if (assetsSearchInput) {
+                const rows = Array.from(document.querySelectorAll('[data-assets-row]'));
+                const filterAssetRows = () => {
+                    const term = normalize(assetsSearchInput.value);
+
+                    rows.forEach((row) => {
+                        if (term === '') {
+                            row.classList.remove('hidden');
+                            return;
+                        }
+
+                        row.classList.toggle('hidden', !normalize(row.textContent).includes(term));
+                    });
+                };
+
+                assetsSearchInput.addEventListener('input', filterAssetRows);
+                filterAssetRows();
+            }
+        })();
+    </script>
 </x-public-layout>

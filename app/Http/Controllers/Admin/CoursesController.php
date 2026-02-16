@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Services\Learning\CloudflareStreamCatalogService;
+use App\Services\Learning\CloudflareStreamMetadataService;
 use App\Services\Payments\StripeCoursePricingService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -29,29 +30,51 @@ class CoursesController extends Controller
         ]);
     }
 
-    public function create(): View
+    public function create(CloudflareStreamCatalogService $streamCatalogService): View
     {
-        return view('admin.courses.create');
+        [$streamVideos, $streamCatalogStatus] = $this->resolveStreamCatalog($streamCatalogService);
+
+        return view('admin.courses.create', [
+            'streamVideos' => $streamVideos,
+            'streamCatalogStatus' => $streamCatalogStatus,
+        ]);
     }
 
-    public function store(Request $request, StripeCoursePricingService $pricingService): RedirectResponse
+    public function store(
+        Request $request,
+        StripeCoursePricingService $pricingService,
+        CloudflareStreamMetadataService $metadataService,
+    ): RedirectResponse
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'alpha_dash', 'unique:courses,slug'],
             'description' => ['nullable', 'string'],
             'thumbnail_url' => ['nullable', 'url', 'max:2048'],
+            'intro_video_id' => ['nullable', 'string', 'max:255'],
             'price_amount' => ['required', 'integer', 'min:100'],
             'price_currency' => ['required', 'string', 'in:usd,gbp'],
             'is_published' => ['nullable', 'boolean'],
             'auto_create_stripe_price' => ['nullable', 'boolean'],
         ]);
 
+        $introVideoId = ($validated['intro_video_id'] ?? null) ?: null;
+        if ($introVideoId) {
+            try {
+                $metadataService->requireSignedUrls($introVideoId);
+            } catch (RuntimeException $exception) {
+                return back()
+                    ->withInput()
+                    ->withErrors(['intro_video_id' => $exception->getMessage()]);
+            }
+        }
+
         $course = DB::transaction(fn (): Course => Course::query()->create([
             'title' => $validated['title'],
             'slug' => $this->resolveCourseSlug($validated['slug'] ?? null, $validated['title']),
             'description' => $validated['description'] ?? null,
             'thumbnail_url' => $validated['thumbnail_url'] ?? null,
+            'intro_video_id' => $introVideoId,
             'price_amount' => (int) $validated['price_amount'],
             'price_currency' => strtolower((string) $validated['price_currency']),
             'is_published' => (bool) ($validated['is_published'] ?? false),
@@ -84,14 +107,7 @@ class CoursesController extends Controller
             'modules.lessons' => fn ($query) => $query->orderBy('sort_order'),
         ]);
 
-        $streamVideos = [];
-        $streamCatalogStatus = null;
-
-        try {
-            $streamVideos = $streamCatalogService->listVideos(200);
-        } catch (RuntimeException $exception) {
-            $streamCatalogStatus = $exception->getMessage();
-        }
+        [$streamVideos, $streamCatalogStatus] = $this->resolveStreamCatalog($streamCatalogService);
 
         return view('admin.courses.edit', [
             'course' => $course,
@@ -100,13 +116,19 @@ class CoursesController extends Controller
         ]);
     }
 
-    public function update(Course $course, Request $request, StripeCoursePricingService $pricingService): RedirectResponse
+    public function update(
+        Course $course,
+        Request $request,
+        StripeCoursePricingService $pricingService,
+        CloudflareStreamMetadataService $metadataService,
+    ): RedirectResponse
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', 'alpha_dash', 'unique:courses,slug,'.$course->id],
             'description' => ['nullable', 'string'],
             'thumbnail_url' => ['nullable', 'url', 'max:2048'],
+            'intro_video_id' => ['nullable', 'string', 'max:255'],
             'price_amount' => ['required', 'integer', 'min:100'],
             'price_currency' => ['required', 'string', 'in:usd,gbp'],
             'stripe_price_id' => ['nullable', 'string', 'max:255'],
@@ -114,11 +136,23 @@ class CoursesController extends Controller
             'refresh_stripe_price' => ['nullable', 'boolean'],
         ]);
 
+        $introVideoId = ($validated['intro_video_id'] ?? null) ?: null;
+        if ($introVideoId) {
+            try {
+                $metadataService->requireSignedUrls($introVideoId);
+            } catch (RuntimeException $exception) {
+                return back()
+                    ->withInput()
+                    ->withErrors(['intro_video_id' => $exception->getMessage()]);
+            }
+        }
+
         $course->forceFill([
             'title' => $validated['title'],
             'slug' => $validated['slug'],
             'description' => $validated['description'] ?? null,
             'thumbnail_url' => $validated['thumbnail_url'] ?? null,
+            'intro_video_id' => $introVideoId,
             'price_amount' => (int) $validated['price_amount'],
             'price_currency' => strtolower((string) $validated['price_currency']),
             'stripe_price_id' => $validated['stripe_price_id'] ?: null,
@@ -158,5 +192,22 @@ class CoursesController extends Controller
         }
 
         return $candidate;
+    }
+
+    /**
+     * @return array{0: array<int, array{uid: string, name: string, created: string}>, 1: string|null}
+     */
+    private function resolveStreamCatalog(CloudflareStreamCatalogService $streamCatalogService): array
+    {
+        $streamVideos = [];
+        $streamCatalogStatus = null;
+
+        try {
+            $streamVideos = $streamCatalogService->listVideos(200);
+        } catch (RuntimeException $exception) {
+            $streamCatalogStatus = $exception->getMessage();
+        }
+
+        return [$streamVideos, $streamCatalogStatus];
     }
 }
