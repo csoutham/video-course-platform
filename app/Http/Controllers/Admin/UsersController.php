@@ -49,8 +49,8 @@ class UsersController extends Controller
             $progressRows = $user->lessonProgress()
                 ->with('lesson:id,course_id,title')
                 ->whereIn('lesson_id', $lessonIdsByCourse->flatten()->values())
-                ->orderByDesc('last_viewed_at')
-                ->orderByDesc('updated_at')
+                ->latest('last_viewed_at')
+                ->latest('updated_at')
                 ->get()
                 ->filter(fn ($row) => $row->lesson !== null);
 

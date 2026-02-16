@@ -91,14 +91,17 @@
                         </p>
 
                         <div class="mt-4">
-                            <h4 class="text-sm font-semibold tracking-wide text-slate-700 uppercase">Lesson Activity Log</h4>
+                            <h4 class="text-sm font-semibold tracking-wide text-slate-700 uppercase">
+                                Lesson Activity Log
+                            </h4>
 
                             @if ($lessonLog->isEmpty())
                                 <p class="mt-2 text-sm text-slate-600">No watched lessons yet for this course.</p>
                             @else
                                 <div class="mt-2 overflow-hidden rounded-xl border border-slate-200">
                                     <table class="min-w-full divide-y divide-slate-200 text-sm">
-                                        <thead class="bg-slate-50 text-left text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                        <thead
+                                            class="bg-slate-50 text-left text-xs font-semibold tracking-wide text-slate-600 uppercase">
                                             <tr>
                                                 <th class="px-3 py-2">Lesson</th>
                                                 <th class="px-3 py-2">Status</th>
@@ -110,7 +113,9 @@
                                         <tbody class="divide-y divide-slate-100 bg-white text-slate-700">
                                             @foreach ($lessonLog as $entry)
                                                 <tr>
-                                                    <td class="px-3 py-2 font-medium text-slate-900">{{ $entry['lesson_title'] }}</td>
+                                                    <td class="px-3 py-2 font-medium text-slate-900">
+                                                        {{ $entry['lesson_title'] }}
+                                                    </td>
                                                     <td class="px-3 py-2 uppercase">{{ $entry['status'] }}</td>
                                                     <td class="px-3 py-2">
                                                         {{ $entry['watched_seconds'] }}s /
