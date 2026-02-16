@@ -35,9 +35,33 @@ test('authenticated user can view their receipts', function (): void {
         ->get(route('receipts.index'))
         ->assertOk()
         ->assertSee('Receipts')
-        ->assertSee('Order #'.$order->id)
+        ->assertSee('Order '.$order->public_id)
         ->assertSee(route('receipts.view', $order), false);
 
+});
+
+test('orders use obfuscated public ids in receipt links', function (): void {
+    $user = User::factory()->create();
+
+    $order = Order::query()->create([
+        'user_id' => $user->id,
+        'email' => $user->email,
+        'stripe_checkout_session_id' => 'cs_receipt_public_id_1',
+        'status' => 'paid',
+        'subtotal_amount' => 1000,
+        'discount_amount' => 0,
+        'total_amount' => 1000,
+        'currency' => 'usd',
+        'paid_at' => now(),
+    ]);
+
+    expect($order->public_id)->toStartWith('ord_');
+    expect($order->public_id)->toMatch('/^ord_[a-z0-9]{26}$/');
+
+    $url = route('receipts.view', $order, false);
+
+    expect($url)->toContain('/receipts/'.$order->public_id);
+    expect($url)->not->toContain('/'.$order->id);
 });
 
 test('user can redirect to their stripe receipt', function (): void {

@@ -29,7 +29,7 @@
   - List of gifts purchased by current authenticated user.
 - `GET /receipts`
   - List of user's paid/refunded order receipts.
-- `GET /receipts/{order}`
+- `GET /receipts/{order:public_id}`
   - Redirect to Stripe-hosted receipt for a purchased order (owner-only).
 - `GET /learn/{course}/{lesson?}`
   - Course player; defaults to next incomplete lesson if lesson omitted.

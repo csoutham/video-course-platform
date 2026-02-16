@@ -9,7 +9,7 @@
     <p>Thanks for your purchase.</p>
 
     <p>
-        Order #{{ $order->id }}<br>
+        Order {{ $order->public_id }}<br>
         Total: {{ strtoupper($order->currency) }} {{ number_format($order->total_amount / 100, 2) }}<br>
         Paid: {{ optional($order->paid_at)->format('M d, Y H:i') ?? now()->format('M d, Y H:i') }}
     </p>
@@ -40,4 +40,3 @@
     @endif
 </body>
 </html>
-

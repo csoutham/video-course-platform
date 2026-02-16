@@ -16,9 +16,11 @@
                     <article class="vc-panel p-5">
                         <div class="flex flex-wrap items-center justify-between gap-3">
                             <div>
-                                <p class="text-sm font-semibold text-slate-900">Order #{{ $order->id }}</p>
-                                <p class="mt-1 text-xs text-slate-500">
-                                    {{ optional($order->paid_at)->format('M d, Y H:i') ?? 'Pending date' }} ·
+                                <p class="text-sm font-semibold text-slate-900">Order {{ $order->public_id }}</p>
+                                <p class="text-sm font-semibold text-slate-900">
+                                    {{ optional($order->paid_at)->format('M d, Y H:i') ?? 'Pending date' }}
+                                </p>
+                                <p class="mt-1 text-sm text-slate-500">
                                     {{ strtoupper($order->currency) }}
                                     {{ number_format($order->total_amount / 100, 2) }}
                                 </p>

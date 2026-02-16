@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Str;
 
 class Order extends Model
 {
@@ -28,6 +29,15 @@ class Order extends Model
         'refunded_at',
     ];
 
+    protected static function booted(): void
+    {
+        static::creating(function (self $order): void {
+            if (! $order->public_id) {
+                $order->public_id = 'ord_'.strtolower((string) Str::ulid());
+            }
+        });
+    }
+
     #[\Override]
     protected function casts(): array
     {
@@ -35,6 +45,11 @@ class Order extends Model
             'paid_at' => 'datetime',
             'refunded_at' => 'datetime',
         ];
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'public_id';
     }
 
     public function user(): BelongsTo
