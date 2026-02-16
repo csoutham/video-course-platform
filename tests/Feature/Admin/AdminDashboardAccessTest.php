@@ -1,35 +1,29 @@
 <?php
 
-namespace Tests\Feature\Admin;
-
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class AdminDashboardAccessTest extends TestCase
-{
-    use RefreshDatabase;
+uses(RefreshDatabase::class);
 
-    public function test_guests_are_redirected_to_login(): void
-    {
-        $this->get(route('admin.dashboard'))
-            ->assertRedirect(route('login'));
-    }
+test('guests are redirected to login', function (): void {
+    $this->get(route('admin.dashboard'))
+        ->assertRedirect(route('login'));
 
-    public function test_non_admin_users_receive_forbidden(): void
-    {
-        $this->actingAs(User::factory()->create());
+});
 
-        $this->get(route('admin.dashboard'))
-            ->assertForbidden();
-    }
+test('non admin users receive forbidden', function (): void {
+    $this->actingAs(User::factory()->create());
 
-    public function test_admin_users_can_open_dashboard(): void
-    {
-        $this->actingAs(User::factory()->admin()->create());
+    $this->get(route('admin.dashboard'))
+        ->assertForbidden();
 
-        $this->get(route('admin.dashboard'))
-            ->assertOk()
-            ->assertSeeText('High-level operational metrics');
-    }
-}
+});
+
+test('admin users can open dashboard', function (): void {
+    $this->actingAs(User::factory()->admin()->create());
+
+    $this->get(route('admin.dashboard'))
+        ->assertOk()
+        ->assertSeeText('High-level operational metrics');
+
+});

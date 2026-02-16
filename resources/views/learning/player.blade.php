@@ -62,7 +62,7 @@
                 @endif
 
                 @if ($activeLesson->duration_seconds)
-                    <p class="mt-1 text-xs font-semibold tracking-[0.1em] text-slate-500 uppercase">
+                    <p class="mt-1 text-xs font-semibold tracking-widest text-slate-500 uppercase">
                         Length: {{ gmdate('i:s', $activeLesson->duration_seconds) }}
                     </p>
                 @endif

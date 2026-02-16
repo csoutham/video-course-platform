@@ -47,7 +47,7 @@ class CoursesController extends Controller
             'auto_create_stripe_price' => ['nullable', 'boolean'],
         ]);
 
-        $course = DB::transaction(fn(): Course => Course::query()->create([
+        $course = DB::transaction(fn (): Course => Course::query()->create([
             'title' => $validated['title'],
             'slug' => $this->resolveCourseSlug($validated['slug'] ?? null, $validated['title']),
             'description' => $validated['description'] ?? null,
