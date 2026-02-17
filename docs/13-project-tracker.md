@@ -73,3 +73,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-17: Updated lesson editor field layout so `Slug`, `Sort`, and `Duration` align in one row for faster editing.
 - 2026-02-17: Improved collapsed module summaries in admin curriculum with clearer total/live lesson badges.
 - 2026-02-17: Switched course thumbnails to local uploads and added PDF uploads for course/module/lesson resources.
+- 2026-02-17: Added Kit purchaser sync (Stripe + free checkout), course-level Kit tag support, and tagging documentation.
