@@ -75,3 +75,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-17: Switched course thumbnails to local uploads and added PDF uploads for course/module/lesson resources.
 - 2026-02-17: Added Kit purchaser sync (Stripe + free checkout), course-level Kit tag support, and tagging documentation.
 - 2026-02-17: Restricted receipts to Stripe-backed non-zero orders; free/non-Stripe orders no longer send or show receipts.
+- 2026-02-17: Improved responsive UX with right-drawer mobile nav and playback layout changes (video-first on small screens, sticky scrollable curriculum on large screens).

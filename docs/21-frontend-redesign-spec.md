@@ -80,6 +80,7 @@ behavior and routes.
 2. Validate color contrast and focus rings.
 3. Validate form error/label accessibility.
 4. Remove visual inconsistencies and orphan utility patterns.
+5. Ensure mobile nav uses an off-canvas right drawer and playback page prioritizes video before curriculum.
 
 ## Technical Constraints
 
