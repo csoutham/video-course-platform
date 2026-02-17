@@ -53,11 +53,22 @@ class CoursesController extends Controller
             'requirements' => ['nullable', 'string'],
             'thumbnail_url' => ['nullable', 'url', 'max:2048'],
             'intro_video_id' => ['nullable', 'string', 'max:255'],
-            'price_amount' => ['required', 'integer', 'min:100'],
+            'price_amount' => ['nullable', 'integer', 'min:0'],
             'price_currency' => ['required', 'string', 'in:usd,gbp'],
             'is_published' => ['nullable', 'boolean'],
+            'is_free' => ['nullable', 'boolean'],
+            'free_access_mode' => ['nullable', 'string', 'in:direct,claim_link'],
             'auto_create_stripe_price' => ['nullable', 'boolean'],
         ]);
+
+        $isFree = (bool) ($validated['is_free'] ?? false);
+        $priceAmount = (int) ($validated['price_amount'] ?? 0);
+
+        if (! $isFree && $priceAmount < 100) {
+            return back()
+                ->withInput()
+                ->withErrors(['price_amount' => 'Paid courses must be at least 100 (cents/pence).']);
+        }
 
         $introVideoId = ($validated['intro_video_id'] ?? null) ?: null;
         if ($introVideoId) {
@@ -78,12 +89,15 @@ class CoursesController extends Controller
             'requirements' => $validated['requirements'] ?? null,
             'thumbnail_url' => $validated['thumbnail_url'] ?? null,
             'intro_video_id' => $introVideoId,
-            'price_amount' => (int) $validated['price_amount'],
+            'price_amount' => $isFree ? 0 : $priceAmount,
             'price_currency' => strtolower((string) $validated['price_currency']),
+            'is_free' => $isFree,
+            'free_access_mode' => (string) ($validated['free_access_mode'] ?? 'claim_link'),
+            'stripe_price_id' => null,
             'is_published' => (bool) ($validated['is_published'] ?? false),
         ]));
 
-        if ((bool) ($validated['auto_create_stripe_price'] ?? true)) {
+        if (! $isFree && (bool) ($validated['auto_create_stripe_price'] ?? true)) {
             try {
                 $stripePriceId = $pricingService->createPriceForCourse($course);
                 $course->forceFill([
@@ -133,12 +147,23 @@ class CoursesController extends Controller
             'requirements' => ['nullable', 'string'],
             'thumbnail_url' => ['nullable', 'url', 'max:2048'],
             'intro_video_id' => ['nullable', 'string', 'max:255'],
-            'price_amount' => ['required', 'integer', 'min:100'],
+            'price_amount' => ['nullable', 'integer', 'min:0'],
             'price_currency' => ['required', 'string', 'in:usd,gbp'],
             'stripe_price_id' => ['nullable', 'string', 'max:255'],
             'is_published' => ['nullable', 'boolean'],
+            'is_free' => ['nullable', 'boolean'],
+            'free_access_mode' => ['nullable', 'string', 'in:direct,claim_link'],
             'refresh_stripe_price' => ['nullable', 'boolean'],
         ]);
+
+        $isFree = (bool) ($validated['is_free'] ?? false);
+        $priceAmount = (int) ($validated['price_amount'] ?? 0);
+
+        if (! $isFree && $priceAmount < 100) {
+            return back()
+                ->withInput()
+                ->withErrors(['price_amount' => 'Paid courses must be at least 100 (cents/pence).']);
+        }
 
         $introVideoId = ($validated['intro_video_id'] ?? null) ?: null;
         if ($introVideoId) {
@@ -159,13 +184,15 @@ class CoursesController extends Controller
             'requirements' => $validated['requirements'] ?? null,
             'thumbnail_url' => $validated['thumbnail_url'] ?? null,
             'intro_video_id' => $introVideoId,
-            'price_amount' => (int) $validated['price_amount'],
+            'price_amount' => $isFree ? 0 : $priceAmount,
             'price_currency' => strtolower((string) $validated['price_currency']),
-            'stripe_price_id' => $validated['stripe_price_id'] ?: null,
+            'stripe_price_id' => $isFree ? null : ($validated['stripe_price_id'] ?: null),
+            'is_free' => $isFree,
+            'free_access_mode' => (string) ($validated['free_access_mode'] ?? 'claim_link'),
             'is_published' => (bool) ($validated['is_published'] ?? false),
         ])->save();
 
-        if ((bool) ($validated['refresh_stripe_price'] ?? false)) {
+        if (! $isFree && (bool) ($validated['refresh_stripe_price'] ?? false)) {
             try {
                 $course->forceFill([
                     'stripe_price_id' => $pricingService->createPriceForCourse($course),

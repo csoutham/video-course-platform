@@ -30,6 +30,8 @@ class CourseFactory extends Factory
             'price_amount' => fake()->numberBetween(4900, 19900),
             'price_currency' => 'usd',
             'stripe_price_id' => null,
+            'is_free' => false,
+            'free_access_mode' => 'claim_link',
             'is_published' => true,
         ];
     }

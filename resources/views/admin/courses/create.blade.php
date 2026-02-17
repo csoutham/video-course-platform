@@ -108,7 +108,7 @@
                         id="price_amount"
                         name="price_amount"
                         type="number"
-                        min="100"
+                        min="0"
                         required
                         value="{{ old('price_amount', 9900) }}"
                         class="vc-input" />
@@ -123,6 +123,30 @@
                         <option value="gbp" @selected(old('price_currency', 'usd') === 'gbp')>GBP</option>
                     </select>
                     @error('price_currency')
+                        <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="grid gap-4 sm:grid-cols-2">
+                <div class="space-y-2">
+                    <label class="flex items-center gap-2 text-sm text-slate-700">
+                        <input type="checkbox" name="is_free" value="1" @checked(old('is_free')) />
+                        Free course (lead magnet)
+                    </label>
+                    <p class="text-xs text-slate-500">
+                        Free courses bypass Stripe checkout and can issue claim links directly.
+                    </p>
+                </div>
+                <div>
+                    <label for="free_access_mode" class="text-sm font-medium text-slate-700">Free access mode</label>
+                    <select id="free_access_mode" name="free_access_mode" class="vc-input">
+                        <option value="claim_link" @selected(old('free_access_mode', 'claim_link') === 'claim_link')>
+                            Claim link
+                        </option>
+                        <option value="direct" @selected(old('free_access_mode') === 'direct')>Direct grant</option>
+                    </select>
+                    @error('free_access_mode')
                         <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
                     @enderror
                 </div>

@@ -27,6 +27,8 @@ class Course extends Model
         'price_amount',
         'price_currency',
         'stripe_price_id',
+        'is_free',
+        'free_access_mode',
         'is_published',
     ];
 
@@ -35,6 +37,7 @@ class Course extends Model
     {
         return [
             'is_published' => 'boolean',
+            'is_free' => 'boolean',
             'source_payload_json' => 'array',
             'source_last_imported_at' => 'datetime',
         ];
