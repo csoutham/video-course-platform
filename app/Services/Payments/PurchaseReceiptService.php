@@ -16,7 +16,7 @@ class PurchaseReceiptService
 
     public function sendPaidReceipt(Order $order, ?string $claimUrl = null): void
     {
-        if (! $order->email) {
+        if (! $order->email || ! $order->isStripeReceiptEligible()) {
             return;
         }
 

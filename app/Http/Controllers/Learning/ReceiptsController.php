@@ -19,7 +19,9 @@ class ReceiptsController extends Controller
             ->whereIn('status', ['paid', 'refunded'])
             ->latest('paid_at')
             ->orderByDesc('id')
-            ->get();
+            ->get()
+            ->filter(fn (Order $order): bool => $order->isStripeReceiptEligible())
+            ->values();
 
         foreach ($orders as $order) {
             $receiptService->ensureReceiptUrl($order);
@@ -33,6 +35,7 @@ class ReceiptsController extends Controller
     public function view(Request $request, Order $order, StripeReceiptService $receiptService): RedirectResponse
     {
         abort_if($order->user_id !== $request->user()->id, 403);
+        abort_if(! $order->isStripeReceiptEligible(), 404, 'Receipt is not available for this order.');
 
         $receiptUrl = $receiptService->ensureReceiptUrl($order);
 

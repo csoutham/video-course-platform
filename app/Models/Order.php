@@ -73,4 +73,21 @@ class Order extends Model
     {
         return $this->hasOne(GiftPurchase::class);
     }
+
+    public function isStripeReceiptEligible(): bool
+    {
+        if ((int) $this->total_amount <= 0) {
+            return false;
+        }
+
+        if (is_string($this->stripe_payment_intent_id) && $this->stripe_payment_intent_id !== '') {
+            return true;
+        }
+
+        if (! is_string($this->stripe_checkout_session_id) || $this->stripe_checkout_session_id === '') {
+            return false;
+        }
+
+        return str_starts_with($this->stripe_checkout_session_id, 'cs_');
+    }
 }

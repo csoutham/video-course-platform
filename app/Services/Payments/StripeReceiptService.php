@@ -10,6 +10,10 @@ class StripeReceiptService
 {
     public function ensureReceiptUrl(Order $order): ?string
     {
+        if (! $order->isStripeReceiptEligible()) {
+            return null;
+        }
+
         if ($order->stripe_receipt_url) {
             return $order->stripe_receipt_url;
         }

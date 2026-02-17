@@ -116,3 +116,70 @@ test('user cannot view another users receipt', function (): void {
         ->assertForbidden();
 
 });
+
+test('zero value and non-stripe orders are excluded from receipts list', function (): void {
+    $user = User::factory()->create();
+
+    $stripeOrder = Order::query()->create([
+        'user_id' => $user->id,
+        'email' => $user->email,
+        'stripe_checkout_session_id' => 'cs_receipt_real_1',
+        'status' => 'paid',
+        'subtotal_amount' => 2500,
+        'discount_amount' => 0,
+        'total_amount' => 2500,
+        'currency' => 'usd',
+        'paid_at' => now(),
+    ]);
+
+    $freeOrder = Order::query()->create([
+        'user_id' => $user->id,
+        'email' => $user->email,
+        'stripe_checkout_session_id' => 'free_01kabcxyzxyzxyzxyzxyzxyz',
+        'status' => 'paid',
+        'subtotal_amount' => 0,
+        'discount_amount' => 0,
+        'total_amount' => 0,
+        'currency' => 'usd',
+        'paid_at' => now(),
+    ]);
+
+    $manualOrder = Order::query()->create([
+        'user_id' => $user->id,
+        'email' => $user->email,
+        'stripe_checkout_session_id' => 'manual_order_1',
+        'status' => 'paid',
+        'subtotal_amount' => 3000,
+        'discount_amount' => 0,
+        'total_amount' => 3000,
+        'currency' => 'usd',
+        'paid_at' => now(),
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('receipts.index'))
+        ->assertOk()
+        ->assertSee('Order '.$stripeOrder->public_id)
+        ->assertDontSee('Order '.$freeOrder->public_id)
+        ->assertDontSee('Order '.$manualOrder->public_id);
+});
+
+test('ineligible orders cannot open receipt view', function (): void {
+    $user = User::factory()->create();
+
+    $freeOrder = Order::query()->create([
+        'user_id' => $user->id,
+        'email' => $user->email,
+        'stripe_checkout_session_id' => 'free_01kabcxyzxyzxyzxyzxyzxyz',
+        'status' => 'paid',
+        'subtotal_amount' => 0,
+        'discount_amount' => 0,
+        'total_amount' => 0,
+        'currency' => 'usd',
+        'paid_at' => now(),
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('receipts.view', $freeOrder))
+        ->assertNotFound();
+});

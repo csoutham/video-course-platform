@@ -171,7 +171,7 @@ test('free guest checkout creates claim flow without stripe', function (): void 
         'purpose' => 'order_claim',
     ]);
 
-    Mail::assertSent(PurchaseReceiptMail::class, fn (PurchaseReceiptMail $mail): bool => $mail->hasTo('lead@example.com'));
+    Mail::assertNotSent(PurchaseReceiptMail::class);
 
     Http::assertSent(fn (\Illuminate\Http\Client\Request $request): bool => $request->method() === 'POST'
         && $request->url() === 'https://api.kit.com/v4/subscribers'
@@ -220,7 +220,7 @@ test('free direct mode grants entitlement for authenticated user', function (): 
         'purpose' => 'order_claim',
     ]);
 
-    Mail::assertSent(PurchaseReceiptMail::class, fn (PurchaseReceiptMail $mail): bool => $mail->hasTo('member@example.com'));
+    Mail::assertNotSent(PurchaseReceiptMail::class);
 });
 
 test('free gift checkout issues gift claim and sends gift emails', function (): void {
@@ -263,4 +263,5 @@ test('free gift checkout issues gift claim and sends gift emails', function (): 
 
     Mail::assertSent(GiftDeliveryMail::class, fn (GiftDeliveryMail $mail): bool => $mail->hasTo('friend@example.com'));
     Mail::assertSent(GiftPurchaseConfirmationMail::class, fn (GiftPurchaseConfirmationMail $mail): bool => $mail->hasTo('buyer@example.com'));
+    Mail::assertNotSent(PurchaseReceiptMail::class);
 });
