@@ -494,8 +494,8 @@
                                         @method('PUT')
 
                                         <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
-                                            <div class="grid gap-3 sm:grid-cols-2">
-                                                <div class="sm:col-span-2">
+                                            <div class="grid gap-3 sm:grid-cols-6">
+                                                <div class="sm:col-span-6">
                                                     <label
                                                         class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
                                                         Lesson title
@@ -506,7 +506,7 @@
                                                         class="vc-input !mt-0 py-1.5 text-sm"
                                                         required />
                                                 </div>
-                                                <div>
+                                                <div class="sm:col-span-2">
                                                     <label
                                                         class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
                                                         Slug
@@ -517,7 +517,7 @@
                                                         class="vc-input !mt-0 py-1.5 text-sm"
                                                         required />
                                                 </div>
-                                                <div>
+                                                <div class="sm:col-span-2">
                                                     <label
                                                         class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
                                                         Sort
@@ -533,6 +533,18 @@
                                                 <div class="sm:col-span-2">
                                                     <label
                                                         class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                                        Duration (seconds)
+                                                    </label>
+                                                    <input
+                                                        type="number"
+                                                        min="0"
+                                                        name="duration_seconds"
+                                                        value="{{ $lesson->duration_seconds }}"
+                                                        class="vc-input !mt-0 py-1.5 text-sm" />
+                                                </div>
+                                                <div class="sm:col-span-6">
+                                                    <label
+                                                        class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
                                                         Module
                                                     </label>
                                                     <select name="module_id" class="vc-input !mt-0 py-1.5 text-sm">
@@ -545,19 +557,7 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                                <div>
-                                                    <label
-                                                        class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
-                                                        Duration (seconds)
-                                                    </label>
-                                                    <input
-                                                        type="number"
-                                                        min="0"
-                                                        name="duration_seconds"
-                                                        value="{{ $lesson->duration_seconds }}"
-                                                        class="vc-input !mt-0 py-1.5 text-sm" />
-                                                </div>
-                                                <div class="sm:col-span-2">
+                                                <div class="sm:col-span-6">
                                                     <label
                                                         class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
                                                         Stream video
@@ -594,7 +594,7 @@
                                                 </div>
 
                                                 <div
-                                                    class="mt-1 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-3 sm:col-span-2">
+                                                    class="mt-1 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-3 sm:col-span-6">
                                                     <div class="flex items-center gap-3">
                                                         <label class="flex items-center gap-2 text-sm text-slate-700">
                                                             <input

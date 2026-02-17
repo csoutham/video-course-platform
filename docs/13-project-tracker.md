@@ -70,3 +70,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-17: Added free lead-magnet distribution path (self-enroll, claim-link mode, and free gifting) with admin controls and coverage tests.
 - 2026-02-17: Added explicit `stream_video_filter_term` on course forms to filter Cloudflare Stream options per course in admin edit.
 - 2026-02-17: Added lesson module reassignment in admin editor and Markdown rendering for lesson summaries on learner playback.
+- 2026-02-17: Updated lesson editor field layout so `Slug`, `Sort`, and `Duration` align in one row for faster editing.
