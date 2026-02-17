@@ -97,10 +97,14 @@ test('admin can update and delete lesson', function (): void {
     $lesson = CourseLesson::factory()->create([
         'slug' => 'intro-lesson',
     ]);
+    $targetModule = CourseModule::factory()->create([
+        'course_id' => $lesson->course_id,
+    ]);
 
     $this->put(route('admin.lessons.update', $lesson), [
         'title' => 'Updated Lesson',
         'slug' => 'updated-lesson',
+        'module_id' => $targetModule->id,
         'summary' => 'Updated summary',
         'sort_order' => 2,
         'duration_seconds' => 180,
@@ -111,6 +115,7 @@ test('admin can update and delete lesson', function (): void {
         'id' => $lesson->id,
         'title' => 'Updated Lesson',
         'slug' => 'updated-lesson',
+        'module_id' => $targetModule->id,
         'duration_seconds' => 180,
     ]);
 
@@ -121,6 +126,22 @@ test('admin can update and delete lesson', function (): void {
         'id' => $lesson->id,
     ]);
 
+});
+
+test('admin cannot move lesson to module in different course', function (): void {
+    $this->actingAs(User::factory()->admin()->create());
+    $lesson = CourseLesson::factory()->create();
+    $foreignModule = CourseModule::factory()->create();
+
+    $this->put(route('admin.lessons.update', $lesson), [
+        'title' => $lesson->title,
+        'slug' => $lesson->slug,
+        'module_id' => $foreignModule->id,
+        'summary' => $lesson->summary,
+        'sort_order' => $lesson->sort_order,
+        'duration_seconds' => $lesson->duration_seconds,
+        'is_published' => $lesson->is_published ? '1' : '0',
+    ])->assertSessionHasErrors('module_id');
 });
 
 test('lesson update with stream video enforces signed urls and syncs duration', function (): void {

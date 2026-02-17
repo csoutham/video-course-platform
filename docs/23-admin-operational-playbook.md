@@ -39,6 +39,7 @@ Define how operations are executed in the custom `/admin` panel and expanded ove
 5. Set `Stream catalog filter term` in course details to narrow Stream options per course (e.g. `Monologue Course`).
 6. Save lesson updates to automatically enforce signed URLs in Cloudflare and sync duration from Stream metadata.
 7. Use red trash icon actions for module/lesson deletes in the curriculum editor.
+8. Reassign lessons between modules using the `Module` selector on each lesson edit block.
 
 ## Core Incident Procedures
 

@@ -471,6 +471,7 @@
                                     <label class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
                                         Summary
                                     </label>
+                                    <p class="mb-2 text-xs text-slate-500">Supports basic Markdown.</p>
                                     <textarea name="summary" rows="8" class="vc-input !mt-0 text-sm"></textarea>
                                 </div>
                             </div>
@@ -528,6 +529,21 @@
                                                         value="{{ $lesson->sort_order }}"
                                                         class="vc-input !mt-0 py-1.5 text-sm"
                                                         required />
+                                                </div>
+                                                <div class="sm:col-span-2">
+                                                    <label
+                                                        class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                                        Module
+                                                    </label>
+                                                    <select name="module_id" class="vc-input !mt-0 py-1.5 text-sm">
+                                                        @foreach ($course->modules as $moduleOption)
+                                                            <option
+                                                                value="{{ $moduleOption->id }}"
+                                                                @selected($lesson->module_id === $moduleOption->id)>
+                                                                {{ $moduleOption->title }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                                 <div>
                                                     <label
@@ -618,6 +634,7 @@
                                                     class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
                                                     Summary
                                                 </label>
+                                                <p class="mb-2 text-xs text-slate-500">Supports basic Markdown.</p>
                                                 <textarea name="summary" rows="8" class="vc-input !mt-0 text-sm">
 {{ $lesson->summary }}</textarea
                                                 >

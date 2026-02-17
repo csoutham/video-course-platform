@@ -1,5 +1,13 @@
 <x-public-layout maxWidth="max-w-none" containerPadding="px-4 py-6 lg:px-10">
     <x-slot:title>{{ $course->title }} - Learn</x-slot>
+    @php
+        $lessonSummaryHtml = $activeLesson->summary
+            ? \Illuminate\Support\Str::markdown($activeLesson->summary, [
+                'html_input' => 'strip',
+                'allow_unsafe_links' => false,
+            ])
+            : null;
+    @endphp
 
     <div class="grid gap-6 lg:grid-cols-[340px_1fr]">
         <aside class="space-y-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
@@ -67,10 +75,12 @@
                 @endif
             </div>
 
-            @if ($activeLesson->summary)
+            @if ($lessonSummaryHtml)
                 <div>
                     <h3 class="text-sm font-semibold text-slate-900">Summary</h3>
-                    <p class="mt-2 text-sm text-slate-600">{{ $activeLesson->summary }}</p>
+                    <div class="prose prose-slate mt-2 max-w-none text-sm">
+                        {!! $lessonSummaryHtml !!}
+                    </div>
                 </div>
             @endif
 

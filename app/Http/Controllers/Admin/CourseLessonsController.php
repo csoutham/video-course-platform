@@ -9,6 +9,7 @@ use App\Services\Learning\CloudflareStreamMetadataService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use RuntimeException;
 
 class CourseLessonsController extends Controller
@@ -65,6 +66,13 @@ class CourseLessonsController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', 'alpha_dash', 'unique:course_lessons,slug,'.$lesson->id.',id,course_id,'.$lesson->course_id],
+            'module_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('course_modules', 'id')->where(
+                    fn ($query) => $query->where('course_id', $lesson->course_id)
+                ),
+            ],
             'summary' => ['nullable', 'string'],
             'stream_video_id' => ['nullable', 'string', 'max:255'],
             'sort_order' => ['required', 'integer', 'min:0'],
@@ -87,6 +95,7 @@ class CourseLessonsController extends Controller
         $lesson->forceFill([
             'title' => $validated['title'],
             'slug' => $validated['slug'],
+            'module_id' => (int) ($validated['module_id'] ?? $lesson->module_id),
             'summary' => $validated['summary'] ?? null,
             'stream_video_id' => $streamVideoId,
             'duration_seconds' => $durationSeconds,

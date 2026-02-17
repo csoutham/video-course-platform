@@ -43,7 +43,7 @@ Success criteria:
 2. User selects entitled course.
 3. User is routed to `/learn/{course}/{lesson?}`.
 4. Course player loads module/lesson navigation and active lesson video.
-5. Lesson summary is shown below the video for better scan/read flow.
+5. Lesson summary is shown below the video for better scan/read flow and supports basic Markdown formatting.
 6. Resources section is shown only when lesson downloads exist.
 7. User downloads lesson resources via secure links.
 

@@ -111,6 +111,21 @@ test('entitled user can access course player default lesson', function (): void 
 
 });
 
+test('lesson summary renders markdown on player and strips unsafe html', function (): void {
+    [$user, $course, $lesson] = ($this->seedEntitledLesson)();
+
+    $lesson->forceFill([
+        'summary' => "### Key Idea\n\nUse **focus** and energy.\n\n<script>alert('xss')</script>",
+    ])->save();
+
+    $this->actingAs($user)
+        ->get(route('learn.show', ['course' => $course->slug, 'lessonSlug' => $lesson->slug]))
+        ->assertOk()
+        ->assertSee('Summary')
+        ->assertSee('<strong>focus</strong>', false)
+        ->assertDontSee("alert('xss')");
+});
+
 test('unentitled user cannot access course player', function (): void {
     $user = User::factory()->create();
     $course = Course::factory()->published()->create();
