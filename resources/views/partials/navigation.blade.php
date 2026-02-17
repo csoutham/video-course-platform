@@ -5,24 +5,35 @@
         </a>
 
         <nav class="hidden items-center gap-2 text-sm font-medium text-slate-600 lg:flex">
-            <a href="{{ route('courses.index') }}" class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
+            <a
+                href="{{ route('courses.index') }}"
+                class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
                 Courses
             </a>
             @auth
-                <a href="{{ route('my-courses.index') }}" class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
+                <a
+                    href="{{ route('my-courses.index') }}"
+                    class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
                     My Courses
                 </a>
-                <a href="{{ route('gifts.index') }}" class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
+                <a
+                    href="{{ route('gifts.index') }}"
+                    class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
                     My Gifts
                 </a>
-                <a href="{{ route('receipts.index') }}" class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
+                <a
+                    href="{{ route('receipts.index') }}"
+                    class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
                     Receipts
                 </a>
                 @can('access-admin')
-                    <a href="{{ route('admin.dashboard') }}" class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
+                    <a
+                        href="{{ route('admin.dashboard') }}"
+                        class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
                         Admin
                     </a>
                 @endcan
+
                 <a href="{{ route('profile') }}" class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
                     Profile
                 </a>
@@ -46,7 +57,12 @@
             aria-label="Open menu"
             aria-controls="mobile-site-nav"
             aria-expanded="false">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
         </button>
@@ -54,14 +70,25 @@
 </header>
 
 <div id="mobile-site-nav" class="pointer-events-none fixed inset-0 z-50 lg:hidden" aria-hidden="true">
-    <div data-mobile-nav-backdrop class="absolute inset-0 bg-slate-900/30 opacity-0 transition-opacity duration-200"></div>
+    <div
+        data-mobile-nav-backdrop
+        class="absolute inset-0 bg-slate-900/30 opacity-0 transition-opacity duration-200"></div>
     <aside
         data-mobile-nav-panel
         class="absolute top-0 right-0 h-full w-[85vw] max-w-sm translate-x-full border-l border-slate-200 bg-white p-5 shadow-xl transition-transform duration-200">
         <div class="mb-4 flex items-center justify-between">
             <p class="text-sm font-semibold tracking-[0.18em] text-slate-500 uppercase">Menu</p>
-            <button type="button" data-mobile-nav-close class="rounded-md p-2 text-slate-500 hover:bg-slate-100" aria-label="Close menu">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <button
+                type="button"
+                data-mobile-nav-close
+                class="rounded-md p-2 text-slate-500 hover:bg-slate-100"
+                aria-label="Close menu">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
@@ -69,12 +96,19 @@
         <nav class="space-y-1 text-sm font-medium text-slate-700">
             <a href="{{ route('courses.index') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">Courses</a>
             @auth
-                <a href="{{ route('my-courses.index') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">My Courses</a>
+                <a href="{{ route('my-courses.index') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
+                    My Courses
+                </a>
                 <a href="{{ route('gifts.index') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">My Gifts</a>
-                <a href="{{ route('receipts.index') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">Receipts</a>
+                <a href="{{ route('receipts.index') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
+                    Receipts
+                </a>
                 @can('access-admin')
-                    <a href="{{ route('admin.dashboard') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">Admin</a>
+                    <a href="{{ route('admin.dashboard') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
+                        Admin
+                    </a>
                 @endcan
+
                 <a href="{{ route('profile') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">Profile</a>
                 <form method="POST" action="{{ route('logout') }}" class="pt-2">
                     @csrf
