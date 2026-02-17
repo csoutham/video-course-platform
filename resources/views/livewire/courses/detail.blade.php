@@ -75,11 +75,13 @@
                     @if ($course->is_free)
                         No payment required. Enroll instantly and start learning right away.
                     @else
-                        One-time purchase. Instant access to all published lessons and resources in this course.
+                            One-time purchase. Instant access to all published lessons and resources in this course.
                     @endif
                 </p>
                 <ul class="mt-5 space-y-2 text-sm text-slate-600">
-                    <li>{{ $course->is_free ? 'Full curriculum access after enrollment' : 'Full curriculum access after checkout' }}</li>
+                    <li>
+                        {{ $course->is_free ? 'Full curriculum access after enrollment' : 'Full curriculum access after checkout' }}
+                    </li>
                     <li>Track progress lesson-by-lesson</li>
                     <li>Watch from any modern browser</li>
                 </ul>
@@ -169,9 +171,10 @@
                 <p class="text-xs font-semibold tracking-[0.14em] text-slate-500 uppercase">Enrollment</p>
                 <p class="text-sm text-slate-600">
                     @if ($course->is_free)
-                        Get access now{{ $course->free_access_mode === 'claim_link' ? ' with a secure claim link.' : '.' }}
+                        Get access
+                        now{{ $course->free_access_mode === 'claim_link' ? ' with a secure claim link.' : '.' }}
                     @else
-                        Complete checkout to unlock this course immediately.
+                            Complete checkout to unlock this course immediately.
                     @endif
                 </p>
 
