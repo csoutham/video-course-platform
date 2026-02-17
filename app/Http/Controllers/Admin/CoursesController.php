@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use RuntimeException;
 use Throwable;
@@ -52,7 +53,7 @@ class CoursesController extends Controller
             'description' => ['nullable', 'string'],
             'long_description' => ['nullable', 'string'],
             'requirements' => ['nullable', 'string'],
-            'thumbnail_url' => ['nullable', 'url', 'max:2048'],
+            'thumbnail_image' => ['nullable', 'file', 'image', 'max:5120', 'mimes:jpg,jpeg,png,webp'],
             'intro_video_id' => ['nullable', 'string', 'max:255'],
             'stream_video_filter_term' => ['nullable', 'string', 'max:255'],
             'price_amount' => ['nullable', 'integer', 'min:0'],
@@ -83,13 +84,15 @@ class CoursesController extends Controller
             }
         }
 
+        $thumbnailUrl = $this->storeThumbnail($request, null, $validated['title']);
+
         $course = DB::transaction(fn (): Course => Course::query()->create([
             'title' => $validated['title'],
             'slug' => $this->resolveCourseSlug($validated['slug'] ?? null, $validated['title']),
             'description' => $validated['description'] ?? null,
             'long_description' => $validated['long_description'] ?? null,
             'requirements' => $validated['requirements'] ?? null,
-            'thumbnail_url' => $validated['thumbnail_url'] ?? null,
+            'thumbnail_url' => $thumbnailUrl,
             'intro_video_id' => $introVideoId,
             'stream_video_filter_term' => ($validated['stream_video_filter_term'] ?? null) ?: null,
             'price_amount' => $isFree ? 0 : $priceAmount,
@@ -124,7 +127,10 @@ class CoursesController extends Controller
     public function edit(Course $course, CloudflareStreamCatalogService $streamCatalogService): View
     {
         $course->load([
+            'resources' => fn ($query) => $query->orderBy('sort_order'),
+            'modules.resources' => fn ($query) => $query->orderBy('sort_order'),
             'modules.lessons' => fn ($query) => $query->orderBy('sort_order'),
+            'modules.lessons.resources' => fn ($query) => $query->orderBy('sort_order'),
         ]);
 
         [$streamVideos, $streamCatalogStatus, $streamCatalogFilterNotice] = $this->resolveStreamCatalog($streamCatalogService, $course);
@@ -149,7 +155,7 @@ class CoursesController extends Controller
             'description' => ['nullable', 'string'],
             'long_description' => ['nullable', 'string'],
             'requirements' => ['nullable', 'string'],
-            'thumbnail_url' => ['nullable', 'url', 'max:2048'],
+            'thumbnail_image' => ['nullable', 'file', 'image', 'max:5120', 'mimes:jpg,jpeg,png,webp'],
             'intro_video_id' => ['nullable', 'string', 'max:255'],
             'stream_video_filter_term' => ['nullable', 'string', 'max:255'],
             'price_amount' => ['nullable', 'integer', 'min:0'],
@@ -181,13 +187,15 @@ class CoursesController extends Controller
             }
         }
 
+        $thumbnailUrl = $this->storeThumbnail($request, $course, $validated['title']);
+
         $course->forceFill([
             'title' => $validated['title'],
             'slug' => $validated['slug'],
             'description' => $validated['description'] ?? null,
             'long_description' => $validated['long_description'] ?? null,
             'requirements' => $validated['requirements'] ?? null,
-            'thumbnail_url' => $validated['thumbnail_url'] ?? null,
+            'thumbnail_url' => $thumbnailUrl ?: $course->thumbnail_url,
             'intro_video_id' => $introVideoId,
             'stream_video_filter_term' => ($validated['stream_video_filter_term'] ?? null) ?: null,
             'price_amount' => $isFree ? 0 : $priceAmount,
@@ -231,6 +239,35 @@ class CoursesController extends Controller
         }
 
         return $candidate;
+    }
+
+    private function storeThumbnail(Request $request, ?Course $existingCourse, string $title): ?string
+    {
+        if (! $request->hasFile('thumbnail_image')) {
+            return null;
+        }
+
+        $disk = 'public';
+        $file = $request->file('thumbnail_image');
+        $extension = strtolower((string) ($file?->getClientOriginalExtension() ?: 'jpg'));
+        $filename = Str::slug($title).'-'.Str::uuid().'.'.$extension;
+        $path = $file?->storeAs('course-thumbnails', $filename, $disk);
+
+        if (! $path) {
+            return null;
+        }
+
+        if ($existingCourse?->thumbnail_url) {
+            $prefix = rtrim(Storage::disk($disk)->url(''), '/').'/';
+            if (str_starts_with($existingCourse->thumbnail_url, $prefix)) {
+                $oldPath = ltrim(Str::after($existingCourse->thumbnail_url, $prefix), '/');
+                if ($oldPath !== '') {
+                    Storage::disk($disk)->delete($oldPath);
+                }
+            }
+        }
+
+        return Storage::disk($disk)->url($path);
     }
 
     /**

@@ -5,6 +5,8 @@ use App\Models\User;
 use App\Services\Learning\CloudflareStreamMetadataService;
 use App\Services\Payments\StripeCoursePricingService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
@@ -19,6 +21,7 @@ test('admin can view create course screen', function (): void {
 
 test('admin can create course and auto assign stripe price', function (): void {
     $this->actingAs(User::factory()->admin()->create());
+    Storage::fake('public');
 
     $mock = \Mockery::mock(StripeCoursePricingService::class);
     $mock->shouldReceive('createPriceForCourse')
@@ -36,6 +39,7 @@ test('admin can create course and auto assign stripe price', function (): void {
         'price_currency' => 'usd',
         'is_published' => '1',
         'auto_create_stripe_price' => '1',
+        'thumbnail_image' => UploadedFile::fake()->image('thumb.png'),
     ]);
 
     $course = Course::query()->firstOrFail();
@@ -52,10 +56,13 @@ test('admin can create course and auto assign stripe price', function (): void {
         'is_published' => true,
     ]);
 
+    $this->assertNotNull($course->fresh()->thumbnail_url);
+
 });
 
 test('admin can update course and refresh stripe price', function (): void {
     $this->actingAs(User::factory()->admin()->create());
+    Storage::fake('public');
     $course = Course::factory()->create([
         'stripe_price_id' => 'price_old_1',
         'price_amount' => 9900,
@@ -79,7 +86,7 @@ test('admin can update course and refresh stripe price', function (): void {
         'description' => 'Updated description',
         'long_description' => "### Updated long description\n\nMore depth.",
         'requirements' => "- Git\n- Basic Laravel",
-        'thumbnail_url' => 'https://example.com/new.jpg',
+        'thumbnail_image' => UploadedFile::fake()->image('new.jpg'),
         'intro_video_id' => 'stream_intro_001',
         'stream_video_filter_term' => 'Updated Course',
         'price_amount' => 14900,

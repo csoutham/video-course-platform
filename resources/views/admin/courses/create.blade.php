@@ -11,7 +11,7 @@
     </section>
 
     <section class="vc-panel mt-6 p-6">
-        <form method="POST" action="{{ route('admin.courses.store') }}" class="space-y-5">
+        <form method="POST" action="{{ route('admin.courses.store') }}" enctype="multipart/form-data" class="space-y-5">
             @csrf
 
             <div>
@@ -63,9 +63,15 @@
             </div>
 
             <div>
-                <label for="thumbnail_url" class="text-sm font-medium text-slate-700">Thumbnail URL</label>
-                <input id="thumbnail_url" name="thumbnail_url" value="{{ old('thumbnail_url') }}" class="vc-input" />
-                @error('thumbnail_url')
+                <label for="thumbnail_image" class="text-sm font-medium text-slate-700">Thumbnail image</label>
+                <label
+                    for="thumbnail_image"
+                    class="mt-2 flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center transition hover:border-slate-400 hover:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">Drop image here or click to upload</span>
+                    <span class="mt-1 text-xs text-slate-500">JPG, PNG, WEBP up to 5MB</span>
+                </label>
+                <input id="thumbnail_image" name="thumbnail_image" type="file" accept="image/*" class="sr-only" />
+                @error('thumbnail_image')
                     <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
                 @enderror
             </div>

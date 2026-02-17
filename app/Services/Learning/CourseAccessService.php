@@ -18,13 +18,21 @@ class CourseAccessService
 
     public function userCanAccessResource(User $user, LessonResource $resource): bool
     {
-        $lesson = $resource->lesson;
+        $course = $resource->course;
 
-        if (! $lesson || ! $lesson->is_published) {
-            return false;
+        if (! $course) {
+            $lesson = $resource->lesson;
+
+            if (! $lesson || ! $lesson->is_published) {
+                return false;
+            }
+
+            $course = $lesson->course;
         }
 
-        $course = $lesson->course;
+        if ($resource->lesson_id && ! $resource->lesson?->is_published) {
+            return false;
+        }
 
         if (! $course || ! $course->is_published) {
             return false;

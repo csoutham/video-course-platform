@@ -84,20 +84,65 @@
                 </div>
             @endif
 
-            @if ($activeLesson->resources->isNotEmpty())
+            @if ($courseResources->isNotEmpty() || $moduleResources->isNotEmpty() || $lessonResources->isNotEmpty())
                 <div class="space-y-2">
                     <h3 class="text-sm font-semibold text-slate-900">Resources</h3>
-                    <ul class="space-y-2">
-                        @foreach ($activeLesson->resources as $resource)
-                            <li>
-                                <a
-                                    href="{{ route('resources.download', $resource) }}"
-                                    class="inline-flex items-center rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">
-                                    Download {{ $resource->name }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
+                    @if ($courseResources->isNotEmpty())
+                        <div>
+                            <p class="mb-2 text-xs font-semibold tracking-wide text-slate-500 uppercase">
+                                Course resources
+                            </p>
+                            <ul class="space-y-2">
+                                @foreach ($courseResources as $resource)
+                                    <li>
+                                        <a
+                                            href="{{ route('resources.download', $resource) }}"
+                                            class="inline-flex items-center rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">
+                                            Download {{ $resource->name }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @if ($moduleResources->isNotEmpty())
+                        <div>
+                            <p class="mb-2 text-xs font-semibold tracking-wide text-slate-500 uppercase">
+                                Module resources
+                            </p>
+                            <ul class="space-y-2">
+                                @foreach ($moduleResources as $resource)
+                                    <li>
+                                        <a
+                                            href="{{ route('resources.download', $resource) }}"
+                                            class="inline-flex items-center rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">
+                                            Download {{ $resource->name }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @if ($lessonResources->isNotEmpty())
+                        <div>
+                            <p class="mb-2 text-xs font-semibold tracking-wide text-slate-500 uppercase">
+                                Lesson resources
+                            </p>
+                            <ul class="space-y-2">
+                                @foreach ($lessonResources as $resource)
+                                    <li>
+                                        <a
+                                            href="{{ route('resources.download', $resource) }}"
+                                            class="inline-flex items-center rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">
+                                            Download {{ $resource->name }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                 </div>
             @endif
 

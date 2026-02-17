@@ -199,6 +199,54 @@ test('resource download generates signed url and allows entitled user download',
 
 });
 
+test('entitled user can access course and module scoped resources', function (): void {
+    Storage::fake('local');
+    config()->set('filesystems.course_resources_disk', 'local');
+
+    [$user, $course, $lesson] = ($this->seedEntitledLesson)();
+
+    $courseResource = LessonResource::create([
+        'course_id' => $course->id,
+        'module_id' => null,
+        'lesson_id' => null,
+        'name' => 'Course Overview.pdf',
+        'storage_key' => 'resources/course-overview.pdf',
+        'mime_type' => 'application/pdf',
+        'size_bytes' => 100,
+        'sort_order' => 1,
+    ]);
+
+    $moduleResource = LessonResource::create([
+        'course_id' => $course->id,
+        'module_id' => $lesson->module_id,
+        'lesson_id' => null,
+        'name' => 'Module Pack.pdf',
+        'storage_key' => 'resources/module-pack.pdf',
+        'mime_type' => 'application/pdf',
+        'size_bytes' => 100,
+        'sort_order' => 2,
+    ]);
+
+    Storage::disk('local')->put('resources/course-overview.pdf', 'content 1');
+    Storage::disk('local')->put('resources/module-pack.pdf', 'content 2');
+
+    $this->actingAs($user)
+        ->get(route('learn.show', ['course' => $course->slug, 'lessonSlug' => $lesson->slug]))
+        ->assertOk()
+        ->assertSee('Course resources')
+        ->assertSee('Module resources')
+        ->assertSee('Course Overview.pdf')
+        ->assertSee('Module Pack.pdf');
+
+    $this->actingAs($user)
+        ->get(route('resources.download', $courseResource))
+        ->assertRedirect();
+
+    $this->actingAs($user)
+        ->get(route('resources.download', $moduleResource))
+        ->assertRedirect();
+});
+
 test('unentitled user cannot download resource', function (): void {
     [$user, $course, $lesson] = ($this->seedEntitledLesson)();
 

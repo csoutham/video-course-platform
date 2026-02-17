@@ -52,7 +52,11 @@
     </section>
 
     <section class="vc-panel mt-6 p-6" data-admin-tab-panel="details">
-        <form method="POST" action="{{ route('admin.courses.update', $course) }}" class="space-y-5">
+        <form
+            method="POST"
+            action="{{ route('admin.courses.update', $course) }}"
+            enctype="multipart/form-data"
+            class="space-y-5">
             @csrf
             @method('PUT')
 
@@ -105,13 +109,21 @@
             </div>
 
             <div>
-                <label for="thumbnail_url" class="text-sm font-medium text-slate-700">Thumbnail URL</label>
-                <input
-                    id="thumbnail_url"
-                    name="thumbnail_url"
-                    value="{{ old('thumbnail_url', $course->thumbnail_url) }}"
-                    class="vc-input" />
-                @error('thumbnail_url')
+                <label for="thumbnail_image" class="text-sm font-medium text-slate-700">Thumbnail image</label>
+                @if ($course->thumbnail_url)
+                    <img
+                        src="{{ $course->thumbnail_url }}"
+                        alt="{{ $course->title }} thumbnail"
+                        class="mt-2 h-28 w-full rounded-lg border border-slate-200 object-cover sm:w-56" />
+                @endif
+                <label
+                    for="thumbnail_image"
+                    class="mt-2 flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center transition hover:border-slate-400 hover:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">Drop image here or click to replace</span>
+                    <span class="mt-1 text-xs text-slate-500">JPG, PNG, WEBP up to 5MB</span>
+                </label>
+                <input id="thumbnail_image" name="thumbnail_image" type="file" accept="image/*" class="sr-only" />
+                @error('thumbnail_image')
                     <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
                 @enderror
             </div>
@@ -304,6 +316,58 @@
             </div>
         @endif
 
+        <div class="mt-4 rounded-xl border border-slate-200 bg-white p-4">
+            <h3 class="text-sm font-semibold text-slate-900">Course resources (PDF)</h3>
+            <form
+                method="POST"
+                action="{{ route('admin.resources.course.store', $course) }}"
+                enctype="multipart/form-data"
+                data-async-curriculum
+                data-async-success="Course resource uploaded."
+                class="mt-3 grid gap-3 sm:grid-cols-6">
+                @csrf
+                <div class="sm:col-span-3">
+                    <label class="text-xs font-semibold tracking-wide text-slate-600 uppercase">Display name</label>
+                    <input name="name" class="vc-input !mt-0 py-1.5 text-sm" placeholder="Workbook.pdf" />
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="text-xs font-semibold tracking-wide text-slate-600 uppercase">PDF file</label>
+                    <input name="resource_file" type="file" accept="application/pdf" class="vc-input !mt-0 py-1.5 text-sm" required />
+                </div>
+                <div class="flex items-end sm:col-span-1">
+                    <button type="submit" class="vc-btn-primary w-full justify-center">Upload</button>
+                </div>
+            </form>
+
+            @if ($course->resources->isNotEmpty())
+                <ul class="mt-3 space-y-2">
+                    @foreach ($course->resources as $resource)
+                        <li class="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-sm">
+                            <span class="text-slate-700">{{ $resource->name }}</span>
+                            <form
+                                method="POST"
+                                action="{{ route('admin.resources.destroy', $resource) }}"
+                                data-async-curriculum
+                                data-async-success="Resource deleted.">
+                                @csrf
+                                @method('DELETE')
+                                <button
+                                    type="submit"
+                                    class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-rose-200 bg-rose-50 text-rose-600 transition hover:bg-rose-100"
+                                    title="Delete resource"
+                                    aria-label="Delete resource">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-current">
+                                        <path
+                                            d="M9 3a1 1 0 0 0-1 1v1H5a1 1 0 1 0 0 2h1v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7h1a1 1 0 1 0 0-2h-3V4a1 1 0 0 0-1-1H9Zm2 2h2v1h-2V5Zm-3 2h8v12H8V7Z" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </div>
+
         @if ($course->modules->isNotEmpty())
             <div class="mt-5 flex flex-wrap items-center justify-end gap-2">
                 <button type="button" data-modules-expand-all class="vc-btn-secondary !px-3 !py-1.5 !text-xs">
@@ -414,6 +478,67 @@
                             @csrf
                             @method('DELETE')
                         </form>
+                        <div class="mt-3 rounded-lg border border-slate-200 bg-white p-3">
+                            <h4 class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                Module resources (PDF)
+                            </h4>
+                            <form
+                                method="POST"
+                                action="{{ route('admin.resources.module.store', $module) }}"
+                                enctype="multipart/form-data"
+                                data-async-curriculum
+                                data-async-success="Module resource uploaded."
+                                class="mt-2 grid gap-3 sm:grid-cols-6">
+                                @csrf
+                                <div class="sm:col-span-3">
+                                    <input
+                                        name="name"
+                                        class="vc-input !mt-0 py-1.5 text-sm"
+                                        placeholder="Module handout.pdf" />
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <input
+                                        name="resource_file"
+                                        type="file"
+                                        accept="application/pdf"
+                                        class="vc-input !mt-0 py-1.5 text-sm"
+                                        required />
+                                </div>
+                                <div class="flex items-end sm:col-span-1">
+                                    <button type="submit" class="vc-btn-secondary w-full justify-center">Upload</button>
+                                </div>
+                            </form>
+                            @if ($module->resources->isNotEmpty())
+                                <ul class="mt-2 space-y-1">
+                                    @foreach ($module->resources as $resource)
+                                        <li class="flex items-center justify-between rounded-md border border-slate-200 px-2.5 py-1.5 text-xs">
+                                            <span class="text-slate-700">{{ $resource->name }}</span>
+                                            <form
+                                                method="POST"
+                                                action="{{ route('admin.resources.destroy', $resource) }}"
+                                                data-async-curriculum
+                                                data-async-success="Resource deleted.">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button
+                                                    type="submit"
+                                                    class="inline-flex h-7 w-7 items-center justify-center rounded-md border border-rose-200 bg-rose-50 text-rose-600 transition hover:bg-rose-100"
+                                                    title="Delete resource"
+                                                    aria-label="Delete resource">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 24 24"
+                                                        class="h-3.5 w-3.5 fill-current">
+                                                        <path
+                                                            d="M9 3a1 1 0 0 0-1 1v1H5a1 1 0 1 0 0 2h1v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7h1a1 1 0 1 0 0-2h-3V4a1 1 0 0 0-1-1H9Zm2 2h2v1h-2V5Zm-3 2h8v12H8V7Z" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                        </div>
                         <form
                             method="POST"
                             action="{{ route('admin.lessons.store', $module) }}"
@@ -657,6 +782,68 @@
                                             </div>
                                         </div>
                                     </form>
+                                    <div class="mt-3 rounded-lg border border-slate-200 bg-white p-3">
+                                        <h4 class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                            Lesson resources (PDF)
+                                        </h4>
+                                        <form
+                                            method="POST"
+                                            action="{{ route('admin.resources.lesson.store', $lesson) }}"
+                                            enctype="multipart/form-data"
+                                            data-async-curriculum
+                                            data-async-success="Lesson resource uploaded."
+                                            class="mt-2 grid gap-3 sm:grid-cols-6">
+                                            @csrf
+                                            <div class="sm:col-span-3">
+                                                <input
+                                                    name="name"
+                                                    class="vc-input !mt-0 py-1.5 text-sm"
+                                                    placeholder="Lesson worksheet.pdf" />
+                                            </div>
+                                            <div class="sm:col-span-2">
+                                                <input
+                                                    name="resource_file"
+                                                    type="file"
+                                                    accept="application/pdf"
+                                                    class="vc-input !mt-0 py-1.5 text-sm"
+                                                    required />
+                                            </div>
+                                            <div class="flex items-end sm:col-span-1">
+                                                <button type="submit" class="vc-btn-secondary w-full justify-center">Upload</button>
+                                            </div>
+                                        </form>
+                                        @if ($lesson->resources->isNotEmpty())
+                                            <ul class="mt-2 space-y-1">
+                                                @foreach ($lesson->resources as $resource)
+                                                    <li
+                                                        class="flex items-center justify-between rounded-md border border-slate-200 px-2.5 py-1.5 text-xs">
+                                                        <span class="text-slate-700">{{ $resource->name }}</span>
+                                                        <form
+                                                            method="POST"
+                                                            action="{{ route('admin.resources.destroy', $resource) }}"
+                                                            data-async-curriculum
+                                                            data-async-success="Resource deleted.">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button
+                                                                type="submit"
+                                                                class="inline-flex h-7 w-7 items-center justify-center rounded-md border border-rose-200 bg-rose-50 text-rose-600 transition hover:bg-rose-100"
+                                                                title="Delete resource"
+                                                                aria-label="Delete resource">
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    viewBox="0 0 24 24"
+                                                                    class="h-3.5 w-3.5 fill-current">
+                                                                    <path
+                                                                        d="M9 3a1 1 0 0 0-1 1v1H5a1 1 0 1 0 0 2h1v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7h1a1 1 0 1 0 0-2h-3V4a1 1 0 0 0-1-1H9Zm2 2h2v1h-2V5Zm-3 2h8v12H8V7Z" />
+                                                                </svg>
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </div>
                                     <form
                                         id="delete-lesson-{{ $lesson->id }}"
                                         method="POST"

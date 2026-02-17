@@ -78,7 +78,9 @@
 ### lesson_resources
 
 - `id`
-- `lesson_id` (index)
+- `course_id` (index)
+- `module_id` (nullable index)
+- `lesson_id` (nullable index)
 - `name`
 - `storage_key`
 - `mime_type`
@@ -179,6 +181,7 @@ Constraints:
 - One course has many modules and lessons.
 - One module has many lessons.
 - One lesson has many resources.
+- Course, module, and lesson-level resources share a single table; each row belongs to one scope.
 - One lesson has many user progress rows.
 - One order has many order items.
 - One paid order creates entitlements for related items.

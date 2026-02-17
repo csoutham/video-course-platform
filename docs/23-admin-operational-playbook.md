@@ -26,7 +26,7 @@ Define how operations are executed in the custom `/admin` panel and expanded ove
 ### Create a new paid course
 
 1. Open `/admin/courses/create`.
-2. Enter title, slug/description, and pricing.
+2. Enter title, slug/description, upload thumbnail image, and pricing.
 3. Keep `Auto-create Stripe price` enabled for first publish.
 4. Save and confirm `stripe_price_id` is populated on the edit page.
 
@@ -40,6 +40,7 @@ Define how operations are executed in the custom `/admin` panel and expanded ove
 6. Save lesson updates to automatically enforce signed URLs in Cloudflare and sync duration from Stream metadata.
 7. Use red trash icon actions for module/lesson deletes in the curriculum editor.
 8. Reassign lessons between modules using the `Module` selector on each lesson edit block.
+9. Upload resources as PDFs at course, module, and lesson scope from the course edit curriculum screen.
 
 ## Core Incident Procedures
 

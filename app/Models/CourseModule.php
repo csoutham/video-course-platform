@@ -36,4 +36,11 @@ class CourseModule extends Model
     {
         return $this->hasMany(CourseLesson::class, 'module_id')->orderBy('sort_order');
     }
+
+    public function resources(): HasMany
+    {
+        return $this->hasMany(LessonResource::class, 'module_id')
+            ->whereNull('lesson_id')
+            ->orderBy('sort_order');
+    }
 }

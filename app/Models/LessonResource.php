@@ -11,6 +11,8 @@ class LessonResource extends Model
     use HasFactory;
 
     protected $fillable = [
+        'course_id',
+        'module_id',
         'lesson_id',
         'name',
         'storage_key',
@@ -18,6 +20,16 @@ class LessonResource extends Model
         'size_bytes',
         'sort_order',
     ];
+
+    public function course(): BelongsTo
+    {
+        return $this->belongsTo(Course::class);
+    }
+
+    public function module(): BelongsTo
+    {
+        return $this->belongsTo(CourseModule::class, 'module_id');
+    }
 
     public function lesson(): BelongsTo
     {

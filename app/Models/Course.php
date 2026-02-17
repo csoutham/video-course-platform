@@ -54,6 +54,14 @@ class Course extends Model
         return $this->hasMany(CourseLesson::class)->orderBy('sort_order');
     }
 
+    public function resources(): HasMany
+    {
+        return $this->hasMany(LessonResource::class)
+            ->whereNull('module_id')
+            ->whereNull('lesson_id')
+            ->orderBy('sort_order');
+    }
+
     protected function scopePublished(Builder $query): Builder
     {
         return $query->where('is_published', true);

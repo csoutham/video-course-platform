@@ -3,10 +3,13 @@
 use App\Models\Course;
 use App\Models\CourseLesson;
 use App\Models\CourseModule;
+use App\Models\LessonResource;
 use App\Models\User;
 use App\Services\Learning\CloudflareStreamCatalogService;
 use App\Services\Learning\CloudflareStreamMetadataService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
@@ -176,4 +179,59 @@ test('lesson update with stream video enforces signed urls and syncs duration', 
         'duration_seconds' => 640,
     ]);
 
+});
+
+test('admin can upload and delete course, module, and lesson resources', function (): void {
+    Storage::fake('local');
+    config()->set('filesystems.course_resources_disk', 'local');
+
+    $this->actingAs(User::factory()->admin()->create());
+    $course = Course::factory()->create();
+    $module = CourseModule::factory()->create(['course_id' => $course->id]);
+    $lesson = CourseLesson::factory()->create([
+        'course_id' => $course->id,
+        'module_id' => $module->id,
+    ]);
+
+    $this->post(route('admin.resources.course.store', $course), [
+        'name' => 'Course Guide.pdf',
+        'resource_file' => UploadedFile::fake()->create('course-guide.pdf', 120, 'application/pdf'),
+    ])->assertRedirect(route('admin.courses.edit', $course));
+
+    $this->post(route('admin.resources.module.store', $module), [
+        'name' => 'Module Guide.pdf',
+        'resource_file' => UploadedFile::fake()->create('module-guide.pdf', 120, 'application/pdf'),
+    ])->assertRedirect(route('admin.courses.edit', $course));
+
+    $this->post(route('admin.resources.lesson.store', $lesson), [
+        'name' => 'Lesson Guide.pdf',
+        'resource_file' => UploadedFile::fake()->create('lesson-guide.pdf', 120, 'application/pdf'),
+    ])->assertRedirect(route('admin.courses.edit', $course));
+
+    $this->assertDatabaseHas('lesson_resources', [
+        'course_id' => $course->id,
+        'module_id' => null,
+        'lesson_id' => null,
+        'name' => 'Course Guide.pdf',
+    ]);
+    $this->assertDatabaseHas('lesson_resources', [
+        'course_id' => $course->id,
+        'module_id' => $module->id,
+        'lesson_id' => null,
+        'name' => 'Module Guide.pdf',
+    ]);
+    $this->assertDatabaseHas('lesson_resources', [
+        'course_id' => $course->id,
+        'module_id' => $module->id,
+        'lesson_id' => $lesson->id,
+        'name' => 'Lesson Guide.pdf',
+    ]);
+
+    $resource = LessonResource::query()->firstWhere('name', 'Course Guide.pdf');
+    expect($resource)->not->toBeNull();
+
+    $this->delete(route('admin.resources.destroy', $resource))
+        ->assertRedirect(route('admin.courses.edit', $course));
+
+    $this->assertDatabaseMissing('lesson_resources', ['id' => $resource->id]);
 });

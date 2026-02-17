@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CoursesController;
+use App\Http\Controllers\Admin\CourseResourcesController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CourseLessonsController;
 use App\Http\Controllers\Admin\CourseModulesController;
@@ -70,6 +71,10 @@ Route::middleware(['auth', 'admin'])
         Route::post('/modules/{module}/lessons', [CourseLessonsController::class, 'store'])->name('lessons.store');
         Route::put('/lessons/{lesson}', [CourseLessonsController::class, 'update'])->name('lessons.update');
         Route::delete('/lessons/{lesson}', [CourseLessonsController::class, 'destroy'])->name('lessons.destroy');
+        Route::post('/courses/{course}/resources', [CourseResourcesController::class, 'storeForCourse'])->name('resources.course.store');
+        Route::post('/modules/{module}/resources', [CourseResourcesController::class, 'storeForModule'])->name('resources.module.store');
+        Route::post('/lessons/{lesson}/resources', [CourseResourcesController::class, 'storeForLesson'])->name('resources.lesson.store');
+        Route::delete('/resources/{resource}', [CourseResourcesController::class, 'destroy'])->name('resources.destroy');
         Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
         Route::get('/users', [UsersController::class, 'index'])->name('users.index');
         Route::get('/users/{user}', [UsersController::class, 'show'])->name('users.show');
