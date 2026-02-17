@@ -50,4 +50,12 @@ return [
         'customer_code' => env('CF_STREAM_CUSTOMER_CODE'),
     ],
 
+    'kit' => [
+        'enabled' => (bool) env('KIT_ENABLED', false),
+        'api_key' => env('KIT_API_KEY'),
+        'base_url' => env('KIT_API_BASE_URL', 'https://api.kit.com/v4'),
+        'purchaser_tag_ids' => env('KIT_PURCHASER_TAG_IDS', ''),
+        'course_tag_map' => env('KIT_COURSE_TAG_MAP', '{}'),
+    ],
+
 ];

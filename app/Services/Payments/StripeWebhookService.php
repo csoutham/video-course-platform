@@ -11,6 +11,7 @@ use App\Services\Audit\AuditLogService;
 use App\Services\Claims\GiftClaimService;
 use App\Services\Claims\PurchaseClaimService;
 use App\Services\Gifts\GiftNotificationService;
+use App\Services\Marketing\KitAudienceService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +28,7 @@ class StripeWebhookService
         private readonly GiftClaimService $giftClaimService,
         private readonly GiftNotificationService $giftNotificationService,
         private readonly PurchaseReceiptService $purchaseReceiptService,
+        private readonly KitAudienceService $kitAudienceService,
         private readonly AuditLogService $auditLogService,
     ) {
     }
@@ -188,6 +190,7 @@ class StripeWebhookService
 
         if (! $wasAlreadyPaid) {
             DB::afterCommit(function () use ($order, $claimUrl, $isGift): void {
+                $this->kitAudienceService->syncPurchaser($order->fresh(['user', 'items.course']));
                 $this->purchaseReceiptService->sendPaidReceipt($order->fresh('items.course'), $claimUrl);
 
                 if ($isGift) {

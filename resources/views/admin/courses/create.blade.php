@@ -129,6 +129,25 @@
                 @enderror
             </div>
 
+            <div>
+                <label for="kit_tag_id" class="text-sm font-medium text-slate-700">Kit tag ID (optional)</label>
+                <input
+                    id="kit_tag_id"
+                    name="kit_tag_id"
+                    type="number"
+                    min="1"
+                    step="1"
+                    value="{{ old('kit_tag_id') }}"
+                    class="vc-input"
+                    placeholder="e.g. 1234567" />
+                <p class="mt-1 text-xs text-slate-500">
+                    Purchasers of this course will be tagged in Kit when this is set.
+                </p>
+                @error('kit_tag_id')
+                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div class="grid gap-4 sm:grid-cols-2">
                 <div>
                     <label for="price_amount" class="text-sm font-medium text-slate-700">Price (cents/pence)</label>

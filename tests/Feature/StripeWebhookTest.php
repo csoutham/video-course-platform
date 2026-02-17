@@ -13,6 +13,7 @@ use App\Models\StripeEvent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
 uses(RefreshDatabase::class);
@@ -29,10 +30,19 @@ beforeEach(function (): void {
 
 test('checkout completed webhook creates order and entitlement', function (): void {
     config()->set('services.stripe.webhook_secret', 'whsec_test');
+    config()->set('services.kit.enabled', true);
+    config()->set('services.kit.api_key', 'kit_test_key');
+    config()->set('services.kit.purchaser_tag_ids', '101');
     Mail::fake();
+    Http::fake([
+        'https://api.kit.com/v4/subscribers' => Http::response(['id' => 'sub_1'], 201),
+        'https://api.kit.com/v4/tags/*/subscribers' => Http::response(['ok' => true], 201),
+    ]);
 
     $user = User::factory()->create();
-    $course = Course::factory()->published()->create();
+    $course = Course::factory()->published()->create([
+        'kit_tag_id' => 202,
+    ]);
 
     $payload = [
         'id' => 'evt_checkout_completed_1',
@@ -96,6 +106,18 @@ test('checkout completed webhook creates order and entitlement', function (): vo
 
     Mail::assertSent(PurchaseReceiptMail::class, fn (PurchaseReceiptMail $mail): bool => $mail->hasTo($user->email)
         && $mail->claimUrl === null);
+
+    Http::assertSent(fn (\Illuminate\Http\Client\Request $request): bool => $request->method() === 'POST'
+        && $request->url() === 'https://api.kit.com/v4/subscribers'
+        && $request['email_address'] === $user->email);
+
+    Http::assertSent(fn (\Illuminate\Http\Client\Request $request): bool => $request->method() === 'POST'
+        && $request->url() === 'https://api.kit.com/v4/tags/101/subscribers'
+        && $request['email_address'] === $user->email);
+
+    Http::assertSent(fn (\Illuminate\Http\Client\Request $request): bool => $request->method() === 'POST'
+        && $request->url() === 'https://api.kit.com/v4/tags/202/subscribers'
+        && $request['email_address'] === $user->email);
 
 });
 

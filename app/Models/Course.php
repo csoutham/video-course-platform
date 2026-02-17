@@ -23,6 +23,7 @@ class Course extends Model
         'thumbnail_url',
         'intro_video_id',
         'stream_video_filter_term',
+        'kit_tag_id',
         'source_payload_json',
         'source_last_imported_at',
         'price_amount',
@@ -41,6 +42,7 @@ class Course extends Model
             'is_free' => 'boolean',
             'source_payload_json' => 'array',
             'source_last_imported_at' => 'datetime',
+            'kit_tag_id' => 'integer',
         ];
     }
 

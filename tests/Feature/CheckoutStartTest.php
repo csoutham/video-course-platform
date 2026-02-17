@@ -10,6 +10,7 @@ use App\Mail\GiftPurchaseConfirmationMail;
 use App\Mail\PurchaseReceiptMail;
 use App\Services\Payments\StripeCheckoutService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
 uses(RefreshDatabase::class);
@@ -136,12 +137,20 @@ test('gift checkout is blocked when feature is disabled', function (): void {
 
 test('free guest checkout creates claim flow without stripe', function (): void {
     Mail::fake();
+    Http::fake([
+        'https://api.kit.com/v4/subscribers' => Http::response(['id' => 'sub_1'], 201),
+        'https://api.kit.com/v4/tags/*/subscribers' => Http::response(['ok' => true], 201),
+    ]);
+    config()->set('services.kit.enabled', true);
+    config()->set('services.kit.api_key', 'kit_test_key');
+    config()->set('services.kit.purchaser_tag_ids', '101');
 
     $course = Course::factory()->published()->create([
         'is_free' => true,
         'free_access_mode' => 'claim_link',
         'price_amount' => 0,
         'stripe_price_id' => null,
+        'kit_tag_id' => 202,
     ]);
 
     $response = $this->post(route('checkout.start', $course), [
@@ -163,6 +172,18 @@ test('free guest checkout creates claim flow without stripe', function (): void 
     ]);
 
     Mail::assertSent(PurchaseReceiptMail::class, fn (PurchaseReceiptMail $mail): bool => $mail->hasTo('lead@example.com'));
+
+    Http::assertSent(fn (\Illuminate\Http\Client\Request $request): bool => $request->method() === 'POST'
+        && $request->url() === 'https://api.kit.com/v4/subscribers'
+        && $request['email_address'] === 'lead@example.com');
+
+    Http::assertSent(fn (\Illuminate\Http\Client\Request $request): bool => $request->method() === 'POST'
+        && $request->url() === 'https://api.kit.com/v4/tags/101/subscribers'
+        && $request['email_address'] === 'lead@example.com');
+
+    Http::assertSent(fn (\Illuminate\Http\Client\Request $request): bool => $request->method() === 'POST'
+        && $request->url() === 'https://api.kit.com/v4/tags/202/subscribers'
+        && $request['email_address'] === 'lead@example.com');
 });
 
 test('free direct mode grants entitlement for authenticated user', function (): void {

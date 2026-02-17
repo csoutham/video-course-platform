@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\Claims\GiftClaimService;
 use App\Services\Claims\PurchaseClaimService;
 use App\Services\Gifts\GiftNotificationService;
+use App\Services\Marketing\KitAudienceService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
@@ -21,6 +22,7 @@ class FreeCheckoutService
         private readonly GiftNotificationService $giftNotificationService,
         private readonly EntitlementService $entitlementService,
         private readonly PurchaseReceiptService $purchaseReceiptService,
+        private readonly KitAudienceService $kitAudienceService,
     ) {
     }
 
@@ -83,6 +85,7 @@ class FreeCheckoutService
                 $giftClaimUrl = URL::route('gift-claim.show', $giftToken->token);
 
                 DB::afterCommit(function () use ($order, $giftPurchase, $giftClaimUrl): void {
+                    $this->kitAudienceService->syncPurchaser($order->fresh(['user', 'items.course']));
                     $this->purchaseReceiptService->sendPaidReceipt($order->fresh('items.course'));
                     $this->giftNotificationService->sendGiftEmails($giftPurchase->fresh('course'), $giftClaimUrl);
                 });
@@ -99,6 +102,7 @@ class FreeCheckoutService
             }
 
             DB::afterCommit(function () use ($order, $claimUrl): void {
+                $this->kitAudienceService->syncPurchaser($order->fresh(['user', 'items.course']));
                 $this->purchaseReceiptService->sendPaidReceipt($order->fresh('items.course'), $claimUrl);
             });
 
