@@ -29,13 +29,6 @@
                                             class="{{ $activeLesson->id === $lesson->id ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100' }} flex items-center justify-between rounded-md px-2 py-1 text-sm">
                                             <span>{{ $lesson->title }}</span>
                                             <span class="flex items-center gap-2">
-                                                @if ($lesson->duration_seconds)
-                                                    <span
-                                                        class="{{ $activeLesson->id === $lesson->id ? 'text-slate-200' : 'text-slate-500' }} text-xs font-semibold">
-                                                        {{ gmdate('i:s', $lesson->duration_seconds) }}
-                                                    </span>
-                                                @endif
-
                                                 @if ($isCompleted)
                                                     <span
                                                         class="{{ $activeLesson->id === $lesson->id ? 'text-emerald-200' : 'text-emerald-700' }} text-xs font-semibold">
@@ -57,15 +50,6 @@
             <div>
                 <p class="text-xs font-semibold tracking-[0.2em] text-slate-500 uppercase">Lesson</p>
                 <h2 class="mt-1 text-2xl font-semibold text-slate-900">{{ $activeLesson->title }}</h2>
-                @if ($activeLesson->summary)
-                    <p class="mt-2 text-sm text-slate-600">{{ $activeLesson->summary }}</p>
-                @endif
-
-                @if ($activeLesson->duration_seconds)
-                    <p class="mt-1 text-xs font-semibold tracking-widest text-slate-500 uppercase">
-                        Length: {{ gmdate('i:s', $activeLesson->duration_seconds) }}
-                    </p>
-                @endif
             </div>
 
             <div class="aspect-video w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
@@ -83,12 +67,16 @@
                 @endif
             </div>
 
-            <div class="space-y-2">
-                <h3 class="text-sm font-semibold text-slate-900">Resources</h3>
+            @if ($activeLesson->summary)
+                <div>
+                    <h3 class="text-sm font-semibold text-slate-900">Summary</h3>
+                    <p class="mt-2 text-sm text-slate-600">{{ $activeLesson->summary }}</p>
+                </div>
+            @endif
 
-                @if ($activeLesson->resources->isEmpty())
-                    <p class="text-sm text-slate-500">No downloads are available for this lesson yet.</p>
-                @else
+            @if ($activeLesson->resources->isNotEmpty())
+                <div class="space-y-2">
+                    <h3 class="text-sm font-semibold text-slate-900">Resources</h3>
                     <ul class="space-y-2">
                         @foreach ($activeLesson->resources as $resource)
                             <li>
@@ -100,8 +88,8 @@
                             </li>
                         @endforeach
                     </ul>
-                @endif
-            </div>
+                </div>
+            @endif
 
             <div class="grid grid-cols-3 items-center gap-3 border-t border-slate-200 pt-4">
                 <div class="justify-self-start">

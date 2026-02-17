@@ -350,7 +350,7 @@
                                 action="{{ route('admin.modules.update', $module) }}"
                                 data-async-curriculum
                                 data-async-success="Module updated."
-                                class="grid flex-1 gap-3 sm:grid-cols-6">
+                                class="grid flex-1 gap-3 sm:grid-cols-7">
                                 @csrf
                                 @method('PUT')
                                 <div class="sm:col-span-4">
@@ -370,17 +370,31 @@
                                 <div class="flex items-end sm:col-span-1">
                                     <button type="submit" class="vc-btn-secondary w-full justify-center">Save</button>
                                 </div>
-                            </form>
-                            <form
-                                method="POST"
-                                action="{{ route('admin.modules.destroy', $module) }}"
-                                data-async-curriculum
-                                data-async-success="Module deleted.">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="vc-btn-secondary">Delete module</button>
+                                <div class="flex items-end sm:col-span-1">
+                                    <button
+                                        type="submit"
+                                        form="delete-module-{{ $module->id }}"
+                                        class="inline-flex h-10 w-full items-center justify-center rounded-md border border-rose-200 bg-rose-50 text-rose-600 transition hover:bg-rose-100"
+                                        title="Delete module"
+                                        aria-label="Delete module">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-current">
+                                            <path
+                                                d="M9 3a1 1 0 0 0-1 1v1H5a1 1 0 1 0 0 2h1v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7h1a1 1 0 1 0 0-2h-3V4a1 1 0 0 0-1-1H9Zm2 2h2v1h-2V5Zm-3 2h8v12H8V7Zm2 2a1 1 0 0 0-1 1v6a1 1 0 1 0 2 0v-6a1 1 0 0 0-1-1Zm4 0a1 1 0 0 0-1 1v6a1 1 0 1 0 2 0v-6a1 1 0 0 0-1-1Z" />
+                                        </svg>
+                                    </button>
+                                </div>
                             </form>
                         </div>
+                        <form
+                            id="delete-module-{{ $module->id }}"
+                            method="POST"
+                            action="{{ route('admin.modules.destroy', $module) }}"
+                            data-async-curriculum
+                            data-async-success="Module deleted."
+                            class="hidden">
+                            @csrf
+                            @method('DELETE')
+                        </form>
                         <form
                             method="POST"
                             action="{{ route('admin.lessons.store', $module) }}"
@@ -581,8 +595,16 @@
                                                         <button
                                                             type="submit"
                                                             form="delete-lesson-{{ $lesson->id }}"
-                                                            class="vc-btn-secondary">
-                                                            Delete lesson
+                                                            class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-rose-200 bg-rose-50 text-rose-600 transition hover:bg-rose-100"
+                                                            title="Delete lesson"
+                                                            aria-label="Delete lesson">
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                viewBox="0 0 24 24"
+                                                                class="h-4 w-4 fill-current">
+                                                                <path
+                                                                    d="M9 3a1 1 0 0 0-1 1v1H5a1 1 0 1 0 0 2h1v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7h1a1 1 0 1 0 0-2h-3V4a1 1 0 0 0-1-1H9Zm2 2h2v1h-2V5Zm-3 2h8v12H8V7Zm2 2a1 1 0 0 0-1 1v6a1 1 0 1 0 2 0v-6a1 1 0 0 0-1-1Zm4 0a1 1 0 0 0-1 1v6a1 1 0 1 0 2 0v-6a1 1 0 0 0-1-1Z" />
+                                                            </svg>
                                                         </button>
                                                     </div>
                                                 </div>
