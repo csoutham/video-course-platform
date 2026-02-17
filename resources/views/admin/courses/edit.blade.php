@@ -166,6 +166,7 @@
                 @if (!empty($streamCatalogFilterNotice))
                     <p class="mt-1 text-xs text-sky-700">{{ $streamCatalogFilterNotice }}</p>
                 @endif
+
                 @error('stream_video_filter_term')
                     <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
                 @enderror

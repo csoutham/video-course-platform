@@ -38,6 +38,7 @@
 - `requirements` (nullable markdown source)
 - `thumbnail_url`
 - `intro_video_id` (nullable; Cloudflare Stream UID for public course intro video)
+- `stream_video_filter_term` (nullable; admin-defined filter for course edit Stream picker)
 - `source_payload_json` (nullable)
 - `source_last_imported_at` (nullable timestamp)
 - `price_amount`

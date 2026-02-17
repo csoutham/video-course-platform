@@ -68,3 +68,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-16: Added admin course CRUD with automatic Stripe price provisioning and manual refresh flow.
 - 2026-02-16: Added nested module/lesson CRUD in admin course editor with Cloudflare Stream video lookup and duration sync support.
 - 2026-02-17: Added free lead-magnet distribution path (self-enroll, claim-link mode, and free gifting) with admin controls and coverage tests.
+- 2026-02-17: Added explicit `stream_video_filter_term` on course forms to filter Cloudflare Stream options per course in admin edit.
