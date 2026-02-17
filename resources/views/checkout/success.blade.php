@@ -14,35 +14,25 @@
 
             <div class="mt-4 flex flex-wrap gap-3">
                 @auth
-                    <a href="{{ route('gifts.index') }}" class="vc-btn-primary">
-                        View my gifts
-                    </a>
+                    <a href="{{ route('gifts.index') }}" class="vc-btn-primary">View my gifts</a>
                 @endauth
 
-                <a href="{{ route('courses.index') }}" class="vc-link">
-                    Browse courses
-                </a>
+                <a href="{{ route('courses.index') }}" class="vc-link">Browse courses</a>
             </div>
         @elseif ($claimUrl)
             <p class="mt-2 text-sm text-emerald-800">
                 Your payment is confirmed. Use the secure link below to add this purchase to your account.
             </p>
 
-            <a href="{{ $claimUrl }}" class="vc-btn-primary mt-4">
-                Add purchase to my account
-            </a>
+            <a href="{{ $claimUrl }}" class="vc-btn-primary mt-4">Add purchase to my account</a>
         @elseif ($order?->user_id)
             <p class="mt-2 text-sm text-emerald-800">
                 This purchase is already linked to an account. Sign in to continue to your course library.
             </p>
 
             <div class="mt-4 flex flex-wrap gap-3">
-                <a href="{{ route('my-courses.index') }}" class="vc-btn-primary">
-                    Go to my courses
-                </a>
-                <a href="{{ route('login') }}" class="vc-link">
-                    Sign in now
-                </a>
+                <a href="{{ route('my-courses.index') }}" class="vc-btn-primary">Go to my courses</a>
+                <a href="{{ route('login') }}" class="vc-link">Sign in now</a>
             </div>
         @elseif ($sessionId)
             <p class="mt-2 text-sm text-emerald-800">
@@ -54,17 +44,13 @@
                 <a href="{{ route('checkout.success', ['session_id' => $sessionId]) }}" class="vc-btn-primary">
                     Refresh status
                 </a>
-                <a href="{{ route('courses.index') }}" class="vc-link">
-                    Browse courses
-                </a>
+                <a href="{{ route('courses.index') }}" class="vc-link">Browse courses</a>
             </div>
         @else
             <p class="mt-2 text-sm text-emerald-800">
                 Your order is being finalized. Course access will appear in your account shortly.
             </p>
-            <a href="{{ route('courses.index') }}" class="vc-btn-primary mt-4">
-                Browse courses
-            </a>
+            <a href="{{ route('courses.index') }}" class="vc-btn-primary mt-4">Browse courses</a>
         @endif
     </div>
 </x-public-layout>

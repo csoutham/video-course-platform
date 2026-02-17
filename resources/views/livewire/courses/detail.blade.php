@@ -127,7 +127,9 @@
                                 <li class="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2">
                                     <span>{{ $lesson->title }}</span>
                                     @if ($lesson->duration_label)
-                                        <span class="text-xs font-semibold text-slate-500">{{ $lesson->duration_label }}</span>
+                                        <span class="text-xs font-semibold text-slate-500">
+                                            {{ $lesson->duration_label }}
+                                        </span>
                                     @endif
                                 </li>
                             @endforeach

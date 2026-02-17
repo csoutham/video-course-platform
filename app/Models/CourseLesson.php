@@ -61,7 +61,7 @@ class CourseLesson extends Model
         return $query->where('is_published', true);
     }
 
-    public function getDurationLabelAttribute(): ?string
+    protected function getDurationLabelAttribute(): ?string
     {
         $seconds = (int) ($this->duration_seconds ?? 0);
 

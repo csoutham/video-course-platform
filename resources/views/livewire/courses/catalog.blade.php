@@ -65,8 +65,12 @@
                     </a>
 
                     <div class="space-y-3 p-5">
-                        <h2 class="text-xl font-semibold tracking-tight text-slate-900">{{ $card['course']->title }}</h2>
-                        <p class="line-clamp-3 text-sm leading-relaxed text-slate-600">{{ $card['course']->description }}</p>
+                        <h2 class="text-xl font-semibold tracking-tight text-slate-900">
+                            {{ $card['course']->title }}
+                        </h2>
+                        <p class="line-clamp-3 text-sm leading-relaxed text-slate-600">
+                            {{ $card['course']->description }}
+                        </p>
 
                         <div class="flex items-center justify-between gap-3 pt-1">
                             <a href="{{ $card['courseLink'] }}" wire:navigate class="vc-btn-primary">

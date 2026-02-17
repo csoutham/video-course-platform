@@ -31,6 +31,7 @@
                                                         {{ $lesson->duration_label }}
                                                     </span>
                                                 @endif
+
                                                 @if (($progressByLessonId->get($lesson->id)?->status) === 'completed')
                                                     <span
                                                         class="{{ $activeLesson->id === $lesson->id ? 'text-emerald-200' : 'text-emerald-700' }} text-xs font-semibold">
