@@ -317,6 +317,10 @@
 
         <div class="mt-6 space-y-6">
             @forelse ($course->modules as $module)
+                @php
+                    $moduleLessonCount = $module->lessons->count();
+                    $moduleLiveLessonCount = $module->lessons->where('is_published', true)->count();
+                @endphp
                 <article
                     class="rounded-lg border border-slate-200 bg-slate-50/50 p-4 shadow-sm"
                     data-module-card
@@ -329,9 +333,20 @@
                             </div>
                             <div class="min-w-0">
                                 <h3 class="truncate text-sm font-semibold text-slate-900">{{ $module->title }}</h3>
-                                <p class="text-xs text-slate-600">
-                                    {{ $module->lessons->count() }} lessons · Sort {{ $module->sort_order }}
-                                </p>
+                                <div class="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
+                                    <span
+                                        class="inline-flex items-center rounded-full border border-slate-200 bg-white px-2 py-0.5 font-medium text-slate-700">
+                                        {{ $moduleLessonCount }} total lessons
+                                    </span>
+                                    <span
+                                        class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 font-medium text-emerald-700">
+                                        {{ $moduleLiveLessonCount }} live
+                                    </span>
+                                    <span
+                                        class="inline-flex items-center rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 font-medium text-slate-600">
+                                        Sort {{ $module->sort_order }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <button

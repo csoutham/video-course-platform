@@ -71,3 +71,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-17: Added explicit `stream_video_filter_term` on course forms to filter Cloudflare Stream options per course in admin edit.
 - 2026-02-17: Added lesson module reassignment in admin editor and Markdown rendering for lesson summaries on learner playback.
 - 2026-02-17: Updated lesson editor field layout so `Slug`, `Sort`, and `Duration` align in one row for faster editing.
+- 2026-02-17: Improved collapsed module summaries in admin curriculum with clearer total/live lesson badges.
