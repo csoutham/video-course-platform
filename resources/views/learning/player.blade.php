@@ -58,6 +58,7 @@
                                                         {{ $formatRuntime($lesson->duration_seconds) }}
                                                     </span>
                                                 @endif
+
                                                 @if ($isCompleted)
                                                     <span
                                                         class="{{ $activeLesson->id === $lesson->id ? 'text-emerald-200' : 'text-emerald-700' }} text-xs font-semibold">
