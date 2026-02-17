@@ -1,7 +1,7 @@
 # VideoCourses Documentation
 
 This folder contains the implementation-ready documentation for VideoCourses v1, a web-based platform to browse, buy, and watch purchasable courses.
-Docs version: `0.9.4`.
+Docs version: `0.9.5`.
 
 ## Scope Summary
 

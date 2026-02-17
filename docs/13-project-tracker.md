@@ -77,3 +77,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-17: Restricted receipts to Stripe-backed non-zero orders; free/non-Stripe orders no longer send or show receipts.
 - 2026-02-17: Improved responsive UX with right-drawer mobile nav and playback layout changes (video-first on small screens, sticky scrollable curriculum on large screens).
 - 2026-02-17: Moved mobile enrollment panel on course detail to appear after Requirements and before curriculum for stronger pre-sale conversion flow.
+- 2026-02-17: Removed inline Blade PHP from core customer pages (catalog/detail/player/my-courses) and standardized primary CTA buttons across checkout/course/learning views.
