@@ -24,8 +24,9 @@
         };
     @endphp
 
-    <div class="grid gap-6 lg:grid-cols-[340px_1fr]">
-        <aside class="space-y-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div class="grid gap-5 lg:grid-cols-[340px_1fr] lg:gap-6">
+        <aside
+            class="order-2 space-y-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm lg:order-1 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7.5rem)] lg:overflow-y-auto">
             <div>
                 <p class="text-xs font-semibold tracking-[0.2em] text-slate-500 uppercase">Course</p>
                 <h1 class="mt-1 text-xl font-semibold text-slate-900">{{ $course->title }}</h1>
@@ -76,7 +77,7 @@
             </div>
         </aside>
 
-        <section class="space-y-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <section class="order-1 space-y-5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 lg:order-2">
             <div>
                 <p class="text-xs font-semibold tracking-[0.2em] text-slate-500 uppercase">Lesson</p>
                 <h2 class="mt-1 text-2xl font-semibold text-slate-900">{{ $activeLesson->title }}</h2>
@@ -168,7 +169,7 @@
                 </div>
             @endif
 
-            <div class="grid grid-cols-3 items-center gap-3 border-t border-slate-200 pt-4">
+            <div class="grid grid-cols-2 items-center gap-3 border-t border-slate-200 pt-4 sm:grid-cols-3">
                 <div class="justify-self-start">
                     @if ($previousLesson)
                         <a
@@ -181,7 +182,7 @@
                     @endif
                 </div>
 
-                <div class="justify-self-center">
+                <div class="order-3 col-span-2 justify-self-center sm:order-2 sm:col-span-1">
                     <form
                         method="POST"
                         action="{{ route('learn.progress.complete', ['course' => $course->slug, 'lessonSlug' => $activeLesson->slug]) }}">
@@ -194,7 +195,7 @@
                     </form>
                 </div>
 
-                <div class="justify-self-end">
+                <div class="justify-self-end sm:order-3">
                     @if ($nextLesson)
                         <a
                             href="{{ route('learn.show', ['course' => $course->slug, 'lessonSlug' => $nextLesson->slug]) }}"
