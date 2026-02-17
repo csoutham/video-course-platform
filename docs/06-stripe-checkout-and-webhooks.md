@@ -8,8 +8,8 @@
 - Support optional promotion/coupon code entry.
 - Support optional gift checkout mode with recipient details.
 - Allow guest purchase; bind entitlement after claim/account association.
-- Send purchase receipt email after successful paid webhook processing.
-- Include claim link in receipt email for guest purchases.
+- Send purchase receipt email after successful paid webhook processing for Stripe-backed, non-zero orders.
+- Include claim link in receipt email for eligible Stripe guest purchases.
 
 ## Session Metadata Requirements
 
@@ -78,4 +78,5 @@ Include metadata sufficient to reconcile internal records:
 - Free gift enroll:
   - app creates gift purchase + gift claim token.
   - app sends recipient and buyer gift emails.
+- No Stripe receipt email is sent for free or non-Stripe orders.
 - Webhook processing is not involved for this path.

@@ -27,7 +27,7 @@ This reuses existing order, claim-token, entitlement, and gift mechanics so paid
 3. If direct mode + authenticated user:
    - entitlement granted immediately.
 4. Else:
-   - purchase claim token issued and claim URL attached to receipt email.
+   - purchase claim token issued for claim-link flow.
 
 ### Free gifting
 
@@ -45,7 +45,7 @@ This reuses existing order, claim-token, entitlement, and gift mechanics so paid
 
 ## Testing Coverage
 
-- Free guest checkout creates claim token and sends receipt email.
+- Free guest checkout creates claim token and does not send Stripe receipt email.
 - Free direct authenticated checkout grants entitlement without claim token.
 - Free gift checkout creates gift purchase and sends gift emails.
 - Paid checkout behavior remains unchanged.
