@@ -44,7 +44,7 @@ class Detail extends Component
             '@context' => 'https://schema.org',
             '@type' => 'Course',
             'name' => $course->title,
-            'description' => Str::limit(strip_tags((string) $course->description), 160),
+            'description' => Str::limit(strip_tags((string) ($course->long_description ?: $course->description)), 160),
             'image' => $course->thumbnail_url ?: asset('favicon.ico'),
             'url' => route('courses.show', $course->slug),
             'provider' => [

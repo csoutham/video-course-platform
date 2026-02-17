@@ -29,6 +29,8 @@ test('admin can create course and auto assign stripe price', function (): void {
     $response = $this->post(route('admin.courses.store'), [
         'title' => 'Laravel for Teams',
         'description' => 'Team-focused Laravel training.',
+        'long_description' => "## Long description\n\nBuilt for team learning.",
+        'requirements' => "- PHP 8.4\n- Composer",
         'price_amount' => 12900,
         'price_currency' => 'usd',
         'is_published' => '1',
@@ -42,6 +44,8 @@ test('admin can create course and auto assign stripe price', function (): void {
     $this->assertDatabaseHas('courses', [
         'id' => $course->id,
         'title' => 'Laravel for Teams',
+        'long_description' => "## Long description\n\nBuilt for team learning.",
+        'requirements' => "- PHP 8.4\n- Composer",
         'stripe_price_id' => 'price_auto_123',
         'is_published' => true,
     ]);
@@ -71,6 +75,8 @@ test('admin can update course and refresh stripe price', function (): void {
         'title' => 'Updated Course Title',
         'slug' => $course->slug,
         'description' => 'Updated description',
+        'long_description' => "### Updated long description\n\nMore depth.",
+        'requirements' => "- Git\n- Basic Laravel",
         'thumbnail_url' => 'https://example.com/new.jpg',
         'intro_video_id' => 'stream_intro_001',
         'price_amount' => 14900,
@@ -86,6 +92,8 @@ test('admin can update course and refresh stripe price', function (): void {
         'id' => $course->id,
         'title' => 'Updated Course Title',
         'price_amount' => 14900,
+        'long_description' => "### Updated long description\n\nMore depth.",
+        'requirements' => "- Git\n- Basic Laravel",
         'intro_video_id' => 'stream_intro_001',
         'stripe_price_id' => 'price_new_2',
         'is_published' => true,

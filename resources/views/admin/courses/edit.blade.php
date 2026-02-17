@@ -21,8 +21,9 @@
         </section>
     @endif
 
-    <section class="vc-panel sticky top-2 z-20 mt-6 border border-slate-200/90 bg-white/90 p-3 backdrop-blur">
-        <div class="flex flex-wrap items-center justify-between gap-3">
+    <section
+        class="sticky top-0 z-30 -mx-4 mt-6 border-y border-slate-200/90 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:-mx-8 lg:px-8">
+        <div class="mx-auto flex max-w-none flex-wrap items-center justify-between gap-3">
             <div class="inline-flex rounded-xl border border-slate-200 bg-white p-1">
                 <button
                     type="button"
@@ -44,7 +45,9 @@
                 </button>
             </div>
 
-            <p class="text-xs text-slate-600">{{ $moduleCount }} modules · {{ $lessonCount }} lessons</p>
+            <p class="text-xs text-slate-600" data-course-count-summary>
+                {{ $moduleCount }} modules · {{ $lessonCount }} lessons
+            </p>
         </div>
     </section>
 
@@ -70,11 +73,33 @@
             </div>
 
             <div>
-                <label for="description" class="text-sm font-medium text-slate-700">Description</label>
+                <label for="description" class="text-sm font-medium text-slate-700">Subtitle</label>
                 <textarea id="description" name="description" rows="4" class="vc-input">
 {{ old('description', $course->description) }}
                 </textarea>
                 @error('description')
+                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="long_description" class="text-sm font-medium text-slate-700">
+                    Long description (Markdown)
+                </label>
+                <textarea id="long_description" name="long_description" rows="8" class="vc-input">
+{{ old('long_description', $course->long_description) }}</textarea
+                >
+                @error('long_description')
+                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="requirements" class="text-sm font-medium text-slate-700">Requirements (Markdown)</label>
+                <textarea id="requirements" name="requirements" rows="6" class="vc-input">
+{{ old('requirements', $course->requirements) }}</textarea
+                >
+                @error('requirements')
                     <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
                 @enderror
             </div>
@@ -200,6 +225,7 @@
         <form
             action="{{ route('admin.modules.store', $course) }}"
             method="POST"
+            data-async-curriculum
             class="mt-5 grid gap-3 sm:grid-cols-8">
             @csrf
             <div class="sm:col-span-5">
@@ -226,141 +252,58 @@
             </div>
         @endif
 
+        @if ($course->modules->isNotEmpty())
+            <div class="mt-5 flex flex-wrap items-center justify-end gap-2">
+                <button type="button" data-modules-expand-all class="vc-btn-secondary !px-3 !py-1.5 !text-xs">
+                    Expand all modules
+                </button>
+                <button type="button" data-modules-collapse-all class="vc-btn-secondary !px-3 !py-1.5 !text-xs">
+                    Collapse all modules
+                </button>
+            </div>
+        @endif
+
         <div class="mt-6 space-y-6">
             @forelse ($course->modules as $module)
-                <article class="vc-panel-soft p-4">
-                    <div class="flex flex-wrap items-center justify-between gap-3">
-                        <form
-                            method="POST"
-                            action="{{ route('admin.modules.update', $module) }}"
-                            class="grid flex-1 gap-3 sm:grid-cols-6">
-                            @csrf
-                            @method('PUT')
-                            <div class="sm:col-span-4">
-                                <label class="text-sm font-medium text-slate-700">Module title</label>
-                                <input name="title" value="{{ $module->title }}" class="vc-input" required />
+                <article
+                    class="rounded-lg border border-slate-200 bg-slate-50/50 p-4 shadow-sm"
+                    data-module-card
+                    data-module-id="{{ $module->id }}">
+                    <div class="flex flex-wrap items-start justify-between gap-3">
+                        <div class="flex min-w-0 items-start gap-3">
+                            <div
+                                class="inline-flex h-7 items-center rounded-full bg-slate-200 px-2.5 text-[11px] font-semibold tracking-wide text-slate-700 uppercase">
+                                Module
                             </div>
-                            <div class="sm:col-span-1">
-                                <label class="text-sm font-medium text-slate-700">Sort</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    name="sort_order"
-                                    value="{{ $module->sort_order }}"
-                                    class="vc-input"
-                                    required />
+                            <div class="min-w-0">
+                                <h3 class="truncate text-sm font-semibold text-slate-900">{{ $module->title }}</h3>
+                                <p class="text-xs text-slate-600">
+                                    {{ $module->lessons->count() }} lessons · Sort {{ $module->sort_order }}
+                                </p>
                             </div>
-                            <div class="flex items-end sm:col-span-1">
-                                <button type="submit" class="vc-btn-secondary w-full justify-center">Save</button>
-                            </div>
-                        </form>
-                        <form method="POST" action="{{ route('admin.modules.destroy', $module) }}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="vc-btn-secondary">Delete module</button>
-                        </form>
+                        </div>
+                        <button
+                            type="button"
+                            data-module-toggle
+                            class="vc-btn-secondary !px-3 !py-1.5 !text-xs"
+                            aria-expanded="true">
+                            Collapse
+                        </button>
                     </div>
 
-                    <form
-                        method="POST"
-                        action="{{ route('admin.lessons.store', $module) }}"
-                        class="mt-4 grid gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:grid-cols-12">
-                        @csrf
-                        <div class="sm:col-span-3">
-                            <label class="text-sm font-medium text-slate-700">Lesson title</label>
-                            <input name="title" class="vc-input" required />
-                        </div>
-                        <div class="sm:col-span-2">
-                            <label class="text-sm font-medium text-slate-700">Slug (optional)</label>
-                            <input name="slug" class="vc-input" />
-                        </div>
-                        <div class="sm:col-span-3">
-                            <label class="text-sm font-medium text-slate-700">Cloudflare Stream video</label>
-                            <input
-                                type="text"
-                                data-stream-search
-                                class="vc-input mb-2"
-                                placeholder="Search videos by name or UID"
-                                autocomplete="off" />
-                            <select name="stream_video_id" class="vc-input" data-stream-select>
-                                <option value="">No video yet</option>
-                                @foreach ($streamVideos as $video)
-                                    <option value="{{ $video['uid'] }}">
-                                        {{ $video['name'] }} ({{ $video['uid'] }})
-                                    </option>
-                                @endforeach
-                            </select>
-                            <p class="mt-1 text-xs text-slate-500">
-                                Selecting a video enforces signed URLs and syncs duration from Cloudflare.
-                            </p>
-                        </div>
-                        <div class="sm:col-span-2">
-                            <label class="text-sm font-medium text-slate-700">Sort</label>
-                            <input
-                                type="number"
-                                min="0"
-                                name="sort_order"
-                                value="{{ ($module->lessons->max('sort_order') ?? 0) + 1 }}"
-                                class="vc-input" />
-                        </div>
-                        <div class="flex items-end sm:col-span-1">
-                            <label class="flex items-center gap-2 text-sm text-slate-700">
-                                <input type="checkbox" name="is_published" value="1" />
-                                Live
-                            </label>
-                        </div>
-                        <div class="flex items-end sm:col-span-1">
-                            <button type="submit" class="vc-btn-primary w-full justify-center">Add</button>
-                        </div>
-                        <div class="sm:col-span-12">
-                            <label class="text-sm font-medium text-slate-700">Summary</label>
-                            <textarea name="summary" rows="2" class="vc-input"></textarea>
-                        </div>
-                    </form>
-
-                    <div class="mt-4 space-y-3">
-                        @forelse ($module->lessons as $lesson)
+                    <div data-module-content class="mt-4">
+                        <div class="flex flex-wrap items-center justify-between gap-3">
                             <form
                                 method="POST"
-                                action="{{ route('admin.lessons.update', $lesson) }}"
-                                class="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:grid-cols-12">
+                                action="{{ route('admin.modules.update', $module) }}"
+                                data-async-curriculum
+                                data-async-success="Module updated."
+                                class="grid flex-1 gap-3 sm:grid-cols-6">
                                 @csrf
                                 @method('PUT')
-                                <div class="sm:col-span-3">
-                                    <label class="text-sm font-medium text-slate-700">Title</label>
-                                    <input name="title" value="{{ $lesson->title }}" class="vc-input" required />
-                                </div>
-                                <div class="sm:col-span-2">
-                                    <label class="text-sm font-medium text-slate-700">Slug</label>
-                                    <input name="slug" value="{{ $lesson->slug }}" class="vc-input" required />
-                                </div>
-                                <div class="sm:col-span-3">
-                                    <label class="text-sm font-medium text-slate-700">Stream video</label>
-                                    <input
-                                        type="text"
-                                        data-stream-search
-                                        class="vc-input mb-2"
-                                        placeholder="Search videos by name or UID"
-                                        autocomplete="off" />
-                                    <select name="stream_video_id" class="vc-input" data-stream-select>
-                                        <option value="">No video</option>
-                                        @if ($lesson->stream_video_id)
-                                            <option value="{{ $lesson->stream_video_id }}" selected>
-                                                Current: {{ $lesson->stream_video_id }}
-                                            </option>
-                                        @endif
-
-                                        @foreach ($streamVideos as $video)
-                                            <option
-                                                value="{{ $video['uid'] }}"
-                                                @selected($lesson->stream_video_id === $video['uid'])>
-                                                {{ $video['name'] }} ({{ $video['uid'] }})
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <p class="mt-1 text-xs text-slate-500">
-                                        Saving with a selected video enforces signed URLs and refreshes duration.
-                                    </p>
+                                <div class="sm:col-span-4">
+                                    <label class="text-sm font-medium text-slate-700">Module title</label>
+                                    <input name="title" value="{{ $module->title }}" class="vc-input" required />
                                 </div>
                                 <div class="sm:col-span-1">
                                     <label class="text-sm font-medium text-slate-700">Sort</label>
@@ -368,55 +311,257 @@
                                         type="number"
                                         min="0"
                                         name="sort_order"
-                                        value="{{ $lesson->sort_order }}"
+                                        value="{{ $module->sort_order }}"
                                         class="vc-input"
                                         required />
                                 </div>
-                                <div class="sm:col-span-1">
-                                    <label class="text-sm font-medium text-slate-700">Duration</label>
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        name="duration_seconds"
-                                        value="{{ $lesson->duration_seconds }}"
-                                        class="vc-input" />
-                                </div>
                                 <div class="flex items-end sm:col-span-1">
-                                    <label class="flex items-center gap-2 text-sm text-slate-700">
-                                        <input
-                                            type="checkbox"
-                                            name="is_published"
-                                            value="1"
-                                            @checked($lesson->is_published) />
-                                        Live
-                                    </label>
-                                </div>
-                                <div class="flex items-end sm:col-span-1">
-                                    <span class="text-xs text-slate-500">Auto sync</span>
-                                </div>
-                                <div class="sm:col-span-9">
-                                    <label class="text-sm font-medium text-slate-700">Summary</label>
-                                    <textarea name="summary" rows="2" class="vc-input">
-{{ $lesson->summary }}</textarea
-                                    >
-                                </div>
-                                <div class="flex items-end sm:col-span-2">
-                                    <button type="submit" class="vc-btn-secondary w-full justify-center">
-                                        Save lesson
-                                    </button>
+                                    <button type="submit" class="vc-btn-secondary w-full justify-center">Save</button>
                                 </div>
                             </form>
                             <form
                                 method="POST"
-                                action="{{ route('admin.lessons.destroy', $lesson) }}"
-                                class="mt-2 flex justify-end">
+                                action="{{ route('admin.modules.destroy', $module) }}"
+                                data-async-curriculum
+                                data-async-success="Module deleted.">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="vc-btn-secondary">Delete lesson</button>
+                                <button type="submit" class="vc-btn-secondary">Delete module</button>
                             </form>
-                        @empty
-                            <p class="text-sm text-slate-600">No lessons in this module yet.</p>
-                        @endforelse
+                        </div>
+                        <form
+                            method="POST"
+                            action="{{ route('admin.lessons.store', $module) }}"
+                            data-async-curriculum
+                            data-async-success="Lesson added."
+                            class="mt-4 rounded-xl border border-slate-200 bg-white p-4">
+                            @csrf
+                            <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
+                                <div class="grid gap-3 sm:grid-cols-2">
+                                    <div class="sm:col-span-2">
+                                        <label class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                            Lesson title
+                                        </label>
+                                        <input name="title" class="vc-input !mt-0 py-1.5 text-sm" required />
+                                    </div>
+                                    <div>
+                                        <label class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                            Slug (optional)
+                                        </label>
+                                        <input name="slug" class="vc-input !mt-0 py-1.5 text-sm" />
+                                    </div>
+                                    <div>
+                                        <label class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                            Sort
+                                        </label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            name="sort_order"
+                                            value="{{ ($module->lessons->max('sort_order') ?? 0) + 1 }}"
+                                            class="vc-input !mt-0 py-1.5 text-sm" />
+                                    </div>
+                                    <div class="sm:col-span-2">
+                                        <label class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                            Cloudflare Stream video
+                                        </label>
+                                        <input
+                                            type="text"
+                                            data-stream-search
+                                            class="vc-input !mt-0 mb-2 py-1.5 text-sm"
+                                            placeholder="Search videos by name or UID"
+                                            autocomplete="off" />
+                                        <select
+                                            name="stream_video_id"
+                                            class="vc-input !mt-0 py-1.5 text-sm"
+                                            data-stream-select>
+                                            <option value="">No video yet</option>
+                                            @foreach ($streamVideos as $video)
+                                                <option value="{{ $video['uid'] }}">
+                                                    {{ $video['name'] }} ({{ $video['uid'] }})
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <p class="mt-1 text-xs text-slate-500">
+                                            Selecting a video enforces signed URLs and syncs duration from Cloudflare.
+                                        </p>
+                                    </div>
+
+                                    <div
+                                        class="mt-1 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-3 sm:col-span-2">
+                                        <label class="flex items-center gap-2 text-sm text-slate-700">
+                                            <input type="checkbox" name="is_published" value="1" />
+                                            Live
+                                        </label>
+
+                                        <button type="submit" class="vc-btn-primary">Add lesson</button>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                        Summary
+                                    </label>
+                                    <textarea name="summary" rows="8" class="vc-input !mt-0 text-sm"></textarea>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="mt-4 space-y-3">
+                            @forelse ($module->lessons as $lesson)
+                                <article class="rounded-xl border border-blue-200/50 bg-blue-50/50 p-4 shadow-xs">
+                                    <div
+                                        class="mb-3 inline-flex items-center rounded-full bg-blue-100 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-blue-600 uppercase">
+                                        Lesson
+                                    </div>
+                                    <form
+                                        method="POST"
+                                        action="{{ route('admin.lessons.update', $lesson) }}"
+                                        data-async-curriculum
+                                        data-async-success="Lesson saved."
+                                        class="space-y-4">
+                                        @csrf
+                                        @method('PUT')
+
+                                        <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
+                                            <div class="grid gap-3 sm:grid-cols-2">
+                                                <div class="sm:col-span-2">
+                                                    <label
+                                                        class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                                        Lesson title
+                                                    </label>
+                                                    <input
+                                                        name="title"
+                                                        value="{{ $lesson->title }}"
+                                                        class="vc-input !mt-0 py-1.5 text-sm"
+                                                        required />
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                                        Slug
+                                                    </label>
+                                                    <input
+                                                        name="slug"
+                                                        value="{{ $lesson->slug }}"
+                                                        class="vc-input !mt-0 py-1.5 text-sm"
+                                                        required />
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                                        Sort
+                                                    </label>
+                                                    <input
+                                                        type="number"
+                                                        min="0"
+                                                        name="sort_order"
+                                                        value="{{ $lesson->sort_order }}"
+                                                        class="vc-input !mt-0 py-1.5 text-sm"
+                                                        required />
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                                        Duration (seconds)
+                                                    </label>
+                                                    <input
+                                                        type="number"
+                                                        min="0"
+                                                        name="duration_seconds"
+                                                        value="{{ $lesson->duration_seconds }}"
+                                                        class="vc-input !mt-0 py-1.5 text-sm" />
+                                                </div>
+                                                <div class="sm:col-span-2">
+                                                    <label
+                                                        class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                                        Stream video
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        data-stream-search
+                                                        class="vc-input !mt-0 mb-2 py-1.5 text-sm"
+                                                        placeholder="Search videos by name or UID"
+                                                        autocomplete="off" />
+                                                    <select
+                                                        name="stream_video_id"
+                                                        class="vc-input !mt-0 py-1.5 text-sm"
+                                                        data-stream-select>
+                                                        <option value="">No video</option>
+                                                        @if ($lesson->stream_video_id)
+                                                            <option value="{{ $lesson->stream_video_id }}" selected>
+                                                                Current: {{ $lesson->stream_video_id }}
+                                                            </option>
+                                                        @endif
+
+                                                        @foreach ($streamVideos as $video)
+                                                            <option
+                                                                value="{{ $video['uid'] }}"
+                                                                @selected($lesson->stream_video_id === $video['uid'])>
+                                                                {{ $video['name'] }} ({{ $video['uid'] }})
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    <p class="mt-1 text-xs text-slate-500">
+                                                        Saving with a selected video enforces signed URLs and refreshes
+                                                        duration.
+                                                    </p>
+                                                </div>
+
+                                                <div
+                                                    class="mt-1 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-3 sm:col-span-2">
+                                                    <div class="flex items-center gap-3">
+                                                        <label class="flex items-center gap-2 text-sm text-slate-700">
+                                                            <input
+                                                                type="checkbox"
+                                                                name="is_published"
+                                                                value="1"
+                                                                @checked($lesson->is_published) />
+                                                            Live
+                                                        </label>
+                                                        <span class="text-xs text-slate-500">Auto sync</span>
+                                                    </div>
+
+                                                    <div class="flex items-center gap-2">
+                                                        <button type="submit" class="vc-btn-secondary">
+                                                            Save lesson
+                                                        </button>
+                                                        <button
+                                                            type="submit"
+                                                            form="delete-lesson-{{ $lesson->id }}"
+                                                            class="vc-btn-secondary">
+                                                            Delete lesson
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label
+                                                    class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                                    Summary
+                                                </label>
+                                                <textarea name="summary" rows="8" class="vc-input !mt-0 text-sm">
+{{ $lesson->summary }}</textarea
+                                                >
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <form
+                                        id="delete-lesson-{{ $lesson->id }}"
+                                        method="POST"
+                                        action="{{ route('admin.lessons.destroy', $lesson) }}"
+                                        data-async-curriculum
+                                        data-async-success="Lesson deleted."
+                                        class="hidden">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                </article>
+                            @empty
+                                <p class="text-sm text-slate-600">No lessons in this module yet.</p>
+                            @endforelse
+                        </div>
                     </div>
                 </article>
             @empty
@@ -475,16 +620,24 @@
         @endif
     </section>
 
+    <div
+        id="admin-curriculum-toast"
+        class="pointer-events-none fixed top-4 left-1/2 z-50 hidden -translate-x-1/2 rounded-xl px-4 py-3 text-sm font-medium text-white shadow-lg"></div>
+
     <script>
         (() => {
             const storageKey = 'admin-course-edit-tab';
-            const tabButtons = Array.from(document.querySelectorAll('[data-admin-tab-button]'));
-            const tabPanels = Array.from(document.querySelectorAll('[data-admin-tab-panel]'));
+            const moduleStateKey = 'admin-course-module-state:{{ $course->id }}';
+            const tabButtons = () => Array.from(document.querySelectorAll('[data-admin-tab-button]'));
+            const tabPanels = () => Array.from(document.querySelectorAll('[data-admin-tab-panel]'));
+            const moduleCards = () => Array.from(document.querySelectorAll('[data-module-card][data-module-id]'));
 
             const setActiveTab = (tab) => {
-                const target = tabPanels.some((panel) => panel.dataset.adminTabPanel === tab) ? tab : 'details';
+                const panels = tabPanels();
+                const buttons = tabButtons();
+                const target = panels.some((panel) => panel.dataset.adminTabPanel === tab) ? tab : 'details';
 
-                tabButtons.forEach((button) => {
+                buttons.forEach((button) => {
                     const active = button.dataset.adminTabButton === target;
                     button.classList.toggle('bg-slate-900', active);
                     button.classList.toggle('text-white', active);
@@ -493,7 +646,7 @@
                     button.setAttribute('aria-selected', active ? 'true' : 'false');
                 });
 
-                tabPanels.forEach((panel) => {
+                panels.forEach((panel) => {
                     const active = panel.dataset.adminTabPanel === target;
                     panel.classList.toggle('hidden', !active);
                 });
@@ -501,9 +654,17 @@
                 localStorage.setItem(storageKey, target);
             };
 
-            tabButtons.forEach((button) => {
-                button.addEventListener('click', () => setActiveTab(button.dataset.adminTabButton));
-            });
+            const bindTabButtons = () => {
+                tabButtons().forEach((button) => {
+                    if (button.dataset.tabsBound === '1') {
+                        return;
+                    }
+                    button.dataset.tabsBound = '1';
+                    button.addEventListener('click', () => setActiveTab(button.dataset.adminTabButton));
+                });
+            };
+
+            bindTabButtons();
 
             const hashTab =
                 window.location.hash === '#curriculum'
@@ -515,35 +676,114 @@
             setActiveTab(hashTab ?? savedTab ?? 'details');
 
             const normalize = (value) => (value ?? '').toString().trim().toLowerCase();
+            const readModuleState = () => {
+                try {
+                    const parsed = JSON.parse(localStorage.getItem(moduleStateKey) ?? '{}');
+                    return parsed && typeof parsed === 'object' ? parsed : {};
+                } catch {
+                    return {};
+                }
+            };
+            const writeModuleState = (state) => {
+                localStorage.setItem(moduleStateKey, JSON.stringify(state));
+            };
 
-            document.querySelectorAll('input[data-stream-search]').forEach((searchInput) => {
-                const container = searchInput.closest('div');
-                const select = container?.querySelector('select[data-stream-select]');
+            const setModuleExpanded = (card, expanded, persist = true) => {
+                const content = card.querySelector('[data-module-content]');
+                const toggle = card.querySelector('[data-module-toggle]');
+                const moduleId = card.dataset.moduleId;
 
-                if (!select) {
+                if (!content || !toggle || !moduleId) {
                     return;
                 }
 
-                const filterOptions = () => {
-                    const term = normalize(searchInput.value);
-                    const selectedValue = select.value;
+                content.classList.toggle('hidden', !expanded);
+                toggle.textContent = expanded ? 'Collapse' : 'Expand';
+                toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
 
-                    Array.from(select.options).forEach((option, index) => {
-                        if (index === 0 || option.value === selectedValue || term === '') {
-                            option.hidden = false;
-                            return;
-                        }
+                if (persist) {
+                    const state = readModuleState();
+                    state[moduleId] = expanded;
+                    writeModuleState(state);
+                }
+            };
 
-                        option.hidden = !normalize(option.textContent).includes(term);
+            const bindModuleAccordions = () => {
+                const state = readModuleState();
+                moduleCards().forEach((card) => {
+                    const toggle = card.querySelector('[data-module-toggle]');
+                    const moduleId = card.dataset.moduleId;
+                    if (!toggle || !moduleId) {
+                        return;
+                    }
+
+                    if (toggle.dataset.moduleToggleBound !== '1') {
+                        toggle.dataset.moduleToggleBound = '1';
+                        toggle.addEventListener('click', () => {
+                            const expanded = toggle.getAttribute('aria-expanded') === 'true';
+                            setModuleExpanded(card, !expanded);
+                        });
+                    }
+
+                    const saved = state[moduleId];
+                    setModuleExpanded(card, saved === undefined ? true : Boolean(saved), false);
+                });
+
+                const expandAllButton = document.querySelector('[data-modules-expand-all]');
+                if (expandAllButton && expandAllButton.dataset.modulesExpandBound !== '1') {
+                    expandAllButton.dataset.modulesExpandBound = '1';
+                    expandAllButton.addEventListener('click', () => {
+                        moduleCards().forEach((card) => setModuleExpanded(card, true));
                     });
-                };
+                }
 
-                searchInput.addEventListener('input', filterOptions);
-                filterOptions();
-            });
+                const collapseAllButton = document.querySelector('[data-modules-collapse-all]');
+                if (collapseAllButton && collapseAllButton.dataset.modulesCollapseBound !== '1') {
+                    collapseAllButton.dataset.modulesCollapseBound = '1';
+                    collapseAllButton.addEventListener('click', () => {
+                        moduleCards().forEach((card) => setModuleExpanded(card, false));
+                    });
+                }
+            };
 
-            const assetsSearchInput = document.querySelector('input[data-assets-search]');
-            if (assetsSearchInput) {
+            const bindStreamSearch = (scope = document) => {
+                scope.querySelectorAll('input[data-stream-search]').forEach((searchInput) => {
+                    if (searchInput.dataset.streamBound === '1') {
+                        return;
+                    }
+                    searchInput.dataset.streamBound = '1';
+                    const container = searchInput.closest('div');
+                    const select = container?.querySelector('select[data-stream-select]');
+
+                    if (!select) {
+                        return;
+                    }
+
+                    const filterOptions = () => {
+                        const term = normalize(searchInput.value);
+                        const selectedValue = select.value;
+
+                        Array.from(select.options).forEach((option, index) => {
+                            if (index === 0 || option.value === selectedValue || term === '') {
+                                option.hidden = false;
+                                return;
+                            }
+
+                            option.hidden = !normalize(option.textContent).includes(term);
+                        });
+                    };
+
+                    searchInput.addEventListener('input', filterOptions);
+                    filterOptions();
+                });
+            };
+
+            const bindAssetsSearch = () => {
+                const assetsSearchInput = document.querySelector('input[data-assets-search]');
+                if (!assetsSearchInput || assetsSearchInput.dataset.assetsBound === '1') {
+                    return;
+                }
+                assetsSearchInput.dataset.assetsBound = '1';
                 const rows = Array.from(document.querySelectorAll('[data-assets-row]'));
                 const filterAssetRows = () => {
                     const term = normalize(assetsSearchInput.value);
@@ -560,7 +800,90 @@
 
                 assetsSearchInput.addEventListener('input', filterAssetRows);
                 filterAssetRows();
-            }
+            };
+
+            const bindAsyncCurriculumForms = () => {
+                document.querySelectorAll('form[data-async-curriculum]').forEach((form) => {
+                    if (form.dataset.asyncBound === '1') {
+                        return;
+                    }
+                    form.dataset.asyncBound = '1';
+
+                    form.addEventListener('submit', async (event) => {
+                        event.preventDefault();
+
+                        const toastEl = document.getElementById('admin-curriculum-toast');
+                        const submitButtons = form.querySelectorAll('button[type="submit"]');
+                        submitButtons.forEach((button) => (button.disabled = true));
+                        form.classList.add('opacity-70');
+
+                        try {
+                            const response = await fetch(form.action, {
+                                method: 'POST',
+                                body: new FormData(form),
+                                credentials: 'same-origin',
+                                headers: {
+                                    Accept: 'text/html',
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                },
+                            });
+
+                            const html = await response.text();
+                            const doc = new DOMParser().parseFromString(html, 'text/html');
+
+                            const currentCurriculum = document.querySelector('[data-admin-tab-panel="curriculum"]');
+                            const incomingCurriculum = doc.querySelector('[data-admin-tab-panel="curriculum"]');
+                            if (currentCurriculum && incomingCurriculum) {
+                                currentCurriculum.replaceWith(incomingCurriculum);
+                            }
+
+                            const currentSummary = document.querySelector('[data-course-count-summary]');
+                            const incomingSummary = doc.querySelector('[data-course-count-summary]');
+                            if (currentSummary && incomingSummary) {
+                                currentSummary.replaceWith(incomingSummary);
+                            }
+
+                            bindTabButtons();
+                            bindStreamSearch();
+                            bindAssetsSearch();
+                            bindModuleAccordions();
+                            bindAsyncCurriculumForms();
+                            setActiveTab('curriculum');
+
+                            if (toastEl) {
+                                toastEl.textContent = form.dataset.asyncSuccess || 'Saved.';
+                                toastEl.classList.remove('hidden', 'bg-rose-600');
+                                toastEl.classList.add('bg-emerald-600');
+                                clearTimeout(window.__adminCurriculumToastTimeout);
+                                window.__adminCurriculumToastTimeout = window.setTimeout(() => {
+                                    toastEl.classList.add('hidden');
+                                }, 1800);
+                            }
+                        } catch (error) {
+                            if (toastEl) {
+                                toastEl.textContent = 'Update failed. Retrying with full page submit...';
+                                toastEl.classList.remove('hidden', 'bg-emerald-600');
+                                toastEl.classList.add('bg-rose-600');
+                                clearTimeout(window.__adminCurriculumToastTimeout);
+                                window.__adminCurriculumToastTimeout = window.setTimeout(() => {
+                                    toastEl.classList.add('hidden');
+                                }, 2200);
+                            }
+                            // Keep fallback simple: if async request fails, revert to full submit.
+                            form.removeAttribute('data-async-curriculum');
+                            form.submit();
+                        } finally {
+                            form.classList.remove('opacity-70');
+                            submitButtons.forEach((button) => (button.disabled = false));
+                        }
+                    });
+                });
+            };
+
+            bindStreamSearch();
+            bindAssetsSearch();
+            bindModuleAccordions();
+            bindAsyncCurriculumForms();
         })();
     </script>
 </x-public-layout>

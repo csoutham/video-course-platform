@@ -160,3 +160,22 @@ test('detail page renders intro video when configured', function (): void {
         ->assertSee('iframe.videodelivery.net/intro_video_uid_123', false)
         ->assertSee('intro video', false);
 });
+
+test('detail page renders long description and requirements markdown', function (): void {
+    Course::factory()->create([
+        'title' => 'Markdown Course',
+        'slug' => 'markdown-course',
+        'description' => 'Subtitle copy',
+        'long_description' => "## Long Details\n\nThis is **important**.",
+        'requirements' => "- A computer\n- Focus\n<script>alert('xss')</script>",
+        'is_published' => true,
+    ]);
+
+    $this->get('/courses/markdown-course')
+        ->assertOk()
+        ->assertSee('About this course')
+        ->assertSee('Requirements')
+        ->assertSee('Long Details')
+        ->assertSee('important')
+        ->assertDontSee("alert('xss')");
+});

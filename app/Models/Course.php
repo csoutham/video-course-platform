@@ -18,6 +18,8 @@ class Course extends Model
         'slug',
         'title',
         'description',
+        'long_description',
+        'requirements',
         'thumbnail_url',
         'intro_video_id',
         'source_payload_json',

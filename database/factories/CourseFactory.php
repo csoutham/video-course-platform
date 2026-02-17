@@ -23,6 +23,8 @@ class CourseFactory extends Factory
             'slug' => Str::slug($title).'-'.fake()->unique()->numberBetween(100, 999),
             'title' => $title,
             'description' => fake()->paragraph(),
+            'long_description' => null,
+            'requirements' => null,
             'thumbnail_url' => fake()->imageUrl(1280, 720),
             'intro_video_id' => null,
             'price_amount' => fake()->numberBetween(4900, 19900),

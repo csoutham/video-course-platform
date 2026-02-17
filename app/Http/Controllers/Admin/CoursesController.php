@@ -44,12 +44,13 @@ class CoursesController extends Controller
         Request $request,
         StripeCoursePricingService $pricingService,
         CloudflareStreamMetadataService $metadataService,
-    ): RedirectResponse
-    {
+    ): RedirectResponse {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'alpha_dash', 'unique:courses,slug'],
             'description' => ['nullable', 'string'],
+            'long_description' => ['nullable', 'string'],
+            'requirements' => ['nullable', 'string'],
             'thumbnail_url' => ['nullable', 'url', 'max:2048'],
             'intro_video_id' => ['nullable', 'string', 'max:255'],
             'price_amount' => ['required', 'integer', 'min:100'],
@@ -73,6 +74,8 @@ class CoursesController extends Controller
             'title' => $validated['title'],
             'slug' => $this->resolveCourseSlug($validated['slug'] ?? null, $validated['title']),
             'description' => $validated['description'] ?? null,
+            'long_description' => $validated['long_description'] ?? null,
+            'requirements' => $validated['requirements'] ?? null,
             'thumbnail_url' => $validated['thumbnail_url'] ?? null,
             'intro_video_id' => $introVideoId,
             'price_amount' => (int) $validated['price_amount'],
@@ -121,12 +124,13 @@ class CoursesController extends Controller
         Request $request,
         StripeCoursePricingService $pricingService,
         CloudflareStreamMetadataService $metadataService,
-    ): RedirectResponse
-    {
+    ): RedirectResponse {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', 'alpha_dash', 'unique:courses,slug,'.$course->id],
             'description' => ['nullable', 'string'],
+            'long_description' => ['nullable', 'string'],
+            'requirements' => ['nullable', 'string'],
             'thumbnail_url' => ['nullable', 'url', 'max:2048'],
             'intro_video_id' => ['nullable', 'string', 'max:255'],
             'price_amount' => ['required', 'integer', 'min:100'],
@@ -151,6 +155,8 @@ class CoursesController extends Controller
             'title' => $validated['title'],
             'slug' => $validated['slug'],
             'description' => $validated['description'] ?? null,
+            'long_description' => $validated['long_description'] ?? null,
+            'requirements' => $validated['requirements'] ?? null,
             'thumbnail_url' => $validated['thumbnail_url'] ?? null,
             'intro_video_id' => $introVideoId,
             'price_amount' => (int) $validated['price_amount'],

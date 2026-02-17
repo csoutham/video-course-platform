@@ -33,7 +33,9 @@
 - `source_external_id` (nullable, indexed)
 - `slug` (unique)
 - `title`
-- `description`
+- `description` (subtitle / short marketing summary)
+- `long_description` (nullable markdown source)
+- `requirements` (nullable markdown source)
 - `thumbnail_url`
 - `intro_video_id` (nullable; Cloudflare Stream UID for public course intro video)
 - `source_payload_json` (nullable)

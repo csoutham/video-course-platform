@@ -23,6 +23,10 @@ Replace DB/manual operational workflows with a secure, maintainable admin interf
 - `/admin` dashboard is implemented with operational metrics and recent orders.
 - `/admin/courses` CRUD is implemented for course create/edit/update.
 - Course metadata includes marketing thumbnail and optional intro video (Cloudflare Stream UID).
+- Course content fields include:
+    - `description` as short subtitle
+    - `long_description` as Markdown
+    - `requirements` as Markdown
 - Stripe price provisioning is integrated in admin course creation/edit (`auto-create` and `refresh` paths).
 - `/admin/courses/{course}/edit` includes nested module and lesson CRUD.
 - `/admin/imports/udemy` preview+commit URL importer is implemented for metadata + lesson shell migration without API credentials.

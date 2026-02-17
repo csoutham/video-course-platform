@@ -31,11 +31,33 @@
             </div>
 
             <div>
-                <label for="description" class="text-sm font-medium text-slate-700">Description</label>
+                <label for="description" class="text-sm font-medium text-slate-700">Subtitle</label>
                 <textarea id="description" name="description" rows="4" class="vc-input">
 {{ old('description') }}
                 </textarea>
                 @error('description')
+                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="long_description" class="text-sm font-medium text-slate-700">
+                    Long description (Markdown)
+                </label>
+                <textarea id="long_description" name="long_description" rows="8" class="vc-input">
+{{ old('long_description') }}</textarea
+                >
+                @error('long_description')
+                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="requirements" class="text-sm font-medium text-slate-700">Requirements (Markdown)</label>
+                <textarea id="requirements" name="requirements" rows="6" class="vc-input">
+{{ old('requirements') }}</textarea
+                >
+                @error('requirements')
                     <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
                 @enderror
             </div>

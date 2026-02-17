@@ -155,7 +155,7 @@ class UdemyCourseImportService
                             'module_id' => $module->id,
                             'title' => $lessonData['name'],
                             'slug' => $this->resolveLessonSlug($course, $lessonData['name'], $lessonPosition),
-                            'summary' => 'Imported shell from Udemy curriculum metadata.',
+                            'summary' => null,
                             'stream_video_id' => null,
                             'duration_seconds' => $lessonData['duration_seconds'],
                             'sort_order' => $lessonPosition,

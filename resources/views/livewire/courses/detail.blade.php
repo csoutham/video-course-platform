@@ -1,6 +1,6 @@
 <x-slot:title>{{ $course->title }} | {{ config('app.name') }}</x-slot>
 <x-slot:metaDescription>
-    {{ \Illuminate\Support\Str::limit(strip_tags($course->description), 155) }}
+    {{ \Illuminate\Support\Str::limit(strip_tags($course->long_description ?: $course->description), 155) }}
 </x-slot>
 <x-slot:metaImage>{{ $course->thumbnail_url ?: asset('favicon.ico') }}</x-slot>
 <x-slot:canonicalUrl>{{ route('courses.show', $course->slug) }}</x-slot>
@@ -12,6 +12,18 @@
 @endpush
 
 @php
+    $longDescriptionHtml = $course->long_description
+        ? \Illuminate\Support\Str::markdown($course->long_description, [
+            'html_input' => 'strip',
+            'allow_unsafe_links' => false,
+        ])
+        : null;
+    $requirementsHtml = $course->requirements
+        ? \Illuminate\Support\Str::markdown($course->requirements, [
+            'html_input' => 'strip',
+            'allow_unsafe_links' => false,
+        ])
+        : null;
     $lessonCount = $course->modules->sum(fn ($module) => $module->lessons->count());
     $totalDurationSeconds = (int) $course->modules
         ->flatMap(fn ($module) => $module->lessons)
@@ -97,6 +109,24 @@
                     </div>
                 @endif
             </article>
+
+            @if ($longDescriptionHtml)
+                <article class="vc-panel p-5">
+                    <h2 class="vc-card-title">About this course</h2>
+                    <div class="prose prose-slate mt-3 max-w-none text-sm">
+                        {!! $longDescriptionHtml !!}
+                    </div>
+                </article>
+            @endif
+
+            @if ($requirementsHtml)
+                <article class="vc-panel p-5">
+                    <h2 class="vc-card-title">Requirements</h2>
+                    <div class="prose prose-slate mt-3 max-w-none text-sm">
+                        {!! $requirementsHtml !!}
+                    </div>
+                </article>
+            @endif
 
             <h2 class="vc-card-title">What you’ll learn</h2>
 
