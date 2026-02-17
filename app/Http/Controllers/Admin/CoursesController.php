@@ -258,7 +258,7 @@ class CoursesController extends Controller
         }
 
         if ($existingCourse?->thumbnail_url) {
-            $prefix = rtrim(Storage::disk($disk)->url(''), '/').'/';
+            $prefix = rtrim((string) Storage::disk($disk)->url(''), '/').'/';
             if (str_starts_with($existingCourse->thumbnail_url, $prefix)) {
                 $oldPath = ltrim(Str::after($existingCourse->thumbnail_url, $prefix), '/');
                 if ($oldPath !== '') {

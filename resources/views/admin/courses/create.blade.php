@@ -11,7 +11,11 @@
     </section>
 
     <section class="vc-panel mt-6 p-6">
-        <form method="POST" action="{{ route('admin.courses.store') }}" enctype="multipart/form-data" class="space-y-5">
+        <form
+            method="POST"
+            action="{{ route('admin.courses.store') }}"
+            enctype="multipart/form-data"
+            class="space-y-5">
             @csrf
 
             <div>

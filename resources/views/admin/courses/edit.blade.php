@@ -116,6 +116,7 @@
                         alt="{{ $course->title }} thumbnail"
                         class="mt-2 h-28 w-full rounded-lg border border-slate-200 object-cover sm:w-56" />
                 @endif
+
                 <label
                     for="thumbnail_image"
                     class="mt-2 flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center transition hover:border-slate-400 hover:bg-slate-100">
@@ -332,7 +333,12 @@
                 </div>
                 <div class="sm:col-span-2">
                     <label class="text-xs font-semibold tracking-wide text-slate-600 uppercase">PDF file</label>
-                    <input name="resource_file" type="file" accept="application/pdf" class="vc-input !mt-0 py-1.5 text-sm" required />
+                    <input
+                        name="resource_file"
+                        type="file"
+                        accept="application/pdf"
+                        class="vc-input !mt-0 py-1.5 text-sm"
+                        required />
                 </div>
                 <div class="flex items-end sm:col-span-1">
                     <button type="submit" class="vc-btn-primary w-full justify-center">Upload</button>
@@ -342,7 +348,8 @@
             @if ($course->resources->isNotEmpty())
                 <ul class="mt-3 space-y-2">
                     @foreach ($course->resources as $resource)
-                        <li class="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-sm">
+                        <li
+                            class="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-sm">
                             <span class="text-slate-700">{{ $resource->name }}</span>
                             <form
                                 method="POST"
@@ -356,7 +363,10 @@
                                     class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-rose-200 bg-rose-50 text-rose-600 transition hover:bg-rose-100"
                                     title="Delete resource"
                                     aria-label="Delete resource">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-current">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        class="h-4 w-4 fill-current">
                                         <path
                                             d="M9 3a1 1 0 0 0-1 1v1H5a1 1 0 1 0 0 2h1v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7h1a1 1 0 1 0 0-2h-3V4a1 1 0 0 0-1-1H9Zm2 2h2v1h-2V5Zm-3 2h8v12H8V7Z" />
                                     </svg>
@@ -511,7 +521,8 @@
                             @if ($module->resources->isNotEmpty())
                                 <ul class="mt-2 space-y-1">
                                     @foreach ($module->resources as $resource)
-                                        <li class="flex items-center justify-between rounded-md border border-slate-200 px-2.5 py-1.5 text-xs">
+                                        <li
+                                            class="flex items-center justify-between rounded-md border border-slate-200 px-2.5 py-1.5 text-xs">
                                             <span class="text-slate-700">{{ $resource->name }}</span>
                                             <form
                                                 method="POST"
@@ -809,7 +820,9 @@
                                                     required />
                                             </div>
                                             <div class="flex items-end sm:col-span-1">
-                                                <button type="submit" class="vc-btn-secondary w-full justify-center">Upload</button>
+                                                <button type="submit" class="vc-btn-secondary w-full justify-center">
+                                                    Upload
+                                                </button>
                                             </div>
                                         </form>
                                         @if ($lesson->resources->isNotEmpty())
