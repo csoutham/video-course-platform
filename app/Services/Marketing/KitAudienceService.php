@@ -120,7 +120,7 @@ class KitAudienceService
      */
     private function parseTagIdList(string $raw): array
     {
-        $parts = array_map('trim', explode(',', $raw));
+        $parts = array_map(trim(...), explode(',', $raw));
         $ids = [];
 
         foreach ($parts as $part) {
