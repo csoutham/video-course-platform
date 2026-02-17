@@ -43,6 +43,8 @@
 - `price_amount`
 - `price_currency`
 - `stripe_price_id`
+- `is_free` (boolean; when true, Stripe checkout is bypassed)
+- `free_access_mode` (`claim_link|direct`)
 - `is_published`
 - `created_at`, `updated_at`
 
@@ -104,6 +106,7 @@
 - `user_id` (nullable for initial guest purchase)
 - `email`
 - `stripe_checkout_session_id` (unique)
+- Uses Stripe session IDs for paid checkouts and `free_*` synthetic IDs for free enrollments.
 - `stripe_customer_id` (nullable)
 - `status` (`pending|paid|failed|refunded`)
 - `subtotal_amount`

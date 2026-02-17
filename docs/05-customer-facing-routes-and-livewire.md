@@ -9,7 +9,8 @@
 - `GET /courses/{slug}`
   - Course detail and buy CTA.
 - `POST /checkout/{course}`
-  - Creates Stripe Checkout Session for self-purchase or gift purchase.
+  - Paid courses: creates Stripe Checkout Session for self-purchase or gift purchase.
+  - Free courses: creates zero-value local order and routes to success/claim flow.
 - `GET /checkout/success`
   - User-facing confirmation state pending webhook finalization.
 - `GET /checkout/cancel`
@@ -60,6 +61,7 @@
 
 - Catalog/detail are public.
 - Checkout is public but validates course publish/purchasable state.
+- Checkout supports both paid and free enrollment paths from same endpoint.
 - Player and download routes require auth plus active entitlement.
 - Authorization policy checks user-course entitlement on every protected request.
 

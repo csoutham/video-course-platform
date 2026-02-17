@@ -1,12 +1,14 @@
 # VideoCourses Documentation
 
 This folder contains the implementation-ready documentation for VideoCourses v1, a web-based platform to browse, buy, and watch purchasable courses.
+Docs version: `0.8.0`.
 
 ## Scope Summary
 
 - Curated course catalog for a single creator, business, or project deployment.
 - One-time course purchases via Stripe Checkout with coupon support.
 - Optional gift purchases with recipient claim links and email delivery.
+- Optional free lead-magnet distribution (self-enroll and free gifting).
 - Guest checkout with post-purchase account claim flow.
 - Authenticated learner area for course playback.
 - Authenticated receipt downloads for paid orders.
@@ -48,3 +50,5 @@ This folder contains the implementation-ready documentation for VideoCourses v1,
 21. [21-frontend-redesign-spec](./21-frontend-redesign-spec.md)
 22. [22-admin-panel-architecture](./22-admin-panel-architecture.md)
 23. [23-admin-operational-playbook](./23-admin-operational-playbook.md)
+24. [24-udemy-importer-spec](./24-udemy-importer-spec.md)
+25. [25-free-lead-magnet-flow](./25-free-lead-magnet-flow.md)

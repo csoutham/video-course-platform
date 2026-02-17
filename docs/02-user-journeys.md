@@ -74,6 +74,35 @@ Success criteria:
 - Buyer does not receive entitlement for gift orders.
 - Recipient receives entitlement only after successful claim.
 
+## Journey G: Free Course Lead Magnet (Self Enroll)
+
+1. Visitor opens a course marked as free.
+2. Visitor submits enrollment form (or secure claim-link flow, based on course mode).
+3. App creates zero-value local order (`free_*` session id) without Stripe checkout.
+4. If `free_access_mode=direct` and user is authenticated:
+   - entitlement is granted immediately.
+5. Otherwise:
+   - claim token is created and emailed.
+   - user claims access through existing claim journey.
+
+Success criteria:
+
+- Free enrollment does not call Stripe.
+- Entitlement behavior follows configured free mode.
+
+## Journey H: Free Gift Distribution
+
+1. Buyer selects `Gift this course` on a free course.
+2. Buyer enters recipient details and optional message.
+3. App creates zero-value local order and gift purchase record.
+4. Gift claim token is issued and emailed to recipient.
+5. Recipient claims and entitlement is granted.
+
+Success criteria:
+
+- Buyer receives no entitlement from free gift.
+- Recipient receives entitlement only after claim.
+
 ## Payment Failure and Cancel Path
 
 - If checkout is canceled, no entitlement is created.

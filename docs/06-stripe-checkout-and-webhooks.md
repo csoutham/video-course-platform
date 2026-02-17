@@ -4,6 +4,7 @@
 
 - Use Stripe Checkout hosted page.
 - Map each course to a Stripe Price ID.
+- Allow course-level free mode (`is_free`) that bypasses Stripe and creates local zero-value orders.
 - Support optional promotion/coupon code entry.
 - Support optional gift checkout mode with recipient details.
 - Allow guest purchase; bind entitlement after claim/account association.
@@ -66,3 +67,15 @@ Include metadata sufficient to reconcile internal records:
 - Use Stripe test keys and webhook secret.
 - Use Stripe CLI forwarding for local webhook testing.
 - Keep separate test products/prices from production.
+
+## Free Lead-Magnet Path (Non-Stripe)
+
+- Trigger: course has `is_free=true`.
+- App creates local paid-equivalent order (`total_amount=0`, synthetic `free_*` session id).
+- Self enroll:
+  - `free_access_mode=direct` + authenticated user grants entitlement immediately.
+  - otherwise app issues normal purchase claim token and uses claim-link flow.
+- Free gift enroll:
+  - app creates gift purchase + gift claim token.
+  - app sends recipient and buyer gift emails.
+- Webhook processing is not involved for this path.
