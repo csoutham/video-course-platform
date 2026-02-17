@@ -101,6 +101,24 @@
                 @enderror
             </div>
 
+            <div>
+                <label for="stream_video_filter_term" class="text-sm font-medium text-slate-700">
+                    Stream catalog filter term
+                </label>
+                <input
+                    id="stream_video_filter_term"
+                    name="stream_video_filter_term"
+                    value="{{ old('stream_video_filter_term') }}"
+                    class="vc-input"
+                    placeholder="e.g. Monologue Course" />
+                <p class="mt-1 text-xs text-slate-500">
+                    Used on the edit screen to filter Cloudflare Stream videos by name.
+                </p>
+                @error('stream_video_filter_term')
+                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div class="grid gap-4 sm:grid-cols-2">
                 <div>
                     <label for="price_amount" class="text-sm font-medium text-slate-700">Price (cents/pence)</label>

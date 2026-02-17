@@ -31,6 +31,7 @@ test('admin can create course and auto assign stripe price', function (): void {
         'description' => 'Team-focused Laravel training.',
         'long_description' => "## Long description\n\nBuilt for team learning.",
         'requirements' => "- PHP 8.4\n- Composer",
+        'stream_video_filter_term' => 'Laravel for Teams',
         'price_amount' => 12900,
         'price_currency' => 'usd',
         'is_published' => '1',
@@ -46,6 +47,7 @@ test('admin can create course and auto assign stripe price', function (): void {
         'title' => 'Laravel for Teams',
         'long_description' => "## Long description\n\nBuilt for team learning.",
         'requirements' => "- PHP 8.4\n- Composer",
+        'stream_video_filter_term' => 'Laravel for Teams',
         'stripe_price_id' => 'price_auto_123',
         'is_published' => true,
     ]);
@@ -79,6 +81,7 @@ test('admin can update course and refresh stripe price', function (): void {
         'requirements' => "- Git\n- Basic Laravel",
         'thumbnail_url' => 'https://example.com/new.jpg',
         'intro_video_id' => 'stream_intro_001',
+        'stream_video_filter_term' => 'Updated Course',
         'price_amount' => 14900,
         'price_currency' => 'usd',
         'stripe_price_id' => $course->stripe_price_id,
@@ -95,6 +98,7 @@ test('admin can update course and refresh stripe price', function (): void {
         'long_description' => "### Updated long description\n\nMore depth.",
         'requirements' => "- Git\n- Basic Laravel",
         'intro_video_id' => 'stream_intro_001',
+        'stream_video_filter_term' => 'Updated Course',
         'stripe_price_id' => 'price_new_2',
         'is_published' => true,
     ]);

@@ -32,11 +32,12 @@ class CoursesController extends Controller
 
     public function create(CloudflareStreamCatalogService $streamCatalogService): View
     {
-        [$streamVideos, $streamCatalogStatus] = $this->resolveStreamCatalog($streamCatalogService);
+        [$streamVideos, $streamCatalogStatus, $streamCatalogFilterNotice] = $this->resolveStreamCatalog($streamCatalogService);
 
         return view('admin.courses.create', [
             'streamVideos' => $streamVideos,
             'streamCatalogStatus' => $streamCatalogStatus,
+            'streamCatalogFilterNotice' => $streamCatalogFilterNotice,
         ]);
     }
 
@@ -53,6 +54,7 @@ class CoursesController extends Controller
             'requirements' => ['nullable', 'string'],
             'thumbnail_url' => ['nullable', 'url', 'max:2048'],
             'intro_video_id' => ['nullable', 'string', 'max:255'],
+            'stream_video_filter_term' => ['nullable', 'string', 'max:255'],
             'price_amount' => ['nullable', 'integer', 'min:0'],
             'price_currency' => ['required', 'string', 'in:usd,gbp'],
             'is_published' => ['nullable', 'boolean'],
@@ -89,6 +91,7 @@ class CoursesController extends Controller
             'requirements' => $validated['requirements'] ?? null,
             'thumbnail_url' => $validated['thumbnail_url'] ?? null,
             'intro_video_id' => $introVideoId,
+            'stream_video_filter_term' => ($validated['stream_video_filter_term'] ?? null) ?: null,
             'price_amount' => $isFree ? 0 : $priceAmount,
             'price_currency' => strtolower((string) $validated['price_currency']),
             'is_free' => $isFree,
@@ -124,12 +127,13 @@ class CoursesController extends Controller
             'modules.lessons' => fn ($query) => $query->orderBy('sort_order'),
         ]);
 
-        [$streamVideos, $streamCatalogStatus] = $this->resolveStreamCatalog($streamCatalogService);
+        [$streamVideos, $streamCatalogStatus, $streamCatalogFilterNotice] = $this->resolveStreamCatalog($streamCatalogService, $course);
 
         return view('admin.courses.edit', [
             'course' => $course,
             'streamVideos' => $streamVideos,
             'streamCatalogStatus' => $streamCatalogStatus,
+            'streamCatalogFilterNotice' => $streamCatalogFilterNotice,
         ]);
     }
 
@@ -147,6 +151,7 @@ class CoursesController extends Controller
             'requirements' => ['nullable', 'string'],
             'thumbnail_url' => ['nullable', 'url', 'max:2048'],
             'intro_video_id' => ['nullable', 'string', 'max:255'],
+            'stream_video_filter_term' => ['nullable', 'string', 'max:255'],
             'price_amount' => ['nullable', 'integer', 'min:0'],
             'price_currency' => ['required', 'string', 'in:usd,gbp'],
             'stripe_price_id' => ['nullable', 'string', 'max:255'],
@@ -184,6 +189,7 @@ class CoursesController extends Controller
             'requirements' => $validated['requirements'] ?? null,
             'thumbnail_url' => $validated['thumbnail_url'] ?? null,
             'intro_video_id' => $introVideoId,
+            'stream_video_filter_term' => ($validated['stream_video_filter_term'] ?? null) ?: null,
             'price_amount' => $isFree ? 0 : $priceAmount,
             'price_currency' => strtolower((string) $validated['price_currency']),
             'stripe_price_id' => $isFree ? null : ($validated['stripe_price_id'] ?: null),
@@ -228,19 +234,48 @@ class CoursesController extends Controller
     }
 
     /**
-     * @return array{0: array<int, array{uid: string, name: string, created: string}>, 1: string|null}
+     * @return array{0: array<int, array{uid: string, name: string, duration_seconds: int|null}>, 1: string|null, 2: string|null}
      */
-    private function resolveStreamCatalog(CloudflareStreamCatalogService $streamCatalogService): array
+    private function resolveStreamCatalog(CloudflareStreamCatalogService $streamCatalogService, ?Course $course = null): array
     {
         $streamVideos = [];
         $streamCatalogStatus = null;
+        $streamCatalogFilterNotice = null;
 
         try {
             $streamVideos = $streamCatalogService->listVideos(200);
+
+            if ($course) {
+                $rawFilterTerm = (string) ($course->stream_video_filter_term ?: '');
+                $resolvedFilterTerm = Str::of($rawFilterTerm)->squish()->value();
+
+                if ($resolvedFilterTerm !== '') {
+                    $normalizedFilterTerm = Str::lower($resolvedFilterTerm);
+                    $filteredVideos = collect($streamVideos)
+                        ->filter(fn (array $video): bool => str_contains(Str::lower((string) ($video['name'] ?? '')), $normalizedFilterTerm))
+                        ->values()
+                        ->all();
+
+                    if (count($filteredVideos) > 0) {
+                        $streamVideos = $filteredVideos;
+                        $streamCatalogFilterNotice = sprintf(
+                            'Showing %d Stream video%s filtered by course filter: "%s".',
+                            count($filteredVideos),
+                            count($filteredVideos) === 1 ? '' : 's',
+                            $resolvedFilterTerm
+                        );
+                    } else {
+                        $streamCatalogFilterNotice = sprintf(
+                            'No Stream videos matched filter "%s". Showing full catalog list instead.',
+                            $resolvedFilterTerm
+                        );
+                    }
+                }
+            }
         } catch (RuntimeException $exception) {
             $streamCatalogStatus = $exception->getMessage();
         }
 
-        return [$streamVideos, $streamCatalogStatus];
+        return [$streamVideos, $streamCatalogStatus, $streamCatalogFilterNotice];
     }
 }

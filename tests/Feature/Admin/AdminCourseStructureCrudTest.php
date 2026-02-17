@@ -60,7 +60,9 @@ test('admin can create lesson and sync duration from stream', function (): void 
 
 test('admin can view stream options on course edit page', function (): void {
     $this->actingAs(User::factory()->admin()->create());
-    $course = Course::factory()->create();
+    $course = Course::factory()->create([
+        'stream_video_filter_term' => 'Monologue Course',
+    ]);
     CourseModule::factory()->create(['course_id' => $course->id]);
 
     $catalog = \Mockery::mock(CloudflareStreamCatalogService::class);
@@ -70,16 +72,23 @@ test('admin can view stream options on course edit page', function (): void {
         ->andReturn([
             [
                 'uid' => 'uid_abc',
-                'name' => 'Lesson Upload 1',
+                'name' => 'Monologue Course - Lesson Upload 1',
                 'duration_seconds' => 321,
+            ],
+            [
+                'uid' => 'uid_other',
+                'name' => 'Different Course - Lesson Upload 2',
+                'duration_seconds' => 410,
             ],
         ]);
     $this->app->instance(CloudflareStreamCatalogService::class, $catalog);
 
     $this->get(route('admin.courses.edit', $course))
         ->assertOk()
-        ->assertSeeText('Lesson Upload 1')
-        ->assertSeeText('uid_abc');
+        ->assertSeeText('Monologue Course - Lesson Upload 1')
+        ->assertSeeText('uid_abc')
+        ->assertDontSeeText('Different Course - Lesson Upload 2')
+        ->assertSeeText('filtered by course filter');
 
 });
 

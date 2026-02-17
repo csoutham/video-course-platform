@@ -22,6 +22,7 @@ class Course extends Model
         'requirements',
         'thumbnail_url',
         'intro_video_id',
+        'stream_video_filter_term',
         'source_payload_json',
         'source_last_imported_at',
         'price_amount',
