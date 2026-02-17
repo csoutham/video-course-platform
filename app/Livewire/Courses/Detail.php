@@ -55,7 +55,7 @@ class Detail extends Component
             'offers' => [
                 '@type' => 'Offer',
                 'priceCurrency' => strtoupper((string) $course->price_currency),
-                'price' => number_format($course->price_amount / 100, 2, '.', ''),
+                'price' => $course->is_free ? '0.00' : number_format($course->price_amount / 100, 2, '.', ''),
                 'availability' => 'https://schema.org/InStock',
                 'url' => route('courses.show', $course->slug),
             ],

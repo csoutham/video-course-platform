@@ -2,7 +2,9 @@
     <x-slot:title>Checkout Success</x-slot>
 
     <div class="vc-panel-soft border-emerald-200 bg-emerald-50 p-6">
-        <h1 class="text-xl font-semibold text-emerald-900">Payment successful</h1>
+        <h1 class="text-xl font-semibold text-emerald-900">
+            {{ ($order?->total_amount ?? 1) === 0 ? 'Enrollment successful' : 'Payment successful' }}
+        </h1>
 
         @if ($isGiftOrder)
             <p class="mt-2 text-sm text-emerald-800">

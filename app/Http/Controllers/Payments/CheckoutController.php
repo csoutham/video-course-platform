@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Payments;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Services\Audit\AuditLogService;
+use App\Services\Payments\FreeCheckoutService;
 use App\Services\Payments\StripeCheckoutService;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use InvalidArgumentException;
 
 class CheckoutController extends Controller
@@ -18,10 +19,10 @@ class CheckoutController extends Controller
         Request $request,
         Course $course,
         StripeCheckoutService $checkoutService,
+        FreeCheckoutService $freeCheckoutService,
         AuditLogService $auditLogService,
     ): RedirectResponse {
         abort_if(! $course->is_published, 404);
-        abort_if(! $course->stripe_price_id, 422, 'Course is not purchasable yet.');
 
         $validated = $request->validate([
             'email' => ['nullable', 'email'],
@@ -58,6 +59,53 @@ class CheckoutController extends Controller
 
             RateLimiter::hit($rateLimitKey, 60);
         }
+
+        if ($course->is_free) {
+            if (($validated['promotion_code'] ?? null) !== null) {
+                return back()->withErrors([
+                    'promotion_code' => 'Promotion codes do not apply to free courses.',
+                ])->withInput();
+            }
+
+            if ($request->user() && ! $isGift && $course->free_access_mode === 'direct') {
+                $alreadyOwned = $request->user()
+                    ->entitlements()
+                    ->where('course_id', $course->id)
+                    ->where('status', 'active')
+                    ->exists();
+
+                if ($alreadyOwned) {
+                    return to_route('my-courses.index');
+                }
+            }
+
+            $freeOrder = $freeCheckoutService->complete(
+                course: $course,
+                user: $request->user(),
+                customerEmail: $customerEmail,
+                isGift: $isGift,
+                recipientEmail: $validated['recipient_email'] ?? null,
+                recipientName: $validated['recipient_name'] ?? null,
+                giftMessage: $validated['gift_message'] ?? null,
+            );
+
+            $auditLogService->record(
+                eventType: 'checkout_started',
+                userId: $request->user()?->id,
+                context: [
+                    'course_id' => $course->id,
+                    'email' => $customerEmail,
+                    'promotion_code' => null,
+                    'is_gift' => $isGift,
+                    'recipient_email' => $validated['recipient_email'] ?? null,
+                    'is_free_checkout' => true,
+                ]
+            );
+
+            return to_route('checkout.success', ['session_id' => $freeOrder['session_id']]);
+        }
+
+        abort_if(! $course->stripe_price_id, 422, 'Course is not purchasable yet.');
 
         try {
             $session = $checkoutService->createCheckoutSession(

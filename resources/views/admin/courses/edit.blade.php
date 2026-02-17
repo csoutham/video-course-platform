@@ -195,11 +195,7 @@
             <div class="grid gap-4 sm:grid-cols-2">
                 <div class="space-y-2">
                     <label class="flex items-center gap-2 text-sm text-slate-700">
-                        <input
-                            type="checkbox"
-                            name="is_free"
-                            value="1"
-                            @checked(old('is_free', $course->is_free)) />
+                        <input type="checkbox" name="is_free" value="1" @checked(old('is_free', $course->is_free)) />
                         Free course (lead magnet)
                     </label>
                     <p class="text-xs text-slate-500">
@@ -214,7 +210,9 @@
                             @selected(old('free_access_mode', $course->free_access_mode) === 'claim_link')>
                             Claim link
                         </option>
-                        <option value="direct" @selected(old('free_access_mode', $course->free_access_mode) === 'direct')>
+                        <option
+                            value="direct"
+                            @selected(old('free_access_mode', $course->free_access_mode) === 'direct')>
                             Direct grant
                         </option>
                     </select>

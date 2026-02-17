@@ -65,13 +65,21 @@
             <div class="border-t border-slate-200 bg-slate-50 p-7 sm:p-8 lg:border-t-0 lg:border-l">
                 <p class="text-xs font-semibold tracking-[0.14em] text-slate-500 uppercase">Pricing</p>
                 <p class="mt-3 text-4xl font-semibold tracking-tight text-slate-900">
-                    {{ strtoupper($course->price_currency) }} {{ number_format($course->price_amount / 100, 2) }}
+                    @if ($course->is_free)
+                        Free
+                    @else
+                        {{ strtoupper($course->price_currency) }} {{ number_format($course->price_amount / 100, 2) }}
+                    @endif
                 </p>
                 <p class="mt-2 text-sm text-slate-600">
-                    One-time purchase. Instant access to all published lessons and resources in this course.
+                    @if ($course->is_free)
+                        No payment required. Enroll instantly and start learning right away.
+                    @else
+                        One-time purchase. Instant access to all published lessons and resources in this course.
+                    @endif
                 </p>
                 <ul class="mt-5 space-y-2 text-sm text-slate-600">
-                    <li>Full curriculum access after checkout</li>
+                    <li>{{ $course->is_free ? 'Full curriculum access after enrollment' : 'Full curriculum access after checkout' }}</li>
                     <li>Track progress lesson-by-lesson</li>
                     <li>Watch from any modern browser</li>
                 </ul>
@@ -159,7 +167,13 @@
         <aside class="lg:sticky lg:top-4">
             <div class="vc-panel space-y-4 p-6">
                 <p class="text-xs font-semibold tracking-[0.14em] text-slate-500 uppercase">Enrollment</p>
-                <p class="text-sm text-slate-600">Complete checkout to unlock this course immediately.</p>
+                <p class="text-sm text-slate-600">
+                    @if ($course->is_free)
+                        Get access now{{ $course->free_access_mode === 'claim_link' ? ' with a secure claim link.' : '.' }}
+                    @else
+                        Complete checkout to unlock this course immediately.
+                    @endif
+                </p>
 
                 <form
                     method="POST"
@@ -262,23 +276,29 @@
                         </div>
                     @endif
 
-                    <div>
-                        <label
-                            for="promotion_code"
-                            class="block text-xs font-semibold tracking-[0.12em] text-slate-500 uppercase">
-                            Promotion code (optional)
-                        </label>
-                        <input
-                            id="promotion_code"
-                            name="promotion_code"
-                            type="text"
-                            value="{{ old('promotion_code') }}"
-                            class="vc-input"
-                            placeholder="promo_xxx" />
-                    </div>
+                    @unless ($course->is_free)
+                        <div>
+                            <label
+                                for="promotion_code"
+                                class="block text-xs font-semibold tracking-[0.12em] text-slate-500 uppercase">
+                                Promotion code (optional)
+                            </label>
+                            <input
+                                id="promotion_code"
+                                name="promotion_code"
+                                type="text"
+                                value="{{ old('promotion_code') }}"
+                                class="vc-input"
+                                placeholder="promo_xxx" />
+                        </div>
+                    @endunless
 
                     <button type="submit" class="vc-btn-primary w-full justify-center py-2.5">
-                        {{ $giftsEnabled ? 'Continue to secure checkout' : 'Buy course now' }}
+                        @if ($course->is_free)
+                            {{ $giftsEnabled ? 'Get free access' : 'Enroll for free' }}
+                        @else
+                            {{ $giftsEnabled ? 'Continue to secure checkout' : 'Buy course now' }}
+                        @endif
                     </button>
                 </form>
             </div>
