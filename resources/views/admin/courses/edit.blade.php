@@ -321,6 +321,7 @@
                     $moduleLessonCount = $module->lessons->count();
                     $moduleLiveLessonCount = $module->lessons->where('is_published', true)->count();
                 @endphp
+
                 <article
                     class="rounded-lg border border-slate-200 bg-slate-50/50 p-4 shadow-sm"
                     data-module-card
