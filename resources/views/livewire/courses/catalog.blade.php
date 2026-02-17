@@ -13,9 +13,9 @@
 <div class="space-y-8">
     <section class="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
         <div
-            class="pointer-events-none absolute -top-28 -right-20 h-72 w-72 rounded-full bg-gradient-to-br from-cyan-200/70 to-transparent blur-3xl"></div>
+            class="pointer-events-none absolute -top-28 -right-20 h-72 w-72 rounded-full bg-linear-to-br from-cyan-200/70 to-transparent blur-3xl"></div>
         <div
-            class="pointer-events-none absolute -bottom-28 -left-20 h-72 w-72 rounded-full bg-gradient-to-tr from-slate-300/40 to-transparent blur-3xl"></div>
+            class="pointer-events-none absolute -bottom-28 -left-20 h-72 w-72 rounded-full bg-linear-to-tr from-slate-300/40 to-transparent blur-3xl"></div>
 
         <div class="relative grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-end">
             <div class="space-y-4">
@@ -28,16 +28,6 @@
                     module-based lessons with downloadable resources.
                 </p>
             </div>
-
-            <div class="rounded-2xl border border-slate-200 bg-slate-50/80 p-5">
-                <p class="text-sm font-medium text-slate-700">
-                    {{ $courses->count() }} {{ \Illuminate\Support\Str::plural('course', $courses->count()) }}
-                    available
-                </p>
-                <p class="mt-2 text-sm text-slate-500">
-                    New courses are published regularly for internal teams and clients.
-                </p>
-            </div>
         </div>
     </section>
 
@@ -48,48 +38,42 @@
         </div>
     @else
         <section class="grid gap-6 md:grid-cols-2">
-            @foreach ($courses as $course)
-                @php
-                    $hasAccess = $ownedCourseIds->contains($course->id);
-                    $courseLink = $hasAccess ? route('learn.show', ['course' => $course->slug]) : route('courses.show', $course->slug);
-                    $thumbnail = $course->thumbnail_url ?: null;
-                @endphp
-
+            @foreach ($courseCards as $card)
                 <article
                     class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-                    <a href="{{ $courseLink }}" wire:navigate class="block">
-                        <div class="relative aspect-[16/9] overflow-hidden bg-slate-900">
-                            @if ($thumbnail)
+                    <a href="{{ $card['courseLink'] }}" wire:navigate class="block">
+                        <div class="relative aspect-video overflow-hidden bg-slate-900">
+                            @if ($card['thumbnail'])
                                 <img
-                                    src="{{ $thumbnail }}"
-                                    alt="{{ $course->title }} thumbnail"
+                                    src="{{ $card['thumbnail'] }}"
+                                    alt="{{ $card['course']->title }} thumbnail"
                                     loading="lazy"
                                     class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
                             @else
                                 <div
-                                    class="flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-800 via-cyan-900 to-slate-700 px-6 text-center text-xl font-semibold tracking-tight text-white">
-                                    {{ $course->title }}
+                                    class="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-800 via-cyan-900 to-slate-700 px-6 text-center text-xl font-semibold tracking-tight text-white">
+                                    {{ $card['course']->title }}
                                 </div>
                             @endif
 
                             <div
                                 class="absolute right-3 bottom-3 rounded-full bg-white px-3 py-1 text-sm font-bold text-slate-900 shadow">
-                                {{ strtoupper($course->price_currency) }}
-                                {{ number_format($course->price_amount / 100, 2) }}
+                                {{ strtoupper($card['course']->price_currency) }}
+                                {{ number_format($card['course']->price_amount / 100, 2) }}
                             </div>
                         </div>
                     </a>
 
                     <div class="space-y-3 p-5">
-                        <h2 class="text-xl font-semibold tracking-tight text-slate-900">{{ $course->title }}</h2>
-                        <p class="line-clamp-3 text-sm leading-relaxed text-slate-600">{{ $course->description }}</p>
+                        <h2 class="text-xl font-semibold tracking-tight text-slate-900">{{ $card['course']->title }}</h2>
+                        <p class="line-clamp-3 text-sm leading-relaxed text-slate-600">{{ $card['course']->description }}</p>
 
-                        <div class="flex items-center justify-between pt-1">
-                            <a href="{{ $courseLink }}" wire:navigate class="vc-link">
-                                {{ $hasAccess ? 'Continue learning' : 'View course and pricing' }}
+                        <div class="flex items-center justify-between gap-3 pt-1">
+                            <a href="{{ $card['courseLink'] }}" wire:navigate class="vc-btn-primary">
+                                {{ $card['hasAccess'] ? 'Continue learning' : 'View course and pricing' }}
                             </a>
                             <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-                                {{ $hasAccess ? 'Owned' : 'Available now' }}
+                                {{ $card['hasAccess'] ? 'Owned' : 'Available now' }}
                             </span>
                         </div>
                     </div>

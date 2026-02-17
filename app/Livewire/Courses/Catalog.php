@@ -27,6 +27,19 @@ class Catalog extends Component
             ->orderBy('title')
             ->get();
 
+        $courseCards = $courses->map(function (Course $course) use ($ownedCourseIds): array {
+            $hasAccess = $ownedCourseIds->contains($course->id);
+
+            return [
+                'course' => $course,
+                'hasAccess' => $hasAccess,
+                'courseLink' => $hasAccess
+                    ? route('learn.show', ['course' => $course->slug])
+                    : route('courses.show', $course->slug),
+                'thumbnail' => $course->thumbnail_url ?: null,
+            ];
+        });
+
         $catalogSchemaJson = json_encode([
             '@context' => 'https://schema.org',
             '@type' => 'ItemList',
@@ -55,7 +68,7 @@ class Catalog extends Component
 
         return view('livewire.courses.catalog', [
             'courses' => $courses,
-            'ownedCourseIds' => $ownedCourseIds,
+            'courseCards' => $courseCards,
             'catalogSchemaJson' => $catalogSchemaJson,
         ]);
     }

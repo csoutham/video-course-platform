@@ -1,28 +1,5 @@
 <x-public-layout maxWidth="max-w-none" containerPadding="px-4 py-6 lg:px-10">
     <x-slot:title>{{ $course->title }} - Learn</x-slot>
-    @php
-        $lessonSummaryHtml = $activeLesson->summary
-            ? \Illuminate\Support\Str::markdown($activeLesson->summary, [
-                'html_input' => 'strip',
-                'allow_unsafe_links' => false,
-            ])
-            : null;
-        $formatRuntime = static function (?int $durationSeconds): ?string {
-            if (!is_int($durationSeconds) || $durationSeconds <= 0) {
-                return null;
-            }
-
-            $hours = intdiv($durationSeconds, 3600);
-            $minutes = intdiv($durationSeconds % 3600, 60);
-            $seconds = $durationSeconds % 60;
-
-            if ($hours > 0) {
-                return sprintf('%d:%02d:%02d', $hours, $minutes, $seconds);
-            }
-
-            return sprintf('%d:%02d', $minutes, $seconds);
-        };
-    @endphp
 
     <div class="grid gap-5 lg:grid-cols-[340px_1fr] lg:gap-6">
         <aside
@@ -42,25 +19,19 @@
                         @else
                             <ul class="space-y-1">
                                 @foreach ($module->lessons as $lesson)
-                                    @php
-                                        $lessonProgress = $progressByLessonId->get($lesson->id);
-                                        $isCompleted = $lessonProgress?->status === 'completed';
-                                    @endphp
-
                                     <li>
                                         <a
                                             href="{{ route('learn.show', ['course' => $course->slug, 'lessonSlug' => $lesson->slug]) }}"
                                             class="{{ $activeLesson->id === $lesson->id ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100' }} flex items-center justify-between rounded-md px-2 py-1 text-sm">
                                             <span>{{ $lesson->title }}</span>
                                             <span class="flex items-center gap-2">
-                                                @if ($formatRuntime($lesson->duration_seconds))
+                                                @if ($lesson->duration_label)
                                                     <span
                                                         class="{{ $activeLesson->id === $lesson->id ? 'text-slate-200' : 'text-slate-500' }} text-xs tabular-nums">
-                                                        {{ $formatRuntime($lesson->duration_seconds) }}
+                                                        {{ $lesson->duration_label }}
                                                     </span>
                                                 @endif
-
-                                                @if ($isCompleted)
+                                                @if (($progressByLessonId->get($lesson->id)?->status) === 'completed')
                                                     <span
                                                         class="{{ $activeLesson->id === $lesson->id ? 'text-emerald-200' : 'text-emerald-700' }} text-xs font-semibold">
                                                         Completed
@@ -98,11 +69,11 @@
                 @endif
             </div>
 
-            @if ($lessonSummaryHtml)
+            @if ($activeLessonSummaryHtml)
                 <div>
                     <h3 class="text-sm font-semibold text-slate-900">Summary</h3>
                     <div class="prose prose-slate mt-2 max-w-none text-sm">
-                        {!! $lessonSummaryHtml !!}
+                        {!! $activeLessonSummaryHtml !!}
                     </div>
                 </div>
             @endif
@@ -174,7 +145,7 @@
                     @if ($previousLesson)
                         <a
                             href="{{ route('learn.show', ['course' => $course->slug, 'lessonSlug' => $previousLesson->slug]) }}"
-                            class="inline-flex items-center rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">
+                            class="vc-btn-secondary">
                             Previous lesson
                         </a>
                     @else
@@ -199,7 +170,7 @@
                     @if ($nextLesson)
                         <a
                             href="{{ route('learn.show', ['course' => $course->slug, 'lessonSlug' => $nextLesson->slug]) }}"
-                            class="inline-flex items-center rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800">
+                            class="vc-btn-primary">
                             Next lesson
                         </a>
                     @else

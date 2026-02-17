@@ -15,23 +15,19 @@
         @else
             <div class="grid gap-6 md:grid-cols-2">
                 @foreach ($courses as $course)
-                    @php
-                        $thumbnail = $course->thumbnail_url ?: null;
-                    @endphp
-
                     <article
                         class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                         <a href="{{ route('learn.show', ['course' => $course->slug]) }}" class="block">
-                            <div class="relative aspect-[16/9] overflow-hidden bg-slate-900">
-                                @if ($thumbnail)
+                            <div class="relative aspect-video overflow-hidden bg-slate-900">
+                                @if ($course->thumbnail_url)
                                     <img
-                                        src="{{ $thumbnail }}"
+                                        src="{{ $course->thumbnail_url }}"
                                         alt="{{ $course->title }} thumbnail"
                                         loading="lazy"
                                         class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
                                 @else
                                     <div
-                                        class="flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-800 via-cyan-900 to-slate-700 px-6 text-center text-xl font-semibold tracking-tight text-white">
+                                        class="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-800 via-cyan-900 to-slate-700 px-6 text-center text-xl font-semibold tracking-tight text-white">
                                         {{ $course->title }}
                                     </div>
                                 @endif

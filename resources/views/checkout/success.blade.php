@@ -14,16 +14,12 @@
 
             <div class="mt-4 flex flex-wrap gap-3">
                 @auth
-                    <a
-                        href="{{ route('gifts.index') }}"
-                        class="inline-flex items-center rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600">
+                    <a href="{{ route('gifts.index') }}" class="vc-btn-primary">
                         View my gifts
                     </a>
                 @endauth
 
-                <a
-                    href="{{ route('courses.index') }}"
-                    class="inline-flex items-center text-sm font-semibold text-emerald-900 hover:text-emerald-700">
+                <a href="{{ route('courses.index') }}" class="vc-link">
                     Browse courses
                 </a>
             </div>
@@ -32,9 +28,7 @@
                 Your payment is confirmed. Use the secure link below to add this purchase to your account.
             </p>
 
-            <a
-                href="{{ $claimUrl }}"
-                class="mt-4 inline-flex items-center rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600">
+            <a href="{{ $claimUrl }}" class="vc-btn-primary mt-4">
                 Add purchase to my account
             </a>
         @elseif ($order?->user_id)
@@ -43,14 +37,10 @@
             </p>
 
             <div class="mt-4 flex flex-wrap gap-3">
-                <a
-                    href="{{ route('my-courses.index') }}"
-                    class="inline-flex items-center rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600">
+                <a href="{{ route('my-courses.index') }}" class="vc-btn-primary">
                     Go to my courses
                 </a>
-                <a
-                    href="{{ route('login') }}"
-                    class="inline-flex items-center text-sm font-semibold text-emerald-900 hover:text-emerald-700">
+                <a href="{{ route('login') }}" class="vc-link">
                     Sign in now
                 </a>
             </div>
@@ -61,14 +51,10 @@
             </p>
 
             <div class="mt-4 flex flex-wrap gap-3">
-                <a
-                    href="{{ route('checkout.success', ['session_id' => $sessionId]) }}"
-                    class="inline-flex items-center rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600">
+                <a href="{{ route('checkout.success', ['session_id' => $sessionId]) }}" class="vc-btn-primary">
                     Refresh status
                 </a>
-                <a
-                    href="{{ route('courses.index') }}"
-                    class="inline-flex items-center text-sm font-semibold text-emerald-900 hover:text-emerald-700">
+                <a href="{{ route('courses.index') }}" class="vc-link">
                     Browse courses
                 </a>
             </div>
@@ -76,9 +62,7 @@
             <p class="mt-2 text-sm text-emerald-800">
                 Your order is being finalized. Course access will appear in your account shortly.
             </p>
-            <a
-                href="{{ route('courses.index') }}"
-                class="mt-4 inline-block text-sm font-semibold text-emerald-900 hover:text-emerald-700">
+            <a href="{{ route('courses.index') }}" class="vc-btn-primary mt-4">
                 Browse courses
             </a>
         @endif

@@ -11,6 +11,7 @@ use App\Services\Learning\CourseAccessService;
 use App\Services\Learning\VideoPlaybackService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CoursePlayerController extends Controller
 {
@@ -107,6 +108,12 @@ class CoursePlayerController extends Controller
         return view('learning.player', [
             'course' => $course,
             'activeLesson' => $activeLesson,
+            'activeLessonSummaryHtml' => $activeLesson->summary
+                ? Str::markdown($activeLesson->summary, [
+                    'html_input' => 'strip',
+                    'allow_unsafe_links' => false,
+                ])
+                : null,
             'activeLessonProgress' => $activeLessonProgress,
             'progressByLessonId' => $progressByLessonId,
             'previousLesson' => $previousLesson,

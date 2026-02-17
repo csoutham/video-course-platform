@@ -1,7 +1,5 @@
 <x-slot:title>{{ $course->title }} | {{ config('app.name') }}</x-slot>
-<x-slot:metaDescription>
-    {{ \Illuminate\Support\Str::limit(strip_tags($course->long_description ?: $course->description), 155) }}
-</x-slot>
+<x-slot:metaDescription>{{ $metaDescription }}</x-slot>
 <x-slot:metaImage>{{ $course->thumbnail_url ?: asset('favicon.ico') }}</x-slot>
 <x-slot:canonicalUrl>{{ route('courses.show', $course->slug) }}</x-slot>
 
@@ -10,33 +8,6 @@
         {!! $courseSchemaJson !!}
     </script>
 @endpush
-
-@php
-    $longDescriptionHtml = $course->long_description
-        ? \Illuminate\Support\Str::markdown($course->long_description, [
-            'html_input' => 'strip',
-            'allow_unsafe_links' => false,
-        ])
-        : null;
-    $requirementsHtml = $course->requirements
-        ? \Illuminate\Support\Str::markdown($course->requirements, [
-            'html_input' => 'strip',
-            'allow_unsafe_links' => false,
-        ])
-        : null;
-    $lessonCount = $course->modules->sum(fn ($module) => $module->lessons->count());
-    $totalDurationSeconds = (int) $course->modules
-        ->flatMap(fn ($module) => $module->lessons)
-        ->sum(fn ($lesson) => (int) ($lesson->duration_seconds ?? 0));
-    $totalDurationLabel =
-        $totalDurationSeconds > 0
-            ? sprintf(
-                '%dh %02dm',
-                intdiv($totalDurationSeconds, 3600),
-                intdiv($totalDurationSeconds % 3600, 60),
-            )
-            : null;
-@endphp
 
 <div class="space-y-8">
     <section class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
@@ -48,11 +19,11 @@
 
                 <div class="mt-5 flex flex-wrap gap-2 pt-3">
                     <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                        {{ $course->modules->count() }}
-                        {{ \Illuminate\Support\Str::plural('module', $course->modules->count()) }}
+                        {{ $moduleCount }}
+                        {{ $moduleCountLabel }}
                     </span>
                     <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                        {{ $lessonCount }} {{ \Illuminate\Support\Str::plural('lesson', $lessonCount) }}
+                        {{ $lessonCount }} {{ $lessonCountLabel }}
                     </span>
                     @if ($totalDurationLabel)
                         <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
@@ -108,7 +79,7 @@
                 @else
                     <div class="relative aspect-video">
                         <div
-                            class="absolute inset-0 bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-700"
+                            class="absolute inset-0 bg-linear-to-br from-slate-900 via-cyan-900 to-slate-700"
                             aria-hidden="true"></div>
                         <div
                             class="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(56,189,248,0.35),transparent_38%)]"></div>
@@ -155,10 +126,8 @@
                             @foreach ($module->lessons as $lesson)
                                 <li class="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2">
                                     <span>{{ $lesson->title }}</span>
-                                    @if ($lesson->duration_seconds)
-                                        <span class="text-xs font-semibold text-slate-500">
-                                            {{ gmdate('i:s', $lesson->duration_seconds) }}
-                                        </span>
+                                    @if ($lesson->duration_label)
+                                        <span class="text-xs font-semibold text-slate-500">{{ $lesson->duration_label }}</span>
                                     @endif
                                 </li>
                             @endforeach

@@ -60,4 +60,23 @@ class CourseLesson extends Model
     {
         return $query->where('is_published', true);
     }
+
+    public function getDurationLabelAttribute(): ?string
+    {
+        $seconds = (int) ($this->duration_seconds ?? 0);
+
+        if ($seconds <= 0) {
+            return null;
+        }
+
+        $hours = intdiv($seconds, 3600);
+        $minutes = intdiv($seconds % 3600, 60);
+        $remainingSeconds = $seconds % 60;
+
+        if ($hours > 0) {
+            return sprintf('%d:%02d:%02d', $hours, $minutes, $remainingSeconds);
+        }
+
+        return sprintf('%d:%02d', $minutes, $remainingSeconds);
+    }
 }
