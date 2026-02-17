@@ -2,10 +2,9 @@
     <p class="text-xs font-semibold tracking-[0.14em] text-slate-500 uppercase">Enrollment</p>
     <p class="text-sm text-slate-600">
         @if ($course->is_free)
-            Get access
-            now{{ $course->free_access_mode === 'claim_link' ? ' with a secure claim link.' : '.' }}
+            Get access now{{ $course->free_access_mode === 'claim_link' ? ' with a secure claim link.' : '.' }}
         @else
-            Complete checkout to unlock this course immediately.
+                Complete checkout to unlock this course immediately.
         @endif
     </p>
 
@@ -18,9 +17,7 @@
 
         @guest
             <div>
-                <label
-                    for="email"
-                    class="block text-xs font-semibold tracking-[0.12em] text-slate-500 uppercase">
+                <label for="email" class="block text-xs font-semibold tracking-[0.12em] text-slate-500 uppercase">
                     Email
                 </label>
                 <input
@@ -49,9 +46,7 @@
                         x-model="isGift" />
                     Gift this course
                 </label>
-                <p class="mt-1 text-xs text-slate-500">
-                    Recipient will get a claim link after payment confirmation.
-                </p>
+                <p class="mt-1 text-xs text-slate-500">Recipient will get a claim link after payment confirmation.</p>
             </div>
 
             <div class="vc-panel-soft space-y-3 p-3" x-show="isGift" x-cloak>
