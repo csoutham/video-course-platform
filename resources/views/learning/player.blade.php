@@ -7,6 +7,21 @@
                 'allow_unsafe_links' => false,
             ])
             : null;
+        $formatRuntime = static function (?int $durationSeconds): ?string {
+            if (!is_int($durationSeconds) || $durationSeconds <= 0) {
+                return null;
+            }
+
+            $hours = intdiv($durationSeconds, 3600);
+            $minutes = intdiv($durationSeconds % 3600, 60);
+            $seconds = $durationSeconds % 60;
+
+            if ($hours > 0) {
+                return sprintf('%d:%02d:%02d', $hours, $minutes, $seconds);
+            }
+
+            return sprintf('%d:%02d', $minutes, $seconds);
+        };
     @endphp
 
     <div class="grid gap-6 lg:grid-cols-[340px_1fr]">
@@ -37,6 +52,12 @@
                                             class="{{ $activeLesson->id === $lesson->id ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100' }} flex items-center justify-between rounded-md px-2 py-1 text-sm">
                                             <span>{{ $lesson->title }}</span>
                                             <span class="flex items-center gap-2">
+                                                @if ($formatRuntime($lesson->duration_seconds))
+                                                    <span
+                                                        class="{{ $activeLesson->id === $lesson->id ? 'text-slate-200' : 'text-slate-500' }} text-xs tabular-nums">
+                                                        {{ $formatRuntime($lesson->duration_seconds) }}
+                                                    </span>
+                                                @endif
                                                 @if ($isCompleted)
                                                     <span
                                                         class="{{ $activeLesson->id === $lesson->id ? 'text-emerald-200' : 'text-emerald-700' }} text-xs font-semibold">

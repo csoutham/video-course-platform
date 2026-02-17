@@ -30,6 +30,7 @@ beforeEach(function (): void {
             'slug' => 'lesson-1',
             'title' => 'Lesson 1',
             'stream_video_id' => 'sample-stream-video-id',
+            'duration_seconds' => 125,
             'sort_order' => 1,
         ]);
 
@@ -107,6 +108,7 @@ test('entitled user can access course player default lesson', function (): void 
         ->assertOk()
         ->assertSee($course->title)
         ->assertSee($lesson->title)
+        ->assertSee('2:05')
         ->assertSee('https://iframe.videodelivery.net/'.$lesson->stream_video_id, false);
 
 });
