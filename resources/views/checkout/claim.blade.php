@@ -14,7 +14,7 @@
         </div>
 
         @if ($errors->any())
-            <div class="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+            <div class="vc-alert vc-alert-error">
                 <ul class="list-inside list-disc space-y-1">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -42,27 +42,17 @@
             <form method="POST" action="{{ route('claim-purchase.store', $claimToken->token) }}" class="space-y-4">
                 @csrf
                 <div>
-                    <label for="name" class="block text-xs font-semibold tracking-[0.12em] text-slate-500 uppercase">
-                        Name
-                    </label>
+                    <label for="name" class="vc-label">Name</label>
                     <input id="name" name="name" type="text" value="{{ old('name') }}" required class="vc-input" />
                 </div>
 
                 <div>
-                    <label
-                        for="password"
-                        class="block text-xs font-semibold tracking-[0.12em] text-slate-500 uppercase">
-                        Password
-                    </label>
+                    <label for="password" class="vc-label">Password</label>
                     <input id="password" name="password" type="password" required class="vc-input" />
                 </div>
 
                 <div>
-                    <label
-                        for="password_confirmation"
-                        class="block text-xs font-semibold tracking-[0.12em] text-slate-500 uppercase">
-                        Confirm password
-                    </label>
+                    <label for="password_confirmation" class="vc-label">Confirm password</label>
                     <input
                         id="password_confirmation"
                         name="password_confirmation"

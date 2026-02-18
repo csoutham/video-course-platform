@@ -16,7 +16,7 @@
         </div>
 
         @error('claim')
-            <p class="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{{ $message }}</p>
+            <p class="vc-alert vc-alert-error">{{ $message }}</p>
         @enderror
 
         @auth
@@ -26,14 +26,14 @@
                     <button type="submit" class="vc-btn-primary w-full justify-center">Add gift to my account</button>
                 </form>
             @else
-                <p class="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-700">
+                <p class="vc-alert vc-alert-warning">
                     You are signed in as {{ auth()->user()->email }}. Please sign in with
                     {{ $giftPurchase->recipient_email }} to claim this gift.
                 </p>
             @endif
         @else
             @if ($existingUser)
-                <p class="rounded-md bg-slate-100 px-3 py-2 text-sm text-slate-700">
+                <p class="vc-alert vc-alert-info">
                     An account already exists for this recipient email. Sign in first, then reopen this claim link.
                 </p>
 
@@ -43,35 +43,23 @@
                     @csrf
 
                     <div>
-                        <label
-                            for="name"
-                            class="block text-xs font-semibold tracking-[0.12em] text-slate-500 uppercase">
-                            Name
-                        </label>
+                        <label for="name" class="vc-label">Name</label>
                         <input id="name" name="name" type="text" required value="{{ old('name') }}" class="vc-input" />
                         @error('name')
-                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                            <p class="vc-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label
-                            for="password"
-                            class="block text-xs font-semibold tracking-[0.12em] text-slate-500 uppercase">
-                            Password
-                        </label>
+                        <label for="password" class="vc-label">Password</label>
                         <input id="password" name="password" type="password" required class="vc-input" />
                         @error('password')
-                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                            <p class="vc-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label
-                            for="password_confirmation"
-                            class="block text-xs font-semibold tracking-[0.12em] text-slate-500 uppercase">
-                            Confirm password
-                        </label>
+                        <label for="password_confirmation" class="vc-label">Confirm password</label>
                         <input
                             id="password_confirmation"
                             name="password_confirmation"

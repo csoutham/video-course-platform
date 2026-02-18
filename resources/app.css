@@ -91,6 +91,47 @@
         @apply ring-2 ring-slate-300 outline-none;
     }
 
+    .vc-input-sm {
+        @apply mt-0 w-full rounded-xl border bg-white px-3 py-1.5 text-sm text-slate-900 shadow-sm;
+        border-color: #cbd5e1;
+    }
+
+    .vc-input-sm:focus {
+        @apply ring-2 ring-slate-300 outline-none;
+    }
+
+    .vc-label {
+        @apply block text-xs font-semibold tracking-[0.12em] text-slate-500 uppercase;
+    }
+
+    .vc-help {
+        @apply mt-1 text-xs text-slate-500;
+    }
+
+    .vc-error {
+        @apply mt-1 text-xs text-red-600;
+    }
+
+    .vc-alert {
+        @apply rounded-lg border px-3 py-2 text-sm;
+    }
+
+    .vc-alert-error {
+        @apply border-red-200 bg-red-50 text-red-700;
+    }
+
+    .vc-alert-warning {
+        @apply border-amber-200 bg-amber-50 text-amber-800;
+    }
+
+    .vc-alert-info {
+        @apply border-slate-200 bg-slate-100 text-slate-700;
+    }
+
+    .vc-alert-success {
+        @apply border-emerald-200 bg-emerald-50 text-emerald-800;
+    }
+
     .vc-btn-primary {
         @apply inline-flex items-center rounded-xl px-4 py-2 text-sm font-semibold text-white transition;
         background-color: var(--vc-brand);

@@ -12,8 +12,8 @@
 
     <section class="vc-panel mt-6 p-6">
         <form method="GET" class="flex flex-wrap items-end gap-3">
-            <label class="text-sm font-medium text-slate-700" for="status">Filter by status</label>
-            <select id="status" name="status" class="vc-input mt-0 max-w-xs">
+            <label class="vc-label" for="status">Filter by status</label>
+            <select id="status" name="status" class="vc-input-sm max-w-xs">
                 <option value="">All statuses</option>
                 @foreach ($statuses as $status)
                     <option value="{{ $status }}" @selected($selectedStatus === $status)>

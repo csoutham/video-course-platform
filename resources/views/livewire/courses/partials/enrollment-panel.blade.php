@@ -17,9 +17,7 @@
 
         @guest
             <div>
-                <label for="email" class="block text-xs font-semibold tracking-[0.12em] text-slate-500 uppercase">
-                    Email
-                </label>
+                <label for="email" class="vc-label">Email</label>
                 <input
                     id="email"
                     name="email"
@@ -29,7 +27,7 @@
                     class="vc-input"
                     placeholder="you@example.com" />
                 @error('email')
-                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                    <p class="vc-error">{{ $message }}</p>
                 @enderror
             </div>
         @endguest
@@ -46,16 +44,12 @@
                         x-model="isGift" />
                     Gift this course
                 </label>
-                <p class="mt-1 text-xs text-slate-500">Recipient will get a claim link after payment confirmation.</p>
+                <p class="vc-help">Recipient will get a claim link after payment confirmation.</p>
             </div>
 
             <div class="vc-panel-soft space-y-3 p-3" x-show="isGift" x-cloak>
                 <div>
-                    <label
-                        for="recipient_email"
-                        class="block text-xs font-semibold tracking-[0.12em] text-slate-500 uppercase">
-                        Recipient email
-                    </label>
+                    <label for="recipient_email" class="vc-label">Recipient email</label>
                     <input
                         id="recipient_email"
                         name="recipient_email"
@@ -64,16 +58,12 @@
                         class="vc-input"
                         placeholder="friend@example.com" />
                     @error('recipient_email')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        <p class="vc-error">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div>
-                    <label
-                        for="recipient_name"
-                        class="block text-xs font-semibold tracking-[0.12em] text-slate-500 uppercase">
-                        Recipient name (optional)
-                    </label>
+                    <label for="recipient_name" class="vc-label">Recipient name (optional)</label>
                     <input
                         id="recipient_name"
                         name="recipient_name"
@@ -84,11 +74,7 @@
                 </div>
 
                 <div>
-                    <label
-                        for="gift_message"
-                        class="block text-xs font-semibold tracking-[0.12em] text-slate-500 uppercase">
-                        Message (optional)
-                    </label>
+                    <label for="gift_message" class="vc-label">Message (optional)</label>
                     <textarea
                         id="gift_message"
                         name="gift_message"
@@ -99,7 +85,7 @@
 {{ old('gift_message') }}</textarea
                     >
                     @error('gift_message')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        <p class="vc-error">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
@@ -107,11 +93,7 @@
 
         @unless ($course->is_free)
             <div>
-                <label
-                    for="promotion_code"
-                    class="block text-xs font-semibold tracking-[0.12em] text-slate-500 uppercase">
-                    Promotion code (optional)
-                </label>
+                <label for="promotion_code" class="vc-label">Promotion code (optional)</label>
                 <input
                     id="promotion_code"
                     name="promotion_code"
