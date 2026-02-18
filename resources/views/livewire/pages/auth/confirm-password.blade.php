@@ -33,7 +33,7 @@ new #[Layout('components.guest-layout')] class extends Component {
 }; ?>
 
 <div>
-    <div class="mb-4 text-sm text-gray-600">
+    <div class="mb-4 text-sm text-slate-600">
         {{ __('For security, please confirm your password to continue.') }}
     </div>
 
@@ -45,7 +45,7 @@ new #[Layout('components.guest-layout')] class extends Component {
             <x-text-input
                 wire:model="password"
                 id="password"
-                class="mt-1 block w-full"
+                class="mt-1"
                 type="password"
                 name="password"
                 required

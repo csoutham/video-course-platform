@@ -69,7 +69,7 @@ new #[Layout('components.guest-layout')] class extends Component {
 }; ?>
 
 <div>
-    <div class="mb-4 text-sm text-gray-600">
+    <div class="mb-4 text-sm text-slate-600">
         {{ __('Choose a new password for your account.') }}
     </div>
 
@@ -80,7 +80,7 @@ new #[Layout('components.guest-layout')] class extends Component {
             <x-text-input
                 wire:model="email"
                 id="email"
-                class="mt-1 block w-full"
+                class="mt-1"
                 type="email"
                 name="email"
                 required
@@ -95,7 +95,7 @@ new #[Layout('components.guest-layout')] class extends Component {
             <x-text-input
                 wire:model="password"
                 id="password"
-                class="mt-1 block w-full"
+                class="mt-1"
                 type="password"
                 name="password"
                 required
@@ -110,7 +110,7 @@ new #[Layout('components.guest-layout')] class extends Component {
             <x-text-input
                 wire:model="password_confirmation"
                 id="password_confirmation"
-                class="mt-1 block w-full"
+                class="mt-1"
                 type="password"
                 name="password_confirmation"
                 required

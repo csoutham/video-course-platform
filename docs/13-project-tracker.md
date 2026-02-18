@@ -79,3 +79,5 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-17: Moved mobile enrollment panel on course detail to appear after Requirements and before curriculum for stronger pre-sale conversion flow.
 - 2026-02-17: Removed inline Blade PHP from core customer pages (catalog/detail/player/my-courses) and standardized primary CTA buttons across checkout/course/learning views.
 - 2026-02-17: Added shared form/alert utility classes (`vc-label`, `vc-help`, `vc-error`, `vc-alert*`, `vc-input-sm`) and started applying them across customer claim/enrollment forms and admin filters.
+- 2026-02-18: Unified auth UI primitives (labels, inputs, validation, status alerts, primary/secondary/danger buttons) through shared Blade components.
+- 2026-02-18: Applied shared admin form primitives across course create/edit and Udemy import screens, including checkbox consistency and help/error messaging.

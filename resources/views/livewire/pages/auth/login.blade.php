@@ -24,7 +24,7 @@ new #[Layout('components.guest-layout')] class extends Component {
 }; ?>
 
 <div>
-    <div class="mb-4 text-sm text-gray-600">
+    <div class="mb-4 text-sm text-slate-600">
         {{ __('Welcome back. Sign in to continue your courses.') }}
     </div>
 
@@ -38,7 +38,7 @@ new #[Layout('components.guest-layout')] class extends Component {
             <x-text-input
                 wire:model="form.email"
                 id="email"
-                class="mt-1 block w-full"
+                class="mt-1"
                 type="email"
                 name="email"
                 required
@@ -54,7 +54,7 @@ new #[Layout('components.guest-layout')] class extends Component {
             <x-text-input
                 wire:model="form.password"
                 id="password"
-                class="mt-1 block w-full"
+                class="mt-1"
                 type="password"
                 name="password"
                 required
@@ -65,23 +65,15 @@ new #[Layout('components.guest-layout')] class extends Component {
 
         <!-- Remember Me -->
         <div class="mt-4 block">
-            <label for="remember" class="inline-flex items-center">
-                <input
-                    wire:model="form.remember"
-                    id="remember"
-                    type="checkbox"
-                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
-                    name="remember" />
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+            <label for="remember" class="inline-flex items-center gap-2">
+                <input wire:model="form.remember" id="remember" type="checkbox" class="vc-checkbox" name="remember" />
+                <span class="text-sm text-slate-600">{{ __('Remember me') }}</span>
             </label>
         </div>
 
         <div class="mt-4 flex items-center justify-end">
             @if (Route::has('password.request'))
-                <a
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
-                    href="{{ route('password.request') }}"
-                    wire:navigate>
+                <a class="vc-link" href="{{ route('password.request') }}" wire:navigate>
                     {{ __('Forgot password?') }}
                 </a>
             @endif

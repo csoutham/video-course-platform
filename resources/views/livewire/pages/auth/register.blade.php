@@ -36,7 +36,7 @@ new #[Layout('components.guest-layout')] class extends Component {
 }; ?>
 
 <div>
-    <div class="mb-4 text-sm text-gray-600">
+    <div class="mb-4 text-sm text-slate-600">
         {{ __('Create your account to start learning right away.') }}
     </div>
 
@@ -47,7 +47,7 @@ new #[Layout('components.guest-layout')] class extends Component {
             <x-text-input
                 wire:model="name"
                 id="name"
-                class="mt-1 block w-full"
+                class="mt-1"
                 type="text"
                 name="name"
                 required
@@ -62,7 +62,7 @@ new #[Layout('components.guest-layout')] class extends Component {
             <x-text-input
                 wire:model="email"
                 id="email"
-                class="mt-1 block w-full"
+                class="mt-1"
                 type="email"
                 name="email"
                 required
@@ -77,7 +77,7 @@ new #[Layout('components.guest-layout')] class extends Component {
             <x-text-input
                 wire:model="password"
                 id="password"
-                class="mt-1 block w-full"
+                class="mt-1"
                 type="password"
                 name="password"
                 required
@@ -93,7 +93,7 @@ new #[Layout('components.guest-layout')] class extends Component {
             <x-text-input
                 wire:model="password_confirmation"
                 id="password_confirmation"
-                class="mt-1 block w-full"
+                class="mt-1"
                 type="password"
                 name="password_confirmation"
                 required
@@ -103,10 +103,7 @@ new #[Layout('components.guest-layout')] class extends Component {
         </div>
 
         <div class="mt-4 flex items-center justify-end">
-            <a
-                class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
-                href="{{ route('login') }}"
-                wire:navigate>
+            <a class="vc-link" href="{{ route('login') }}" wire:navigate>
                 {{ __('Already have an account?') }}
             </a>
 

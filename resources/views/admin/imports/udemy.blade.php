@@ -16,7 +16,7 @@
         <form method="POST" action="{{ route('admin.imports.udemy.preview') }}" class="grid gap-4 md:grid-cols-8">
             @csrf
             <div class="md:col-span-6">
-                <label for="source_url" class="text-sm font-medium text-slate-700">Udemy Course URL</label>
+                <label for="source_url" class="vc-label">Udemy Course URL</label>
                 <input
                     id="source_url"
                     name="source_url"
@@ -26,7 +26,7 @@
                     class="vc-input"
                     placeholder="https://www.udemy.com/course/example-course/" />
                 @error('source_url')
-                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                    <p class="vc-error">{{ $message }}</p>
                 @enderror
             </div>
             <div class="flex items-end md:col-span-2">
@@ -35,17 +35,17 @@
 
             <div class="md:col-span-8">
                 <label class="inline-flex items-center gap-2 text-sm text-slate-700">
-                    <input type="checkbox" name="confirm_ownership" value="1" required />
+                    <input class="vc-checkbox" type="checkbox" name="confirm_ownership" value="1" required />
                     I confirm I have rights to migrate this source content.
                 </label>
                 @error('confirm_ownership')
-                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                    <p class="vc-error">{{ $message }}</p>
                 @enderror
             </div>
 
             <div class="md:col-span-8">
-                <label for="source_html" class="text-sm font-medium text-slate-700">HTML fallback (optional)</label>
-                <p class="mt-1 text-xs text-slate-500">
+                <label for="source_html" class="vc-label">HTML fallback (optional)</label>
+                <p class="vc-help">
                     If Udemy blocks server fetch with a Cloudflare challenge, open the Udemy URL in your browser, view
                     page source, and paste it here.
                 </p>
@@ -58,7 +58,7 @@
 {{ $sourceHtml }}</textarea
                 >
                 @error('source_html')
-                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                    <p class="vc-error">{{ $message }}</p>
                 @enderror
             </div>
         </form>
@@ -140,7 +140,7 @@
                                         <td class="px-3 py-2">
                                             <p>{{ count($module['lessons']) }}</p>
                                             @if (count($module['lessons']) > 0)
-                                                <p class="mt-1 text-xs text-slate-500">
+                                                <p class="vc-help">
                                                     {{ collect($module['lessons'])->pluck('name')->take(3)->implode(', ') }}
                                                 </p>
                                             @endif
@@ -162,7 +162,7 @@
                 <textarea name="source_html" class="hidden">{{ $sourceHtml }}</textarea>
 
                 <div>
-                    <label for="overwrite_mode" class="text-sm font-medium text-slate-700">Overwrite mode</label>
+                    <label for="overwrite_mode" class="vc-label">Overwrite mode</label>
                     <select id="overwrite_mode" name="overwrite_mode" class="vc-input">
                         <option value="safe_merge" @selected($overwriteMode === 'safe_merge')>
                             Safe merge (recommended)
@@ -180,13 +180,13 @@
                         </option>
                     </select>
                     @error('overwrite_mode')
-                        <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                        <p class="vc-error">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div>
                     <label class="inline-flex items-center gap-2 text-sm text-slate-700">
-                        <input type="checkbox" name="confirm_ownership" value="1" required />
+                        <input class="vc-checkbox" type="checkbox" name="confirm_ownership" value="1" required />
                         I confirm I have rights to migrate this source content.
                     </label>
                 </div>

@@ -36,7 +36,7 @@ new #[Layout('components.guest-layout')] class extends Component {
 }; ?>
 
 <div>
-    <div class="mb-4 text-sm text-gray-600">
+    <div class="mb-4 text-sm text-slate-600">
         {{ __('Enter your email and we will send you a secure link to reset your password.') }}
     </div>
 
@@ -47,14 +47,7 @@ new #[Layout('components.guest-layout')] class extends Component {
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input
-                wire:model="email"
-                id="email"
-                class="mt-1 block w-full"
-                type="email"
-                name="email"
-                required
-                autofocus />
+            <x-text-input wire:model="email" id="email" class="mt-1" type="email" name="email" required autofocus />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 

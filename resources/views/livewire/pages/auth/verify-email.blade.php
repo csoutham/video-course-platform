@@ -35,12 +35,12 @@ new #[Layout('components.guest-layout')] class extends Component {
 }; ?>
 
 <div>
-    <div class="mb-4 text-sm text-gray-600">
+    <div class="mb-4 text-sm text-slate-600">
         {{ __('Before you begin, please verify your email using the link we just sent. If it did not arrive, we can send another one.') }}
     </div>
 
     @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 text-sm font-medium text-green-600">
+        <div class="vc-alert vc-alert-success mb-4">
             {{ __('A new verification email has been sent.') }}
         </div>
     @endif
@@ -50,10 +50,7 @@ new #[Layout('components.guest-layout')] class extends Component {
             {{ __('Resend verification email') }}
         </x-primary-button>
 
-        <button
-            wire:click="logout"
-            type="submit"
-            class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none">
+        <button wire:click="logout" type="submit" class="vc-link">
             {{ __('Sign out') }}
         </button>
     </div>

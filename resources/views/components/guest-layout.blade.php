@@ -12,15 +12,15 @@
 
         @vite(['resources/app.css', 'resources/app.js'])
     </head>
-    <body class="flex min-h-screen flex-col font-sans text-gray-900 antialiased">
-        <main class="flex flex-1 flex-col items-center justify-center bg-gray-100 px-4 py-6 sm:py-0">
+    <body class="vc-shell flex min-h-screen flex-col font-sans text-slate-900 antialiased">
+        <main class="flex flex-1 flex-col items-center justify-center px-4 py-8">
             <div>
-                <a href="{{ route('courses.index') }}" class="text-lg font-semibold tracking-tight text-slate-900">
+                <a href="{{ route('courses.index') }}" class="text-xl font-semibold tracking-tight text-slate-900">
                     {{ config('app.name', 'VideoCourses') }}
                 </a>
             </div>
 
-            <div class="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg">
+            <div class="vc-panel mt-6 w-full overflow-hidden px-6 py-5 sm:max-w-lg">
                 {{ $slot }}
             </div>
         </main>

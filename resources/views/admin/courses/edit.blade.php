@@ -61,55 +61,53 @@
             @method('PUT')
 
             <div>
-                <label for="title" class="text-sm font-medium text-slate-700">Title</label>
+                <label for="title" class="vc-label">Title</label>
                 <input id="title" name="title" value="{{ old('title', $course->title) }}" required class="vc-input" />
                 @error('title')
-                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                    <p class="vc-error">{{ $message }}</p>
                 @enderror
             </div>
 
             <div>
-                <label for="slug" class="text-sm font-medium text-slate-700">Slug</label>
+                <label for="slug" class="vc-label">Slug</label>
                 <input id="slug" name="slug" value="{{ old('slug', $course->slug) }}" required class="vc-input" />
                 @error('slug')
-                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                    <p class="vc-error">{{ $message }}</p>
                 @enderror
             </div>
 
             <div>
-                <label for="description" class="text-sm font-medium text-slate-700">Subtitle</label>
+                <label for="description" class="vc-label">Subtitle</label>
                 <textarea id="description" name="description" rows="4" class="vc-input">
 {{ old('description', $course->description) }}
                 </textarea>
                 @error('description')
-                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                    <p class="vc-error">{{ $message }}</p>
                 @enderror
             </div>
 
             <div>
-                <label for="long_description" class="text-sm font-medium text-slate-700">
-                    Long description (Markdown)
-                </label>
+                <label for="long_description" class="vc-label">Long description (Markdown)</label>
                 <textarea id="long_description" name="long_description" rows="8" class="vc-input">
 {{ old('long_description', $course->long_description) }}</textarea
                 >
                 @error('long_description')
-                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                    <p class="vc-error">{{ $message }}</p>
                 @enderror
             </div>
 
             <div>
-                <label for="requirements" class="text-sm font-medium text-slate-700">Requirements (Markdown)</label>
+                <label for="requirements" class="vc-label">Requirements (Markdown)</label>
                 <textarea id="requirements" name="requirements" rows="6" class="vc-input">
 {{ old('requirements', $course->requirements) }}</textarea
                 >
                 @error('requirements')
-                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                    <p class="vc-error">{{ $message }}</p>
                 @enderror
             </div>
 
             <div>
-                <label for="thumbnail_image" class="text-sm font-medium text-slate-700">Thumbnail image</label>
+                <label for="thumbnail_image" class="vc-label">Thumbnail image</label>
                 @if ($course->thumbnail_url)
                     <img
                         src="{{ $course->thumbnail_url }}"
@@ -121,18 +119,16 @@
                     for="thumbnail_image"
                     class="mt-2 flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center transition hover:border-slate-400 hover:bg-slate-100">
                     <span class="text-sm font-semibold text-slate-700">Drop image here or click to replace</span>
-                    <span class="mt-1 text-xs text-slate-500">JPG, PNG, WEBP up to 5MB</span>
+                    <span class="vc-help">JPG, PNG, WEBP up to 5MB</span>
                 </label>
                 <input id="thumbnail_image" name="thumbnail_image" type="file" accept="image/*" class="sr-only" />
                 @error('thumbnail_image')
-                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                    <p class="vc-error">{{ $message }}</p>
                 @enderror
             </div>
 
             <div>
-                <label for="intro_video_id" class="text-sm font-medium text-slate-700">
-                    Intro video (Cloudflare Stream)
-                </label>
+                <label for="intro_video_id" class="vc-label">Intro video (Cloudflare Stream)</label>
                 <input
                     type="text"
                     data-stream-search
@@ -155,25 +151,21 @@
                         </option>
                     @endforeach
                 </select>
-                <p class="mt-1 text-xs text-slate-500">
-                    Intro video appears on public course page and is forced to signed URLs on save.
-                </p>
+                <p class="vc-help">Intro video appears on public course page and is forced to signed URLs on save.</p>
                 @error('intro_video_id')
-                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                    <p class="vc-error">{{ $message }}</p>
                 @enderror
             </div>
 
             <div>
-                <label for="stream_video_filter_term" class="text-sm font-medium text-slate-700">
-                    Stream catalog filter term
-                </label>
+                <label for="stream_video_filter_term" class="vc-label">Stream catalog filter term</label>
                 <input
                     id="stream_video_filter_term"
                     name="stream_video_filter_term"
                     value="{{ old('stream_video_filter_term', $course->stream_video_filter_term) }}"
                     class="vc-input"
                     placeholder="e.g. Monologue Course" />
-                <p class="mt-1 text-xs text-slate-500">
+                <p class="vc-help">
                     This controls which Cloudflare Stream videos are shown for lesson and intro-video selection.
                 </p>
                 @if (!empty($streamCatalogFilterNotice))
@@ -181,12 +173,12 @@
                 @endif
 
                 @error('stream_video_filter_term')
-                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                    <p class="vc-error">{{ $message }}</p>
                 @enderror
             </div>
 
             <div>
-                <label for="kit_tag_id" class="text-sm font-medium text-slate-700">Kit tag ID (optional)</label>
+                <label for="kit_tag_id" class="vc-label">Kit tag ID (optional)</label>
                 <input
                     id="kit_tag_id"
                     name="kit_tag_id"
@@ -196,17 +188,15 @@
                     value="{{ old('kit_tag_id', $course->kit_tag_id) }}"
                     class="vc-input"
                     placeholder="e.g. 1234567" />
-                <p class="mt-1 text-xs text-slate-500">
-                    Purchasers are tagged in Kit with this tag ID after a successful purchase.
-                </p>
+                <p class="vc-help">Purchasers are tagged in Kit with this tag ID after a successful purchase.</p>
                 @error('kit_tag_id')
-                    <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                    <p class="vc-error">{{ $message }}</p>
                 @enderror
             </div>
 
             <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <div>
-                    <label for="price_amount" class="text-sm font-medium text-slate-700">Price (cents/pence)</label>
+                    <label for="price_amount" class="vc-label">Price (cents/pence)</label>
                     <input
                         id="price_amount"
                         name="price_amount"
@@ -216,11 +206,11 @@
                         value="{{ old('price_amount', $course->price_amount) }}"
                         class="vc-input" />
                     @error('price_amount')
-                        <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                        <p class="vc-error">{{ $message }}</p>
                     @enderror
                 </div>
                 <div>
-                    <label for="price_currency" class="text-sm font-medium text-slate-700">Currency</label>
+                    <label for="price_currency" class="vc-label">Currency</label>
                     <select id="price_currency" name="price_currency" required class="vc-input">
                         <option value="usd" @selected(old('price_currency', $course->price_currency) === 'usd')>
                             USD
@@ -230,18 +220,18 @@
                         </option>
                     </select>
                     @error('price_currency')
-                        <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                        <p class="vc-error">{{ $message }}</p>
                     @enderror
                 </div>
                 <div class="sm:col-span-2">
-                    <label for="stripe_price_id" class="text-sm font-medium text-slate-700">Stripe Price ID</label>
+                    <label for="stripe_price_id" class="vc-label">Stripe Price ID</label>
                     <input
                         id="stripe_price_id"
                         name="stripe_price_id"
                         value="{{ old('stripe_price_id', $course->stripe_price_id) }}"
                         class="vc-input" />
                     @error('stripe_price_id')
-                        <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                        <p class="vc-error">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
@@ -249,7 +239,12 @@
             <div class="grid gap-4 sm:grid-cols-2">
                 <div class="space-y-2">
                     <label class="flex items-center gap-2 text-sm text-slate-700">
-                        <input type="checkbox" name="is_free" value="1" @checked(old('is_free', $course->is_free)) />
+                        <input
+                            class="vc-checkbox"
+                            type="checkbox"
+                            name="is_free"
+                            value="1"
+                            @checked(old('is_free', $course->is_free)) />
                         Free course (lead magnet)
                     </label>
                     <p class="text-xs text-slate-500">
@@ -257,7 +252,7 @@
                     </p>
                 </div>
                 <div>
-                    <label for="free_access_mode" class="text-sm font-medium text-slate-700">Free access mode</label>
+                    <label for="free_access_mode" class="vc-label">Free access mode</label>
                     <select id="free_access_mode" name="free_access_mode" class="vc-input">
                         <option
                             value="claim_link"
@@ -271,7 +266,7 @@
                         </option>
                     </select>
                     @error('free_access_mode')
-                        <p class="mt-1 text-sm text-rose-700">{{ $message }}</p>
+                        <p class="vc-error">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
@@ -279,6 +274,7 @@
             <div class="space-y-2">
                 <label class="flex items-center gap-2 text-sm text-slate-700">
                     <input
+                        class="vc-checkbox"
                         type="checkbox"
                         name="is_published"
                         value="1"
@@ -287,6 +283,7 @@
                 </label>
                 <label class="flex items-center gap-2 text-sm text-slate-700">
                     <input
+                        class="vc-checkbox"
                         type="checkbox"
                         name="refresh_stripe_price"
                         value="1"
@@ -313,11 +310,11 @@
             class="mt-5 grid gap-3 sm:grid-cols-8">
             @csrf
             <div class="sm:col-span-5">
-                <label class="text-sm font-medium text-slate-700">New module title</label>
+                <label class="vc-label">New module title</label>
                 <input name="title" class="vc-input" placeholder="Module title" required />
             </div>
             <div class="sm:col-span-2">
-                <label class="text-sm font-medium text-slate-700">Sort order</label>
+                <label class="vc-label">Sort order</label>
                 <input
                     type="number"
                     min="0"
@@ -463,11 +460,11 @@
                                 @csrf
                                 @method('PUT')
                                 <div class="sm:col-span-4">
-                                    <label class="text-sm font-medium text-slate-700">Module title</label>
+                                    <label class="vc-label">Module title</label>
                                     <input name="title" value="{{ $module->title }}" class="vc-input" required />
                                 </div>
                                 <div class="sm:col-span-1">
-                                    <label class="text-sm font-medium text-slate-700">Sort</label>
+                                    <label class="vc-label">Sort</label>
                                     <input
                                         type="number"
                                         min="0"
@@ -622,7 +619,7 @@
                                                 </option>
                                             @endforeach
                                         </select>
-                                        <p class="mt-1 text-xs text-slate-500">
+                                        <p class="vc-help">
                                             Selecting a video enforces signed URLs and syncs duration from Cloudflare.
                                         </p>
                                     </div>
@@ -630,7 +627,7 @@
                                     <div
                                         class="mt-1 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-3 sm:col-span-2">
                                         <label class="flex items-center gap-2 text-sm text-slate-700">
-                                            <input type="checkbox" name="is_published" value="1" />
+                                            <input class="vc-checkbox" type="checkbox" name="is_published" value="1" />
                                             Live
                                         </label>
 
@@ -758,7 +755,7 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                    <p class="mt-1 text-xs text-slate-500">
+                                                    <p class="vc-help">
                                                         Saving with a selected video enforces signed URLs and refreshes
                                                         duration.
                                                     </p>
@@ -769,6 +766,7 @@
                                                     <div class="flex items-center gap-3">
                                                         <label class="flex items-center gap-2 text-sm text-slate-700">
                                                             <input
+                                                                class="vc-checkbox"
                                                                 type="checkbox"
                                                                 name="is_published"
                                                                 value="1"
@@ -915,7 +913,7 @@
             </div>
         @else
             <div class="mt-4 rounded-xl border border-slate-200 bg-white p-4">
-                <label class="text-sm font-medium text-slate-700">Search assets</label>
+                <label class="vc-label">Search assets</label>
                 <input
                     type="text"
                     data-assets-search
