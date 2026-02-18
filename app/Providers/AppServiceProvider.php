@@ -4,8 +4,11 @@ namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Request;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
@@ -28,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureCommands();
         $this->configureErrors();
         $this->configureModels();
+        $this->configureRateLimiting();
         $this->configureSecurity();
         $this->configureVite();
     }
@@ -55,6 +59,17 @@ class AppServiceProvider extends ServiceProvider
         Model::automaticallyEagerLoadRelationships();
         Model::shouldBeStrict();
         Model::unguard();
+    }
+
+    private function configureRateLimiting(): void
+    {
+        RateLimiter::for('mobile-api', function (Request $request): Limit {
+            $key = $request->user()?->id
+                ? 'mobile-user:'.$request->user()->id
+                : 'mobile-ip:'.$request->ip();
+
+            return Limit::perMinute(120)->by($key);
+        });
     }
 
     private function configureSecurity(): void
