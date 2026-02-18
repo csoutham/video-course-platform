@@ -68,6 +68,7 @@ Auth required.
 Response includes:
 
 - `stream_url`
+- `stream` (`hls_url`, `iframe_url`, `preferred_url`, `player`)
 - `heartbeat_seconds`
 - `auto_complete_percent`
 - `lesson`

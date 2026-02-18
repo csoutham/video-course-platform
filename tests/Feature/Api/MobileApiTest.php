@@ -163,7 +163,10 @@ test('mobile playback endpoint returns stream url and creates in-progress row', 
 
     $this->getJson('/api/v1/mobile/courses/'.$course->slug.'/lessons/'.$lesson->slug.'/playback')
         ->assertOk()
-        ->assertJsonPath('stream_url', 'https://iframe.videodelivery.net/'.$lesson->stream_video_id)
+        ->assertJsonPath('stream_url', 'https://videodelivery.net/'.$lesson->stream_video_id.'/manifest/video.m3u8')
+        ->assertJsonPath('stream.hls_url', 'https://videodelivery.net/'.$lesson->stream_video_id.'/manifest/video.m3u8')
+        ->assertJsonPath('stream.iframe_url', 'https://iframe.videodelivery.net/'.$lesson->stream_video_id)
+        ->assertJsonPath('stream.player', 'native')
         ->assertJsonPath('lesson.slug', $lesson->slug)
         ->assertJsonPath('progress.status', 'in_progress');
 

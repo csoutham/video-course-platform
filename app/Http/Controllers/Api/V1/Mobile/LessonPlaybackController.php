@@ -71,13 +71,16 @@ class LessonPlaybackController extends Controller
             ->get();
 
         $streamUrl = null;
+        $stream = null;
 
         if ($lesson->stream_video_id) {
-            $streamUrl = $videoPlaybackService->streamEmbedUrl($lesson->stream_video_id);
+            $stream = $videoPlaybackService->playbackUrls($lesson->stream_video_id);
+            $streamUrl = $stream['preferred_url'];
         }
 
         return response()->json([
             'stream_url' => $streamUrl,
+            'stream' => $stream,
             'heartbeat_seconds' => max(5, (int) config('learning.video_heartbeat_seconds', 15)),
             'auto_complete_percent' => max(1, min(100, (int) config('learning.video_autocomplete_percent', 90))),
             'lesson' => [
@@ -87,15 +90,13 @@ class LessonPlaybackController extends Controller
                 'summary' => $lesson->summary,
                 'duration_seconds' => $lesson->duration_seconds,
                 'updated_at' => $lesson->updated_at?->toIso8601String(),
-                'resources' => $resources->map(function (LessonResource $resource) {
-                    return [
-                        'id' => $resource->id,
-                        'name' => $resource->name,
-                        'mime_type' => $resource->mime_type,
-                        'size_bytes' => $resource->size_bytes,
-                        'updated_at' => $resource->updated_at?->toIso8601String(),
-                    ];
-                })->values(),
+                'resources' => $resources->map(fn(LessonResource $resource) => [
+                    'id' => $resource->id,
+                    'name' => $resource->name,
+                    'mime_type' => $resource->mime_type,
+                    'size_bytes' => $resource->size_bytes,
+                    'updated_at' => $resource->updated_at?->toIso8601String(),
+                ])->values(),
             ],
             'progress' => new MobileLessonProgressResource($progress),
         ]);

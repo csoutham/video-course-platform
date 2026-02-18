@@ -7,12 +7,17 @@ use RuntimeException;
 
 class VideoPlaybackService
 {
-    public function streamEmbedUrl(string $streamVideoId): string
+    public function playbackUrls(string $streamVideoId): array
     {
         if (! config('services.cloudflare_stream.signed_urls_enabled', false)) {
-            $baseUrl = rtrim((string) config('services.cloudflare_stream.iframe_base_url', 'https://iframe.videodelivery.net'), '/');
+            $iframeUrl = $this->unsignedIframeUrl($streamVideoId);
 
-            return "{$baseUrl}/{$streamVideoId}";
+            return [
+                'iframe_url' => $iframeUrl,
+                'hls_url' => 'https://videodelivery.net/'.$streamVideoId.'/manifest/video.m3u8',
+                'preferred_url' => 'https://videodelivery.net/'.$streamVideoId.'/manifest/video.m3u8',
+                'player' => 'native',
+            ];
         }
 
         $token = $this->signedTokenForVideo($streamVideoId);
@@ -20,7 +25,19 @@ class VideoPlaybackService
 
         throw_if($customerCode === '', RuntimeException::class, 'CF_STREAM_CUSTOMER_CODE is required when signed Stream URLs are enabled.');
 
-        return 'https://customer-'.$customerCode.'.cloudflarestream.com/'.$token.'/iframe';
+        $base = 'https://customer-'.$customerCode.'.cloudflarestream.com/'.$token;
+
+        return [
+            'iframe_url' => $base.'/iframe',
+            'hls_url' => $base.'/manifest/video.m3u8',
+            'preferred_url' => $base.'/manifest/video.m3u8',
+            'player' => 'native',
+        ];
+    }
+
+    public function streamEmbedUrl(string $streamVideoId): string
+    {
+        return $this->playbackUrls($streamVideoId)['iframe_url'];
     }
 
     private function signedTokenForVideo(string $streamVideoId): string
@@ -44,5 +61,12 @@ class VideoPlaybackService
         throw_if(! is_string($token) || $token === '', RuntimeException::class, 'Cloudflare Stream signed token response was invalid.');
 
         return $token;
+    }
+
+    private function unsignedIframeUrl(string $streamVideoId): string
+    {
+        $baseUrl = rtrim((string) config('services.cloudflare_stream.iframe_base_url', 'https://iframe.videodelivery.net'), '/');
+
+        return "{$baseUrl}/{$streamVideoId}";
     }
 }
