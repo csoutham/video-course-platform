@@ -82,6 +82,7 @@ behavior and routes.
 4. Remove visual inconsistencies and orphan utility patterns.
 5. Ensure mobile nav uses an off-canvas right drawer and playback page prioritizes video before curriculum.
 6. Minimize Blade template logic by moving formatting/derived values to PHP classes and controllers.
+7. Standardize form primitives across customer and admin surfaces (labels, help/error text, compact inputs, alerts).
 
 ## Technical Constraints
 
