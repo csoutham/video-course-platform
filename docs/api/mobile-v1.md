@@ -2,6 +2,11 @@
 
 Base path: `/api/v1/mobile`
 
+Postman assets:
+
+- Collection: `docs/api/mobile-v1.postman_collection.json`
+- Environment: `docs/api/mobile-v1.postman_environment.json`
+
 ## Auth
 
 ### `POST /auth/login`

@@ -1,0 +1,238 @@
+{
+  "info": {
+    "name": "VideoCourses Mobile API v1",
+    "description": "Postman collection for VideoCourses mobile endpoints under /api/v1/mobile.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearer_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:8000" },
+    { "key": "email", "value": "user@example.com" },
+    { "key": "password", "value": "password" },
+    { "key": "device_name", "value": "Postman" },
+    { "key": "bearer_token", "value": "" },
+    { "key": "course_slug", "value": "laravel-foundations" },
+    { "key": "lesson_slug", "value": "install-and-setup" },
+    { "key": "resource_id", "value": "1" },
+    { "key": "resource_signed_url", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"device_name\": \"{{device_name}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/mobile/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "mobile", "auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login succeeded', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "let json = {};",
+                  "try { json = pm.response.json(); } catch (e) {}",
+                  "if (json.token) {",
+                  "  pm.collectionVariables.set('bearer_token', json.token);",
+                  "  pm.environment.set('bearer_token', json.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/mobile/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "mobile", "auth", "logout"]
+            }
+          }
+        },
+        {
+          "name": "Logout All",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/mobile/auth/logout-all",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "mobile", "auth", "logout-all"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/mobile/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "mobile", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Library",
+      "item": [
+        {
+          "name": "Library",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/mobile/library",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "mobile", "library"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Courses",
+      "item": [
+        {
+          "name": "Course Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/mobile/courses/{{course_slug}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "mobile", "courses", "{{course_slug}}"]
+            }
+          }
+        },
+        {
+          "name": "Lesson Playback",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/mobile/courses/{{course_slug}}/lessons/{{lesson_slug}}/playback",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "mobile", "courses", "{{course_slug}}", "lessons", "{{lesson_slug}}", "playback"]
+            }
+          }
+        },
+        {
+          "name": "Lesson Progress",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"position_seconds\": 120,\n  \"duration_seconds\": 300,\n  \"is_completed\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/mobile/courses/{{course_slug}}/lessons/{{lesson_slug}}/progress",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "mobile", "courses", "{{course_slug}}", "lessons", "{{lesson_slug}}", "progress"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Resources",
+      "item": [
+        {
+          "name": "Get Resource URL",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/mobile/resources/{{resource_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "mobile", "resources", "{{resource_id}}"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "let json = {};",
+                  "try { json = pm.response.json(); } catch (e) {}",
+                  "if (json.resource && json.resource.url) {",
+                  "  pm.collectionVariables.set('resource_signed_url', json.resource.url);",
+                  "  pm.environment.set('resource_signed_url', json.resource.url);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Open Signed Resource File",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{resource_signed_url}}",
+              "host": ["{{resource_signed_url}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
