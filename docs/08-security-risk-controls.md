@@ -14,6 +14,7 @@
 
 - Auth middleware on learner and download routes.
 - Policy checks for active entitlement before serving protected content.
+- Sanctum token auth on `/api/v1/mobile/*` endpoints with scoped token abilities.
 
 ### Payment Integrity
 

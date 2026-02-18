@@ -39,6 +39,8 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 - Added gift delivery and buyer confirmation emails plus authenticated `My Gifts` tracking page.
 - Added planning docs for frontend redesign and Filament admin-panel architecture under `/docs/21-23`.
 - Added frontend redesign Phase A/B foundation: shared visual tokens/components and upgraded catalog, course detail, checkout, claim, and library surfaces.
+- Added Sanctum-based mobile API v1 under `/api/v1/mobile` for token auth, library access, course detail, playback context, progress heartbeats, and signed resource links.
+- Added Expo React Native mobile workspace under `/mobile` with login, course library, course lessons, playback screen, and account/logout flow.
 
 ### Fixed
 

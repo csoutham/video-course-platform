@@ -1,7 +1,7 @@
 # VideoCourses Documentation
 
 This folder contains the implementation-ready documentation for VideoCourses v1, a web-based platform to browse, buy, and watch purchasable courses.
-Docs version: `0.9.7`.
+Docs version: `0.9.8`.
 
 ## Scope Summary
 
@@ -53,3 +53,9 @@ Docs version: `0.9.7`.
 24. [24-udemy-importer-spec](./24-udemy-importer-spec.md)
 25. [25-free-lead-magnet-flow](./25-free-lead-magnet-flow.md)
 26. [26-kit-integration](./26-kit-integration.md)
+27. [27-mobile-playback-strategy](./27-mobile-playback-strategy.md)
+
+## API and Mobile Extensions
+
+- [mobile-architecture](./mobile-architecture.md)
+- [api/mobile-v1](./api/mobile-v1.md)

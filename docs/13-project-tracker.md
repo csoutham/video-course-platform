@@ -27,6 +27,7 @@ This file is the source of truth for project execution tracking in-repo.
 | Milestone 5 | Open-source preparation | `done` | Chris/Codex | Backlog in `18-milestone-5-backlog.md` |
 | Milestone 6 | Learner progress tracking (Phase 1 lesson progress, Phase 2 video progress) | `in_progress` | Chris/Codex | Backlog in `20-milestone-6-backlog.md` |
 | Milestone 7 | Frontend redesign + admin panel | `in_progress` | Chris/Codex | Specs in `21-frontend-redesign-spec.md`, `22-admin-panel-architecture.md`, `23-admin-operational-playbook.md` |
+| Milestone 8 | Mobile API + Expo playback app | `in_progress` | Chris/Codex | Specs in `27-mobile-playback-strategy.md`, `mobile-architecture.md`, `api/mobile-v1.md` |
 
 ## Active Sprint Focus
 
@@ -81,3 +82,5 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-17: Added shared form/alert utility classes (`vc-label`, `vc-help`, `vc-error`, `vc-alert*`, `vc-input-sm`) and started applying them across customer claim/enrollment forms and admin filters.
 - 2026-02-18: Unified auth UI primitives (labels, inputs, validation, status alerts, primary/secondary/danger buttons) through shared Blade components.
 - 2026-02-18: Applied shared admin form primitives across course create/edit and Udemy import screens, including checkbox consistency and help/error messaging.
+- 2026-02-18: Added Sanctum-based mobile API surface (`/api/v1/mobile`) with token auth, library/course/playback/progress/resource endpoints, and mobile API feature tests.
+- 2026-02-18: Added Expo mobile app workspace (`/mobile`) with auth, library, course outline, lesson playback, and resource handoff flows.

@@ -20,6 +20,7 @@
 
 1. Laravel App
    - Routing, authorization, domain services, persistence.
+   - Web + API surfaces, including `/api/v1/mobile` endpoints for mobile clients.
 2. Livewire Components
    - Catalog, detail, learner library, player interactions.
 3. Stripe Integration
@@ -30,6 +31,8 @@
    - Cloudflare Stream lesson playback.
 6. Resource Delivery
    - Signed R2 download URLs generated on demand.
+7. Mobile Client (Expo)
+   - iOS/Android playback app that consumes installation-bound mobile API.
 
 ## High-Level Flow: Purchase
 
