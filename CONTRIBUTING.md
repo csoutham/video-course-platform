@@ -1,13 +1,13 @@
-# Contributing to VideoCourses
+# Contributing to Video Courses
 
 ## Development Workflow
 
 1. Create a branch from `main`.
 2. Implement changes with tests.
 3. Run local quality gates:
-   - `composer test`
-   - `./vendor/bin/pint --test`
-   - `npm run build`
+    - `composer test`
+    - `./vendor/bin/pint --test`
+    - `npm run build`
 4. Update `/docs` milestone trackers when scope or status changes.
 5. Open a pull request using the template.
 

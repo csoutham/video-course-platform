@@ -25,7 +25,7 @@
 
 ## Installation Model
 
-Each mobile build is tied to one VideoCourses installation via compile-time env variable:
+Each mobile build is tied to one Video Courses installation via compile-time env variable:
 
 - `EXPO_PUBLIC_API_BASE_URL`
 

@@ -75,4 +75,3 @@ return new class () extends Migration {
         // Keep expanded schema; destructive rollback of scoped resources is intentionally omitted.
     }
 };
-

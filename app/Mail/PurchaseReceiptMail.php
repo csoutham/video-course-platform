@@ -24,7 +24,7 @@ class PurchaseReceiptMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your VideoCourses receipt',
+            subject: 'Your Video Courses receipt',
         );
     }
 

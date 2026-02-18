@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /** @mixin \App\Models\Course */
 class MobileLibraryCourseResource extends JsonResource
 {
+    #[\Override]
     public function toArray(Request $request): array
     {
         return [

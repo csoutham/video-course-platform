@@ -90,7 +90,7 @@ class LessonPlaybackController extends Controller
                 'summary' => $lesson->summary,
                 'duration_seconds' => $lesson->duration_seconds,
                 'updated_at' => $lesson->updated_at?->toIso8601String(),
-                'resources' => $resources->map(fn(LessonResource $resource) => [
+                'resources' => $resources->map(fn (LessonResource $resource) => [
                     'id' => $resource->id,
                     'name' => $resource->name,
                     'mime_type' => $resource->mime_type,

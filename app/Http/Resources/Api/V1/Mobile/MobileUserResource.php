@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /** @mixin \App\Models\User */
 class MobileUserResource extends JsonResource
 {
+    #[\Override]
     public function toArray(Request $request): array
     {
         return [

@@ -2,18 +2,18 @@
 
 ## Summary
 
-VideoCourses supports free course distribution without Stripe checkout.
+Video Courses supports free course distribution without Stripe checkout.
 
 This reuses existing order, claim-token, entitlement, and gift mechanics so paid and free delivery stay consistent.
 
 ## Course Configuration
 
 - `is_free` (boolean)
-  - `true`: checkout bypasses Stripe and creates zero-value local order.
-  - `false`: standard paid Stripe checkout.
+    - `true`: checkout bypasses Stripe and creates zero-value local order.
+    - `false`: standard paid Stripe checkout.
 - `free_access_mode` (`claim_link|direct`)
-  - `claim_link`: always issue purchase claim token.
-  - `direct`: authenticated self-enroll grants entitlement immediately.
+    - `claim_link`: always issue purchase claim token.
+    - `direct`: authenticated self-enroll grants entitlement immediately.
 
 ## Runtime Behavior
 
@@ -21,13 +21,13 @@ This reuses existing order, claim-token, entitlement, and gift mechanics so paid
 
 1. User submits `POST /checkout/{course}` for free course.
 2. System creates local order:
-   - `status=paid`
-   - `total_amount=0`
-   - `stripe_checkout_session_id=free_{ulid}`
+    - `status=paid`
+    - `total_amount=0`
+    - `stripe_checkout_session_id=free_{ulid}`
 3. If direct mode + authenticated user:
-   - entitlement granted immediately.
+    - entitlement granted immediately.
 4. Else:
-   - purchase claim token issued for claim-link flow.
+    - purchase claim token issued for claim-link flow.
 
 ### Free gifting
 

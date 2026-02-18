@@ -2,7 +2,7 @@
 
 ## Objective
 
-Prepare VideoCourses for eventual public release without re-architecting the core product.
+Prepare Video Courses for eventual public release without re-architecting the core product.
 
 ## Repository Readiness Standards
 
@@ -17,9 +17,9 @@ Prepare VideoCourses for eventual public release without re-architecting the cor
 - Add `CODE_OF_CONDUCT.md`.
 - Add issue templates for bug report and feature request.
 - Add pull request template requiring:
-  - Linked issue/context.
-  - Test evidence.
-  - Backward compatibility notes.
+    - Linked issue/context.
+    - Test evidence.
+    - Backward compatibility notes.
 
 ## CI/CD Requirements
 

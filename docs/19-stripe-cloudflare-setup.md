@@ -1,6 +1,7 @@
 # 19. Stripe + Cloudflare Setup (Local to Production)
 
-This is the concrete setup checklist to get checkout, claim flow, video playback, and resource downloads working reliably.
+This is the concrete setup checklist to get checkout, claim flow, video playback, and resource downloads working
+reliably.
 
 ## 1) Required Environment Variables
 
@@ -30,11 +31,12 @@ AWS_USE_PATH_STYLE_ENDPOINT=true
 
 MAIL_MAILER=log
 MAIL_FROM_ADDRESS=hello@example.com
-MAIL_FROM_NAME="VideoCourses"
+MAIL_FROM_NAME="Video Courses"
 GIFTS_ENABLED=false
 ```
 
 Notes:
+
 - `STRIPE_WEBHOOK_SECRET` must match the currently active endpoint secret from Stripe CLI or Stripe Dashboard.
 - `COURSE_RESOURCES_DISK=s3` is required for Cloudflare R2-backed resource downloads.
 - `CF_STREAM_IFRAME_BASE_URL` can remain the default unless you have a custom delivery domain.
@@ -47,6 +49,7 @@ Notes:
 A course is purchasable only when `courses.stripe_price_id` is populated.
 
 If missing, checkout returns:
+
 - `Course is not purchasable yet.`
 
 ### Option A: Create via admin (recommended)
@@ -98,6 +101,7 @@ php artisan config:clear
 ```
 
 Recommended events for this app:
+
 - `checkout.session.completed`
 - `checkout.session.async_payment_succeeded`
 - `checkout.session.async_payment_failed`
@@ -108,6 +112,7 @@ Recommended events for this app:
 Per lesson, set `course_lessons.stream_video_id` to the Stream video UID.
 
 Expected embed URL shape:
+
 - `https://iframe.videodelivery.net/<video_uid>`
 
 Quick data check:
@@ -123,19 +128,21 @@ php artisan videocourses:stream-sync-durations
 ```
 
 Admin workflow:
+
 - In `/admin/courses/{course}/edit`, add/edit lessons and choose Stream videos directly from uploaded assets.
-- When a Stream video is selected and lesson is saved, admin flow automatically enforces Stream signed URLs and syncs duration metadata.
+- When a Stream video is selected and lesson is saved, admin flow automatically enforces Stream signed URLs and syncs
+  duration metadata.
 
 ### Optional Stream hardening with signed URLs
 
 1. In Cloudflare Stream, enable signed URL requirement for private delivery.
 2. Create Stream API token with permissions needed to create playback tokens.
 3. Set:
-   - `CF_STREAM_SIGNED_URLS_ENABLED=true`
-   - `CF_STREAM_ACCOUNT_ID`
-   - `CF_STREAM_API_TOKEN`
-   - `CF_STREAM_CUSTOMER_CODE`
-   - `CF_STREAM_TOKEN_TTL_SECONDS` (for example `900`)
+    - `CF_STREAM_SIGNED_URLS_ENABLED=true`
+    - `CF_STREAM_ACCOUNT_ID`
+    - `CF_STREAM_API_TOKEN`
+    - `CF_STREAM_CUSTOMER_CODE`
+    - `CF_STREAM_TOKEN_TTL_SECONDS` (for example `900`)
 4. Clear config cache:
 
 ```bash
@@ -169,6 +176,7 @@ php artisan tinker --execute="App\\Models\\LessonResource::query()->select('id',
 9. (If gifts enabled) run a gift checkout and confirm recipient + buyer gift emails are delivered.
 
 If payment succeeded but no claim button appears:
+
 - Wait 3-10 seconds and click `Refresh status` on success page.
 - Check `stripe_events` and `orders` rows for that `session_id`.
 - Replay event with:

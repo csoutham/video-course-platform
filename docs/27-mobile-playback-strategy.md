@@ -2,7 +2,8 @@
 
 ## Summary
 
-VideoCourses now supports a dedicated mobile API and an Expo-based React Native client path for iOS and Android. The mobile app is scoped to playback for already-purchased courses and binds to one installation at build time.
+Video Courses now supports a dedicated mobile API and an Expo-based React Native client path for iOS and Android. The
+mobile app is scoped to playback for already-purchased courses and binds to one installation at build time.
 
 ## Decisions
 
