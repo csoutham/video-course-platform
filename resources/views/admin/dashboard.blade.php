@@ -1,4 +1,12 @@
 <x-public-layout maxWidth="max-w-none" containerPadding="px-4 py-6 lg:px-8" title="Admin Dashboard">
+    <section class="vc-panel p-6">
+        <div class="vc-heading-block">
+            <p class="vc-eyebrow">Admin</p>
+            <h1 class="vc-title">Dashboard</h1>
+            <p class="vc-subtitle">High-level operational metrics for courses, customers, orders, and gift delivery.</p>
+        </div>
+    </section>
+
     <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <article class="vc-panel p-4">
             <p class="text-xs font-semibold tracking-wide text-slate-500 uppercase">Courses</p>
