@@ -7,23 +7,20 @@ uses(RefreshDatabase::class);
 
 test('guests are redirected to login', function (): void {
     $this->get(route('admin.dashboard'))
-        ->assertRedirect(route('login'));
-
+         ->assertRedirect(route('login'));
 });
 
 test('non admin users receive forbidden', function (): void {
     $this->actingAs(User::factory()->create());
 
     $this->get(route('admin.dashboard'))
-        ->assertForbidden();
-
+         ->assertForbidden();
 });
 
 test('admin users can open dashboard', function (): void {
     $this->actingAs(User::factory()->admin()->create());
 
     $this->get(route('admin.dashboard'))
-        ->assertOk()
-        ->assertSeeText('High-level operational metrics');
-
+         ->assertOk()
+         ->assertSeeText('Recent Orders');
 });
