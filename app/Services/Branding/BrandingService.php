@@ -83,7 +83,7 @@ class BrandingService
         $platformName = trim((string) ($input['platform_name'] ?? $defaults['platform_name']));
         $settings->platform_name = $platformName !== '' ? $platformName : $defaults['platform_name'];
 
-        foreach ($this->tokenToColumnMap as $token => $column) {
+        foreach ($this->tokenToColumnMap as $column) {
             $raw = $input[$column] ?? null;
             $settings->{$column} = $this->normalizeHex($raw);
         }

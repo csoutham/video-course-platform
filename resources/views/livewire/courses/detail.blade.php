@@ -1,4 +1,6 @@
-<x-slot:title>{{ $course->title }} | {{ $branding?->platformName ?? config('app.name') }}</x-slot>
+<x-slot:title>
+    {{ $course->title }} | {{ $branding?->platformName ?? config('app.name') }}
+</x-slot>
 <x-slot:metaDescription>{{ $metaDescription }}</x-slot>
 <x-slot:metaImage>{{ $course->thumbnail_url ?: asset('favicon.ico') }}</x-slot>
 <x-slot:canonicalUrl>{{ route('courses.show', $course->slug) }}</x-slot>

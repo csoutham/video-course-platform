@@ -2,7 +2,7 @@
 
 This folder contains the implementation-ready documentation for Video Courses v1, a web-based platform to browse, buy,
 and watch purchasable courses.
-Docs version: `0.9.8`.
+Docs version: `0.10.0`.
 
 ## Scope Summary
 
@@ -55,6 +55,7 @@ Docs version: `0.9.8`.
 25. [25-free-lead-magnet-flow](./25-free-lead-magnet-flow.md)
 26. [26-kit-integration](./26-kit-integration.md)
 27. [27-mobile-playback-strategy](./27-mobile-playback-strategy.md)
+28. [28-branding-and-white-labeling](./28-branding-and-white-labeling.md)
 
 ## API and Mobile Extensions
 

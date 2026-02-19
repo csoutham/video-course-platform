@@ -4,17 +4,6 @@
         $lessonCount = $course->modules->sum(fn ($module) => $module->lessons->count());
     @endphp
 
-    <section class="vc-panel p-6">
-        <div class="flex flex-wrap items-start justify-between gap-3">
-            <div class="vc-heading-block">
-                <p class="vc-eyebrow">Admin</p>
-                <h1 class="vc-title">Edit Course</h1>
-                <p class="vc-subtitle">Manage course pricing, publishing, and Stripe mapping.</p>
-            </div>
-            <a href="{{ route('admin.courses.index') }}" class="vc-btn-secondary">Back to Courses</a>
-        </div>
-    </section>
-
     @if (session('status'))
         <section class="vc-panel mt-4 p-4 text-sm text-slate-700">
             {{ session('status') }}
@@ -22,7 +11,7 @@
     @endif
 
     <section
-        class="sticky top-0 z-30 -mx-4 mt-6 border-y border-slate-200/90 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:-mx-8 lg:px-8">
+        class="sticky top-0 z-50 -mx-4 border-y border-slate-200/90 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:-mx-8 lg:px-8">
         <div class="mx-auto flex max-w-none flex-wrap items-center justify-between gap-3">
             <div class="inline-flex rounded-xl border border-slate-200 bg-white p-1">
                 <button

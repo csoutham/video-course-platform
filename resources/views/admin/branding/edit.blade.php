@@ -1,24 +1,9 @@
 <x-public-layout maxWidth="max-w-none" containerPadding="px-4 py-6 lg:px-8" title="Branding">
-    <section class="vc-panel p-6">
-        <div class="flex flex-wrap items-start justify-between gap-3">
-            <div class="vc-heading-block">
-                <p class="vc-eyebrow">Admin</p>
-                <h1 class="vc-title">Branding</h1>
-                <p class="vc-subtitle">
-                    Configure white-label platform naming, logo, and core color palette at runtime.
-                </p>
-            </div>
-            <a href="{{ route('admin.dashboard') }}" class="vc-btn-secondary">Back to Dashboard</a>
-        </div>
-    </section>
-
     @if (session('status'))
-        <section class="vc-panel mt-6 p-4">
-            <p class="vc-alert vc-alert-success">{{ session('status') }}</p>
-        </section>
+        <p class="vc-alert vc-alert-success mb-6">{{ session('status') }}</p>
     @endif
 
-    <section class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
+    <section class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
         <article class="vc-panel p-6">
             <form
                 method="POST"
@@ -48,9 +33,15 @@
                         <img
                             src="{{ $branding->logoUrl }}"
                             alt="{{ $branding->platformName }} logo"
-                            class="mt-2 h-16 w-auto rounded-lg border border-slate-200 bg-white p-2 object-contain" />
+                            class="mt-2 h-16 w-auto rounded-lg border border-slate-200 bg-white object-contain p-2" />
                     @endif
-                    <input id="logo" name="logo" type="file" accept="image/png,image/jpeg,image/webp" class="vc-input" />
+
+                    <input
+                        id="logo"
+                        name="logo"
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp"
+                        class="vc-input" />
                     <p class="vc-help">PNG/JPG/WEBP up to 5MB. Replacing logo removes the previous file.</p>
                     @error('logo')
                         <p class="vc-error">{{ $message }}</p>
@@ -66,6 +57,7 @@
                                 $label = str($token)->replace('vc-', '')->replace('-', ' ')->title();
                                 $value = old($column, $branding->colors[$token] ?? $defaults['colors'][$token] ?? '#000000');
                             @endphp
+
                             <div class="rounded-xl border border-slate-200 bg-white p-4">
                                 <label for="{{ $column }}" class="vc-label">{{ $label }}</label>
                                 <div class="mt-2 flex items-center gap-2">
@@ -97,10 +89,7 @@
             </form>
             <form method="POST" action="{{ route('admin.branding.reset') }}" class="mt-3">
                 @csrf
-                <button
-                    type="submit"
-                    class="vc-btn-danger"
-                    onclick="return confirm('Reset branding to defaults?')">
+                <button type="submit" class="vc-btn-danger" onclick="return confirm('Reset branding to defaults?');">
                     Reset defaults
                 </button>
             </form>
@@ -108,7 +97,9 @@
 
         <aside class="vc-panel p-6">
             <p class="vc-eyebrow">Preview</p>
-            <h2 class="vc-card-title mt-2" data-branding-preview-name>{{ old('platform_name', $branding->platformName) }}</h2>
+            <h2 class="vc-card-title mt-2" data-branding-preview-name>
+                {{ old('platform_name', $branding->platformName) }}
+            </h2>
             <div class="vc-panel mt-4 p-4" data-branding-preview-surface>
                 <p class="text-sm" data-branding-preview-copy>
                     This preview uses your selected runtime branding colors without requiring an asset rebuild.
@@ -118,9 +109,7 @@
                     <button type="button" class="vc-btn-secondary" data-branding-preview-secondary>Secondary</button>
                 </div>
             </div>
-            <p class="vc-help mt-4">
-                Live preview updates as you change fields. Final values are validated on save.
-            </p>
+            <p class="vc-help mt-4">Live preview updates as you change fields. Final values are validated on save.</p>
         </aside>
     </section>
 
@@ -135,9 +124,7 @@
                 colorTextInputs.forEach((input) => {
                     if (!input.name || !/^#([A-Fa-f0-9]{6})$/.test(input.value)) return;
 
-                    const token = input.name
-                        .replace(/^color_/, 'vc-')
-                        .replaceAll('_', '-');
+                    const token = input.name.replace(/^color_/, 'vc-').replaceAll('_', '-');
 
                     document.documentElement.style.setProperty(`--${token}`, input.value.toUpperCase());
                 });

@@ -3,7 +3,7 @@
 
     <div class="grid gap-5 lg:grid-cols-[340px_1fr] lg:gap-6">
         <aside
-            class="order-2 space-y-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm lg:sticky lg:top-24 lg:order-1 lg:max-h-[calc(100vh-7.5rem)] lg:overflow-y-auto">
+            class="order-2 space-y-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm lg:sticky lg:order-1 lg:max-h-[calc(100vh-7.5rem)] lg:overflow-y-auto">
             <div>
                 <p class="text-xs font-semibold tracking-[0.2em] text-slate-500 uppercase">Course</p>
                 <h1 class="mt-1 text-xl font-semibold text-slate-900">{{ $course->title }}</h1>

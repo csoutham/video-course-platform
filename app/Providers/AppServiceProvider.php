@@ -91,7 +91,7 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer('*', function ($view): void {
             /** @var BrandingService $brandingService */
-            $brandingService = app(BrandingService::class);
+            $brandingService = resolve(BrandingService::class);
             $branding = $brandingService->current();
 
             $view->with('branding', $branding);

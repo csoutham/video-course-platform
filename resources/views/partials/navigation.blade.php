@@ -1,12 +1,15 @@
 <header class="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur">
     <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-        <a href="{{ route('courses.index') }}" class="flex items-center gap-2 text-lg font-semibold tracking-tight text-slate-900">
+        <a
+            href="{{ route('courses.index') }}"
+            class="flex items-center gap-2 text-lg font-semibold tracking-tight text-slate-900">
             @if ($branding?->logoUrl)
                 <img
                     src="{{ $branding->logoUrl }}"
                     alt="{{ $branding->platformName }} logo"
                     class="h-8 w-auto max-w-36 object-contain" />
             @endif
+
             <span>{{ $branding?->platformName ?? config('app.name', 'VideoCourses') }}</span>
         </a>
 

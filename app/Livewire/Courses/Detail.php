@@ -23,7 +23,7 @@ class Detail extends Component
 
     public function render(VideoPlaybackService $videoPlaybackService): View
     {
-        $branding = app(BrandingService::class)->current();
+        $branding = resolve(BrandingService::class)->current();
 
         $course = Course::query()
             ->published()

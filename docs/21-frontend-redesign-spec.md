@@ -84,6 +84,7 @@ behavior and routes.
 6. Minimize Blade template logic by moving formatting/derived values to PHP classes and controllers.
 7. Standardize form primitives across customer and admin surfaces (labels, help/error text, compact inputs, alerts).
 8. Use the same auth component primitives (`x-input-label`, `x-text-input`, `x-input-error`, `x-primary-button`) as customer/admin forms to keep all entry points visually consistent.
+9. Support runtime white-label branding overrides (platform name, logo, and core color tokens) via admin settings without Vite rebuilds.
 
 ## Technical Constraints
 

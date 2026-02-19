@@ -24,13 +24,16 @@
     <body class="vc-shell flex min-h-screen flex-col font-sans text-slate-900 antialiased">
         <main class="flex flex-1 flex-col items-center justify-center px-4 py-8">
             <div>
-                <a href="{{ route('courses.index') }}" class="flex items-center gap-2 text-xl font-semibold tracking-tight text-slate-900">
+                <a
+                    href="{{ route('courses.index') }}"
+                    class="flex items-center gap-2 text-xl font-semibold tracking-tight text-slate-900">
                     @if ($branding?->logoUrl)
                         <img
                             src="{{ $branding->logoUrl }}"
                             alt="{{ $branding->platformName }} logo"
                             class="h-8 w-auto max-w-32 object-contain" />
                     @endif
+
                     <span>{{ $branding?->platformName ?? config('app.name', 'VideoCourses') }}</span>
                 </a>
             </div>
