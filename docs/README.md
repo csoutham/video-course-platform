@@ -2,7 +2,7 @@
 
 This folder contains the implementation-ready documentation for Video Courses v1, a web-based platform to browse, buy,
 and watch purchasable courses.
-Docs version: `0.10.4`.
+Docs version: `0.10.5`.
 
 ## Scope Summary
 
@@ -61,3 +61,4 @@ Docs version: `0.10.4`.
 
 - [mobile-architecture](./mobile-architecture.md)
 - [api/mobile-v1](./api/mobile-v1.md)
+- Mobile app repo: `git@github.com:csoutham/video-course-platform-mobile.git`

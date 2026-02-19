@@ -10,7 +10,8 @@
 
 - Backend: Laravel API v1 mobile surface (`/api/v1/mobile/*`).
 - Auth: Sanctum personal access tokens (Bearer tokens).
-- Mobile client: React Native + Expo app in `/mobile`.
+- Mobile client: React Native + Expo app in the separate repo:
+  `git@github.com:csoutham/video-course-platform-mobile.git`.
 - Video delivery: Cloudflare Stream URL from backend playback endpoint.
 - Resource delivery: signed URL returned by API, opened by mobile app.
 

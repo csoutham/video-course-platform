@@ -84,6 +84,7 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-18: Applied shared admin form primitives across course create/edit and Udemy import screens, including checkbox consistency and help/error messaging.
 - 2026-02-18: Added Sanctum-based mobile API surface (`/api/v1/mobile`) with token auth, library/course/playback/progress/resource endpoints, and mobile API feature tests.
 - 2026-02-18: Added Expo mobile app workspace (`/mobile`) with auth, library, course outline, lesson playback, and resource handoff flows.
+- 2026-02-19: Extracted mobile app to standalone repository `git@github.com:csoutham/video-course-platform-mobile.git` and removed `/mobile` from this monorepo.
 - 2026-02-19: Added runtime white-label branding system (admin-managed platform name, logo, and core color token overrides) without rebuilding compiled Tailwind assets.
 - 2026-02-19: Extended branding with runtime font selection (system/Bunny/Google) and dynamic font stylesheet injection without rebuilding assets.
 - 2026-02-19: Extended branding with runtime logo sizing, publisher/footer copy controls, and CMS-style editable `/courses` homepage hero text.

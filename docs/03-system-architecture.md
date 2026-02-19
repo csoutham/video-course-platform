@@ -33,6 +33,7 @@
    - Signed R2 download URLs generated on demand.
 7. Mobile Client (Expo)
    - iOS/Android playback app that consumes installation-bound mobile API.
+   - Maintained in separate repo: `git@github.com:csoutham/video-course-platform-mobile.git`.
 
 ## High-Level Flow: Purchase
 

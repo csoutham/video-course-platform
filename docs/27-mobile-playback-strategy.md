@@ -4,6 +4,7 @@
 
 Video Courses now supports a dedicated mobile API and an Expo-based React Native client path for iOS and Android. The
 mobile app is scoped to playback for already-purchased courses and binds to one installation at build time.
+Mobile client repository: `git@github.com:csoutham/video-course-platform-mobile.git`.
 
 ## Decisions
 
@@ -36,7 +37,7 @@ mobile app is scoped to playback for already-purchased courses and binds to one 
 
 ## Next Phases
 
-1. Complete the mobile UI in `mobile/` for production polish and store packaging.
+1. Continue mobile UI and release hardening in the dedicated mobile repository.
 2. Add optional push notifications for release announcements and reminders.
 3. Add stronger media hardening controls (e.g. stricter Stream token TTL tuning per environment).
 4. Evaluate offline encrypted downloads as a post-v1 milestone.
