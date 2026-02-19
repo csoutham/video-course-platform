@@ -8,11 +8,12 @@
 ])
 
 @php
-    $pageTitle = $metaTitle ?? $title ?? config('app.name', 'VideoCourses');
+    $brandingName = $branding?->platformName ?? config('app.name', 'VideoCourses');
+    $pageTitle = $metaTitle ?? $title ?? $brandingName;
     $pageDescription =
         $metaDescription ??
         'Learn with practical video courses, instant checkout, and clear step-by-step progress.';
-    $pageImage = $metaImage ?: asset('favicon.ico');
+    $pageImage = $metaImage ?: ($branding?->logoUrl ?: asset('favicon.ico'));
     $pageUrl = $canonicalUrl ?: url()->current();
 @endphp
 
@@ -40,6 +41,15 @@
 
         <link rel="preconnect" href="https://fonts.bunny.net" />
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
+        @if (config('branding.enabled', true) && isset($branding))
+            <style>
+                :root {
+                    @foreach ($branding->colors as $token => $value)
+                        --{{ $token }}: {{ $value }};
+                    @endforeach
+                }
+            </style>
+        @endif
 
         @vite(['resources/app.css', 'resources/app.js'])
         @stack('head')

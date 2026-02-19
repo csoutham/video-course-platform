@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\Branding\BrandingService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -22,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
     #[\Override]
     public function register(): void
     {
-        //
+        $this->app->singleton(BrandingService::class);
     }
 
     public function boot(): void
@@ -34,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
         $this->configureSecurity();
         $this->configureVite();
+        $this->configureBranding();
     }
 
     private function configureAuthorization(): void
@@ -82,5 +85,16 @@ class AppServiceProvider extends ServiceProvider
     private function configureVite(): void
     {
         Vite::useAggressivePrefetching();
+    }
+
+    private function configureBranding(): void
+    {
+        View::composer('*', function ($view): void {
+            /** @var BrandingService $brandingService */
+            $brandingService = app(BrandingService::class);
+            $branding = $brandingService->current();
+
+            $view->with('branding', $branding);
+        });
     }
 }

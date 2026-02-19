@@ -1,7 +1,13 @@
 <header class="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur">
     <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-        <a href="{{ route('courses.index') }}" class="text-lg font-semibold tracking-tight text-slate-900">
-            {{ config('app.name', 'VideoCourses') }}
+        <a href="{{ route('courses.index') }}" class="flex items-center gap-2 text-lg font-semibold tracking-tight text-slate-900">
+            @if ($branding?->logoUrl)
+                <img
+                    src="{{ $branding->logoUrl }}"
+                    alt="{{ $branding->platformName }} logo"
+                    class="h-8 w-auto max-w-36 object-contain" />
+            @endif
+            <span>{{ $branding?->platformName ?? config('app.name', 'VideoCourses') }}</span>
         </a>
 
         <nav class="hidden items-center gap-2 text-sm font-medium text-slate-600 lg:flex">
@@ -31,6 +37,11 @@
                         href="{{ route('admin.dashboard') }}"
                         class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
                         Admin
+                    </a>
+                    <a
+                        href="{{ route('admin.branding.edit') }}"
+                        class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
+                        Branding
                     </a>
                 @endcan
 
@@ -106,6 +117,9 @@
                 @can('access-admin')
                     <a href="{{ route('admin.dashboard') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
                         Admin
+                    </a>
+                    <a href="{{ route('admin.branding.edit') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
+                        Branding
                     </a>
                 @endcan
 

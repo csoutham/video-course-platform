@@ -6,7 +6,7 @@
     <title>Gift delivery</title>
 </head>
 <body style="font-family: Arial, sans-serif; color: #0f172a; line-height: 1.5;">
-    <p>You received a gift course on {{ config('app.name', 'Video Courses') }}.</p>
+    <p>You received a gift course on {{ $branding?->platformName ?? config('app.name', 'Video Courses') }}.</p>
 
     <p>
         Course: {{ $giftPurchase->course->title ?? 'Course #'.$giftPurchase->course_id }}<br>
@@ -26,4 +26,3 @@
     </p>
 </body>
 </html>
-

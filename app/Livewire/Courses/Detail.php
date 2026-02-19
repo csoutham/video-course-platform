@@ -3,6 +3,7 @@
 namespace App\Livewire\Courses;
 
 use App\Models\Course;
+use App\Services\Branding\BrandingService;
 use App\Services\Learning\VideoPlaybackService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
@@ -22,6 +23,8 @@ class Detail extends Component
 
     public function render(VideoPlaybackService $videoPlaybackService): View
     {
+        $branding = app(BrandingService::class)->current();
+
         $course = Course::query()
             ->published()
             ->with([
@@ -49,7 +52,7 @@ class Detail extends Component
             'url' => route('courses.show', $course->slug),
             'provider' => [
                 '@type' => 'Organization',
-                'name' => config('app.name'),
+                'name' => $branding->platformName,
                 'url' => url('/'),
             ],
             'offers' => [

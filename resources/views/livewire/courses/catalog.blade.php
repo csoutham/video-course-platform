@@ -1,4 +1,4 @@
-<x-slot:title>Professional Video Courses | {{ config('app.name') }}</x-slot>
+<x-slot:title>Professional Video Courses | {{ $branding?->platformName ?? config('app.name') }}</x-slot>
 <x-slot:metaDescription>
     Upgrade practical skills with focused, purchasable video courses. Instant checkout, structured modules, and
     downloadable resources.

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CoursesController;
 use App\Http\Controllers\Admin\CourseResourcesController;
+use App\Http\Controllers\Admin\BrandingController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CourseLessonsController;
 use App\Http\Controllers\Admin\CourseModulesController;
@@ -78,6 +79,9 @@ Route::middleware(['auth', 'admin'])
         Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
         Route::get('/users', [UsersController::class, 'index'])->name('users.index');
         Route::get('/users/{user}', [UsersController::class, 'show'])->name('users.show');
+        Route::get('/branding', [BrandingController::class, 'edit'])->name('branding.edit');
+        Route::put('/branding', [BrandingController::class, 'update'])->name('branding.update');
+        Route::post('/branding/reset', [BrandingController::class, 'reset'])->name('branding.reset');
     });
 
 Route::view('profile', 'profile')
