@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\Mobile\CourseController;
 use App\Http\Controllers\Api\V1\Mobile\LibraryController;
 use App\Http\Controllers\Api\V1\Mobile\LessonPlaybackController;
 use App\Http\Controllers\Api\V1\Mobile\ProfileController;
+use App\Http\Controllers\Api\V1\Mobile\ReceiptsController;
 use App\Http\Controllers\Api\V1\Mobile\ResourceAccessController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,7 @@ Route::prefix('v1/mobile')
 
             Route::get('/me', ProfileController::class)->name('me');
             Route::get('/library', LibraryController::class)->name('library');
+            Route::get('/receipts', ReceiptsController::class)->name('receipts');
             Route::get('/courses/{courseSlug}', [CourseController::class, 'show'])->name('courses.show');
             Route::get('/courses/{courseSlug}/lessons/{lessonSlug}/playback', [LessonPlaybackController::class, 'show'])
                 ->name('playback.show');

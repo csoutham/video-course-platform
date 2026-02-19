@@ -227,3 +227,54 @@ test('mobile resource endpoint issues signed url and signed file endpoint serves
     $this->get($signedUrl)
         ->assertOk();
 });
+
+test('mobile receipts endpoint returns current users eligible stripe receipts', function (): void {
+    $user = User::factory()->create();
+    $otherUser = User::factory()->create();
+
+    $eligibleOrder = Order::create([
+        'user_id' => $user->id,
+        'email' => $user->email,
+        'stripe_checkout_session_id' => 'cs_receipt_mobile_1',
+        'stripe_receipt_url' => 'https://pay.stripe.com/receipts/mobile_receipt_1',
+        'status' => 'paid',
+        'subtotal_amount' => 1000,
+        'discount_amount' => 0,
+        'total_amount' => 1000,
+        'currency' => 'usd',
+        'paid_at' => now()->subDay(),
+    ]);
+
+    Order::create([
+        'user_id' => $user->id,
+        'email' => $user->email,
+        'stripe_checkout_session_id' => 'free_01kabcxyzxyzxyzxyzxyzxyz',
+        'status' => 'paid',
+        'subtotal_amount' => 0,
+        'discount_amount' => 0,
+        'total_amount' => 0,
+        'currency' => 'usd',
+        'paid_at' => now(),
+    ]);
+
+    Order::create([
+        'user_id' => $otherUser->id,
+        'email' => $otherUser->email,
+        'stripe_checkout_session_id' => 'cs_receipt_mobile_other',
+        'stripe_receipt_url' => 'https://pay.stripe.com/receipts/mobile_receipt_other',
+        'status' => 'paid',
+        'subtotal_amount' => 1200,
+        'discount_amount' => 0,
+        'total_amount' => 1200,
+        'currency' => 'usd',
+        'paid_at' => now(),
+    ]);
+
+    Sanctum::actingAs($user, ['mobile:read']);
+
+    $this->getJson('/api/v1/mobile/receipts')
+        ->assertOk()
+        ->assertJsonCount(1, 'receipts')
+        ->assertJsonPath('receipts.0.order_public_id', $eligibleOrder->public_id)
+        ->assertJsonPath('receipts.0.receipt_url', 'https://pay.stripe.com/receipts/mobile_receipt_1');
+});

@@ -53,6 +53,31 @@ Auth required.
 
 Returns entitled, published courses with progress summary.
 
+## Receipts
+
+### `GET /receipts`
+Auth required.
+
+Returns Stripe-eligible receipts for the authenticated user.
+
+Response:
+
+```json
+{
+  "receipts": [
+    {
+      "order_public_id": "ord_01hf...",
+      "status": "paid",
+      "total_amount": 2500,
+      "currency": "usd",
+      "paid_at": "2026-02-19T10:15:00+00:00",
+      "refunded_at": null,
+      "receipt_url": "https://pay.stripe.com/receipts/..."
+    }
+  ]
+}
+```
+
 ## Course Detail
 
 ### `GET /courses/{courseSlug}`

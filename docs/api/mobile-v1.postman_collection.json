@@ -129,6 +129,23 @@
             ]
         },
         {
+            "name": "Receipts",
+            "item": [
+                {
+                    "name": "Receipts",
+                    "request": {
+                        "method": "GET",
+                        "header": [{ "key": "Accept", "value": "application/json" }],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/mobile/receipts",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "mobile", "receipts"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
             "name": "Courses",
             "item": [
                 {
