@@ -16,7 +16,6 @@
 /mobile/node_modules
 /mobile/.expo
 .expo/
-/public/build
 /public/hot
 /public/storage
 /storage/*.key
