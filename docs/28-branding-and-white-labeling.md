@@ -8,6 +8,10 @@ Enable deployment owners to configure platform branding without rebuilding Tailw
 
 - Runtime platform name override.
 - Runtime logo upload and replacement.
+- Runtime typography selection:
+    - provider: `system`, `bunny`, or `google`
+    - font family
+    - font weights
 - Runtime core palette overrides via CSS variables:
     - `--vc-bg`
     - `--vc-panel`
@@ -29,6 +33,9 @@ Enable deployment owners to configure platform branding without rebuilding Tailw
 - `branding_settings` singleton table:
     - `platform_name`
     - `logo_url`
+    - `font_provider`
+    - `font_family`
+    - `font_weights`
     - token-specific color columns
     - timestamps
 
@@ -36,6 +43,7 @@ Enable deployment owners to configure platform branding without rebuilding Tailw
 
 - Tailwind build output remains static.
 - Layouts inject runtime token overrides via inline `<style>` in `<head>`.
+- Layouts conditionally inject provider-specific font stylesheet links at runtime.
 - If settings are missing/disabled/invalid, defaults from `config/branding.php` are used.
 
 ### Service Layer
@@ -60,6 +68,7 @@ Actions:
 
 - `PUT /admin/branding`:
     - save platform name
+    - save runtime font provider/family/weights
     - save color tokens
     - optionally upload logo
 - `POST /admin/branding/reset`:
@@ -70,6 +79,9 @@ Validation:
 
 - `platform_name`: required, max 120.
 - `logo`: image, max 5MB, `jpg|jpeg|png|webp`.
+- `font_provider`: `system|bunny|google`.
+- `font_family`: alphanumeric + space + dash.
+- `font_weights`: comma-separated hundreds (`400,500,700`).
 - color fields: strict `#RRGGBB`.
 
 ## Configuration
@@ -82,6 +94,9 @@ BRANDING_CACHE_KEY=branding:current
 BRANDING_CACHE_TTL_SECONDS=3600
 BRANDING_DISK=public
 BRANDING_DEFAULT_PLATFORM_NAME="${APP_NAME}"
+BRANDING_DEFAULT_FONT_PROVIDER=bunny
+BRANDING_DEFAULT_FONT_FAMILY=Figtree
+BRANDING_DEFAULT_FONT_WEIGHTS=400,500,600,700
 ```
 
 `config/branding.php` holds defaults and token fallback values.
@@ -100,6 +115,7 @@ Feature tests cover:
 - admin authorization for branding routes
 - branding page rendering
 - update and runtime style token injection
+- runtime font provider/family link injection
 - logo upload persistence
 - invalid color rejection
 - reset to defaults behavior
