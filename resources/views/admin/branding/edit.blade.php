@@ -31,7 +31,10 @@
                 <button form="branding-settings-form" type="submit" class="vc-btn-primary">Save branding</button>
                 <form id="branding-reset-form" method="POST" action="{{ route('admin.branding.reset') }}">
                     @csrf
-                    <button type="submit" class="vc-btn-danger" onclick="return confirm('Reset branding to defaults?');">
+                    <button
+                        type="submit"
+                        class="vc-btn-danger"
+                        onclick="return confirm('Reset branding to defaults?');">
                         Reset defaults
                     </button>
                 </form>
@@ -46,8 +49,8 @@
             action="{{ route('admin.branding.update') }}"
             enctype="multipart/form-data"
             class="space-y-6">
-                @csrf
-                @method('PUT')
+            @csrf
+            @method('PUT')
 
             <section class="vc-panel p-6" data-branding-tab-panel="brand">
                 <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
@@ -107,7 +110,9 @@
                     </article>
 
                     <aside class="vc-panel-soft p-4">
-                        <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Publisher and footer</h2>
+                        <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">
+                            Publisher and footer
+                        </h2>
 
                         <div class="mt-4 space-y-4">
                             <div>
@@ -158,7 +163,9 @@
             <section class="vc-panel hidden p-6" data-branding-tab-panel="homepage">
                 <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
                     <article class="space-y-4">
-                        <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Homepage hero copy</h2>
+                        <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">
+                            Homepage hero copy
+                        </h2>
 
                         <div>
                             <label for="homepage_eyebrow" class="vc-label">Eyebrow</label>
@@ -192,7 +199,9 @@
                                 id="homepage_subtitle"
                                 name="homepage_subtitle"
                                 class="vc-input min-h-32"
-                                maxlength="500">{{ old('homepage_subtitle', $branding->homepageSubtitle) }}</textarea>
+                                maxlength="500">
+{{ old('homepage_subtitle', $branding->homepageSubtitle) }}</textarea
+                            >
                             @error('homepage_subtitle')
                                 <p class="vc-error">{{ $message }}</p>
                             @enderror
@@ -200,10 +209,13 @@
                     </article>
 
                     <aside class="vc-panel-soft p-4">
-                        <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Where this appears</h2>
+                        <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">
+                            Where this appears
+                        </h2>
                         <p class="vc-help mt-2">
-                            These fields power the marketing header copy on <code>/courses</code>. Leave empty to use
-                            system defaults.
+                            These fields power the marketing header copy on
+                            <code>/courses</code>
+                            . Leave empty to use system defaults.
                         </p>
                     </aside>
                 </div>
@@ -257,7 +269,8 @@
                                     placeholder="400,500,600,700"
                                     data-font-weights />
                                 <p class="vc-help">
-                                    Comma-separated hundreds only (e.g. 400,500,700). Used when loading Bunny/Google fonts.
+                                    Comma-separated hundreds only (e.g. 400,500,700). Used when loading Bunny/Google
+                                    fonts.
                                 </p>
                                 @error('font_weights')
                                     <p class="vc-error">{{ $message }}</p>
@@ -266,7 +279,9 @@
                         </div>
 
                         <div class="space-y-4">
-                            <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Core color tokens</h2>
+                            <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">
+                                Core color tokens
+                            </h2>
 
                             <div class="grid gap-4 md:grid-cols-2">
                                 @foreach ($tokenColumnMap as $token => $column)
@@ -308,19 +323,24 @@
                         </h2>
                         <div class="vc-panel mt-4 p-4" data-branding-preview-surface>
                             <p class="text-sm" data-branding-preview-copy>
-                                This preview uses your selected runtime branding colors without requiring an asset rebuild.
+                                This preview uses your selected runtime branding colors without requiring an asset
+                                rebuild.
                             </p>
                             <p class="mt-2 text-sm font-medium" data-branding-preview-font>
                                 The quick brown fox jumps over the lazy dog.
                             </p>
                             <div class="mt-4 flex gap-2">
-                                <button type="button" class="vc-btn-primary" data-branding-preview-primary>Primary</button>
+                                <button type="button" class="vc-btn-primary" data-branding-preview-primary>
+                                    Primary
+                                </button>
                                 <button type="button" class="vc-btn-secondary" data-branding-preview-secondary>
                                     Secondary
                                 </button>
                             </div>
                         </div>
-                        <p class="vc-help mt-4">Live preview updates as you change fields. Final values are validated on save.</p>
+                        <p class="vc-help mt-4">
+                            Live preview updates as you change fields. Final values are validated on save.
+                        </p>
                     </aside>
                 </div>
             </section>
