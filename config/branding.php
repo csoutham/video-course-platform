@@ -7,7 +7,7 @@ return [
 
     'cache_ttl_seconds' => (int) env('BRANDING_CACHE_TTL_SECONDS', 3600),
 
-    'disk' => env('BRANDING_DISK', 'public'),
+    'disk' => env('BRANDING_DISK', env('IMAGE_UPLOAD_DISK', 'public')),
 
     'defaults' => [
         'platform_name' => env('BRANDING_DEFAULT_PLATFORM_NAME', env('APP_NAME', 'VideoCourses')),

@@ -16,6 +16,7 @@ return [
     'default' => env('FILESYSTEM_DISK', 'local'),
 
     'course_resources_disk' => env('COURSE_RESOURCES_DISK', 'local'),
+    'image_upload_disk' => env('IMAGE_UPLOAD_DISK', 'public'),
 
     /*
     |--------------------------------------------------------------------------

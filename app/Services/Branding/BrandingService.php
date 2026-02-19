@@ -8,6 +8,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Contracts\Filesystem\Filesystem;
 
 class BrandingService
 {
@@ -463,7 +464,7 @@ class BrandingService
 
     private function storeLogo(UploadedFile $file, ?string $existingLogoUrl = null): ?string
     {
-        $disk = (string) config('branding.disk', 'public');
+        $disk = $this->uploadDisk();
         $extension = strtolower((string) ($file->getClientOriginalExtension() ?: 'png'));
         $filename = 'branding-logo-'.Str::uuid().'.'.$extension;
         $path = $file->storeAs('branding', $filename, $disk);
@@ -484,16 +485,40 @@ class BrandingService
             return;
         }
 
-        $disk = (string) config('branding.disk', 'public');
-        $prefix = rtrim((string) Storage::disk($disk)->url(''), '/').'/';
-
-        if (! str_starts_with($logoUrl, $prefix)) {
+        $diskName = $this->uploadDisk();
+        $disk = Storage::disk($diskName);
+        $oldPath = $this->extractDiskPathFromUrl($disk, $logoUrl);
+        if ($oldPath === '') {
             return;
         }
 
-        $oldPath = ltrim(Str::after($logoUrl, $prefix), '/');
-        if ($oldPath !== '') {
-            Storage::disk($disk)->delete($oldPath);
+        $disk->delete($oldPath);
+    }
+
+    private function uploadDisk(): string
+    {
+        return (string) config('branding.disk', (string) config('filesystems.image_upload_disk', 'public'));
+    }
+
+    private function extractDiskPathFromUrl(Filesystem $disk, string $url): string
+    {
+        $prefix = rtrim((string) $disk->url(''), '/').'/';
+
+        if (str_starts_with($url, $prefix)) {
+            return ltrim(Str::after($url, $prefix), '/');
         }
+
+        $path = parse_url($url, PHP_URL_PATH);
+        if (! is_string($path) || $path === '') {
+            return '';
+        }
+
+        if (str_contains($path, '/branding/')) {
+            $suffix = ltrim(Str::after($path, '/branding/'), '/');
+
+            return $suffix !== '' ? 'branding/'.$suffix : '';
+        }
+
+        return '';
     }
 }

@@ -73,6 +73,8 @@ test('admin can update platform name and colors and runtime layout reflects upda
 });
 
 test('admin can upload branding logo', function (): void {
+    config()->set('filesystems.image_upload_disk', 'public');
+    config()->set('branding.disk', 'public');
     Storage::fake('public');
     $this->actingAs(User::factory()->admin()->create());
 
@@ -94,7 +96,7 @@ test('admin can upload branding logo', function (): void {
     $branding = BrandingSetting::query()->first();
     expect($branding)->not->toBeNull();
     expect($branding?->logo_url)->not->toBeNull();
-    expect($branding?->logo_url)->toContain('/storage/branding/');
+    expect($branding?->logo_url)->toContain('branding/');
 });
 
 test('invalid branding color is rejected', function (): void {

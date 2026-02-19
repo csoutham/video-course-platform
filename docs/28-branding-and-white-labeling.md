@@ -120,7 +120,7 @@ Additions in `.env`:
 BRANDING_ENABLED=true
 BRANDING_CACHE_KEY=branding:current
 BRANDING_CACHE_TTL_SECONDS=3600
-BRANDING_DISK=public
+BRANDING_DISK=s3
 BRANDING_DEFAULT_PLATFORM_NAME="${APP_NAME}"
 BRANDING_DEFAULT_FONT_PROVIDER=bunny
 BRANDING_DEFAULT_FONT_FAMILY=Figtree
@@ -138,8 +138,7 @@ BRANDING_DEFAULT_HOMEPAGE_SUBTITLE="Each course is designed for implementation. 
 
 ## Operational Notes
 
-- Ensure `public` disk is writable.
-- Ensure `php artisan storage:link` is present in deploy flow.
+- For R2-backed logo uploads, ensure `BRANDING_DISK` (or `IMAGE_UPLOAD_DISK`) points to `s3` and `AWS_*` settings are valid.
 - Cache clears automatically on branding save/reset.
 - No asset rebuild is required for branding changes.
 

@@ -21,6 +21,7 @@ test('admin can view create course screen', function (): void {
 
 test('admin can create course and auto assign stripe price', function (): void {
     $this->actingAs(User::factory()->admin()->create());
+    config()->set('filesystems.image_upload_disk', 'public');
     Storage::fake('public');
 
     $mock = \Mockery::mock(StripeCoursePricingService::class);
@@ -62,6 +63,7 @@ test('admin can create course and auto assign stripe price', function (): void {
 
 test('admin can update course and refresh stripe price', function (): void {
     $this->actingAs(User::factory()->admin()->create());
+    config()->set('filesystems.image_upload_disk', 'public');
     Storage::fake('public');
     $course = Course::factory()->create([
         'stripe_price_id' => 'price_old_1',

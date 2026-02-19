@@ -22,12 +22,14 @@ CF_STREAM_API_TOKEN=
 CF_STREAM_CUSTOMER_CODE=
 
 COURSE_RESOURCES_DISK=s3
+IMAGE_UPLOAD_DISK=s3
 AWS_ACCESS_KEY_ID=<r2-access-key-id>
 AWS_SECRET_ACCESS_KEY=<r2-secret>
 AWS_DEFAULT_REGION=auto
 AWS_BUCKET=<r2-bucket-name>
 AWS_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
 AWS_USE_PATH_STYLE_ENDPOINT=true
+AWS_URL=https://<public-r2-domain-or-cdn>
 
 MAIL_MAILER=log
 MAIL_FROM_ADDRESS=hello@example.com
@@ -39,6 +41,7 @@ Notes:
 
 - `STRIPE_WEBHOOK_SECRET` must match the currently active endpoint secret from Stripe CLI or Stripe Dashboard.
 - `COURSE_RESOURCES_DISK=s3` is required for Cloudflare R2-backed resource downloads.
+- `IMAGE_UPLOAD_DISK=s3` is required for image uploads (course thumbnails + branding logos) to use Cloudflare R2.
 - `CF_STREAM_IFRAME_BASE_URL` can remain the default unless you have a custom delivery domain.
 - For signed Stream playback, configure `CF_STREAM_*` signing values and enable signed URLs in Cloudflare Stream.
 - `MAIL_MAILER` must be configured in each environment to deliver purchase receipt emails.
@@ -151,11 +154,12 @@ php artisan config:clear
 
 ## 5) Cloudflare R2 Setup
 
-1. Create private R2 bucket.
+1. Create R2 bucket(s) for resources and image uploads.
 2. Create API token (Object Read/Write as needed).
 3. Use token as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
 4. Set `AWS_ENDPOINT` to account endpoint.
-5. Set resource rows with `disk='s3'`, object key in `path`.
+5. Set `AWS_URL` to your public R2 custom domain/CDN URL so uploaded image URLs resolve publicly.
+6. Set resource rows with `disk='s3'`, object key in `path`.
 
 Quick check:
 

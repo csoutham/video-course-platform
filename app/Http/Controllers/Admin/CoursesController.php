@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use RuntimeException;
 use Throwable;
+use Illuminate\Contracts\Filesystem\Filesystem;
 
 class CoursesController extends Controller
 {
@@ -251,7 +252,7 @@ class CoursesController extends Controller
             return null;
         }
 
-        $disk = 'public';
+        $disk = (string) config('filesystems.image_upload_disk', 'public');
         $file = $request->file('thumbnail_image');
         $extension = strtolower((string) ($file?->getClientOriginalExtension() ?: 'jpg'));
         $filename = Str::slug($title).'-'.Str::uuid().'.'.$extension;
@@ -262,16 +263,35 @@ class CoursesController extends Controller
         }
 
         if ($existingCourse?->thumbnail_url) {
-            $prefix = rtrim((string) Storage::disk($disk)->url(''), '/').'/';
-            if (str_starts_with($existingCourse->thumbnail_url, $prefix)) {
-                $oldPath = ltrim(Str::after($existingCourse->thumbnail_url, $prefix), '/');
-                if ($oldPath !== '') {
-                    Storage::disk($disk)->delete($oldPath);
-                }
+            $oldPath = $this->extractDiskPathFromUrl(Storage::disk($disk), $existingCourse->thumbnail_url);
+            if ($oldPath !== '') {
+                Storage::disk($disk)->delete($oldPath);
             }
         }
 
         return Storage::disk($disk)->url($path);
+    }
+
+    private function extractDiskPathFromUrl(Filesystem $disk, string $url): string
+    {
+        $prefix = rtrim((string) $disk->url(''), '/').'/';
+
+        if (str_starts_with($url, $prefix)) {
+            return ltrim(Str::after($url, $prefix), '/');
+        }
+
+        $path = parse_url($url, PHP_URL_PATH);
+        if (! is_string($path) || $path === '') {
+            return '';
+        }
+
+        if (str_contains($path, '/course-thumbnails/')) {
+            return ltrim(Str::after($path, '/course-thumbnails/'), '/') !== ''
+                ? 'course-thumbnails/'.ltrim(Str::after($path, '/course-thumbnails/'), '/')
+                : '';
+        }
+
+        return '';
     }
 
     /**
