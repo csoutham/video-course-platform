@@ -43,10 +43,12 @@
             @foreach ($branding->fontPreconnectUrls as $preconnectUrl)
                 <link rel="preconnect" href="{{ $preconnectUrl }}" />
             @endforeach
+
             @if ($branding->fontStylesheetUrl)
                 <link href="{{ $branding->fontStylesheetUrl }}" rel="stylesheet" />
             @endif
         @endif
+
         @if (config('branding.enabled', true) && isset($branding))
             <style>
                 :root {

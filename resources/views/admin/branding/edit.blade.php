@@ -195,9 +195,10 @@
 
                 const provider = fontProviderInput?.value || 'bunny';
                 const family = (fontFamilyInput?.value || '{{ $defaults['font_family'] }}').trim();
-                const cssFamily = provider === 'system'
-                    ? 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif'
-                    : `"${family.replaceAll('"', '')}", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`;
+                const cssFamily =
+                    provider === 'system'
+                        ? 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif'
+                        : `"${family.replaceAll('"', '')}", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`;
 
                 document.documentElement.style.setProperty('--vc-font-sans', cssFamily);
 
@@ -208,9 +209,10 @@
                     .join(provider === 'google' ? ';' : ',');
 
                 const familyParam = family.replaceAll(' ', '+');
-                const href = provider === 'google'
-                    ? `https://fonts.googleapis.com/css2?family=${familyParam}:wght@${validWeights}&display=swap`
-                    : `https://fonts.bunny.net/css?family=${familyParam}:${validWeights}&display=swap`;
+                const href =
+                    provider === 'google'
+                        ? `https://fonts.googleapis.com/css2?family=${familyParam}:wght@${validWeights}&display=swap`
+                        : `https://fonts.bunny.net/css?family=${familyParam}:${validWeights}&display=swap`;
 
                 if (dynamicFontLink) {
                     dynamicFontLink.remove();

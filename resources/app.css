@@ -15,7 +15,7 @@
         --vc-brand-strong: #0b1220;
         --vc-accent: #0f766e;
         --vc-warning: #b45309;
-        --vc-font-sans: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        --vc-font-sans: 'Figtree', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
     }
 
     html,
