@@ -86,3 +86,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-18: Added Expo mobile app workspace (`/mobile`) with auth, library, course outline, lesson playback, and resource handoff flows.
 - 2026-02-19: Added runtime white-label branding system (admin-managed platform name, logo, and core color token overrides) without rebuilding compiled Tailwind assets.
 - 2026-02-19: Extended branding with runtime font selection (system/Bunny/Google) and dynamic font stylesheet injection without rebuilding assets.
+- 2026-02-19: Extended branding with runtime logo sizing, publisher/footer copy controls, and CMS-style editable `/courses` homepage hero text.

@@ -53,6 +53,7 @@
             <style>
                 :root {
                     --vc-font-sans: {!! $branding->fontCssFamily !!};
+                    --vc-logo-height: {{ $branding->logoHeightPx }}px;
                     @foreach ($branding->colors as $token => $value)
                         --{{ $token }}: {{ $value }};
                     @endforeach

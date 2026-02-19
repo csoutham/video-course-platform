@@ -86,6 +86,7 @@ behavior and routes.
 8. Use the same auth component primitives (`x-input-label`, `x-text-input`, `x-input-error`, `x-primary-button`) as customer/admin forms to keep all entry points visually consistent.
 9. Support runtime white-label branding overrides (platform name, logo, and core color tokens) via admin settings without Vite rebuilds.
 10. Support runtime typography overrides (system/Bunny/Google) through branding settings without Vite rebuilds.
+11. Support runtime branding-driven catalog hero copy and publisher-focused footer messaging without a frontend rebuild.
 
 ## Technical Constraints
 

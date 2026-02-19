@@ -12,9 +12,19 @@ return [
     'defaults' => [
         'platform_name' => env('BRANDING_DEFAULT_PLATFORM_NAME', env('APP_NAME', 'VideoCourses')),
         'logo_url' => null,
+        'logo_height_px' => (int) env('BRANDING_DEFAULT_LOGO_HEIGHT_PX', 32),
         'font_provider' => env('BRANDING_DEFAULT_FONT_PROVIDER', 'bunny'),
         'font_family' => env('BRANDING_DEFAULT_FONT_FAMILY', 'Figtree'),
         'font_weights' => env('BRANDING_DEFAULT_FONT_WEIGHTS', '400,500,600,700'),
+        'publisher_name' => env('BRANDING_DEFAULT_PUBLISHER_NAME', env('APP_NAME', 'VideoCourses')),
+        'publisher_website' => env('BRANDING_DEFAULT_PUBLISHER_WEBSITE'),
+        'footer_tagline' => env('BRANDING_DEFAULT_FOOTER_TAGLINE', 'Practical video training for real-world results.'),
+        'homepage_eyebrow' => env('BRANDING_DEFAULT_HOMEPAGE_EYEBROW', 'Professional Training'),
+        'homepage_title' => env('BRANDING_DEFAULT_HOMEPAGE_TITLE', 'Learn faster with curated, results-focused courses.'),
+        'homepage_subtitle' => env(
+            'BRANDING_DEFAULT_HOMEPAGE_SUBTITLE',
+            'Each course is designed for implementation. Buy once, get immediate access, and follow clear module-based lessons with downloadable resources.'
+        ),
         'colors' => [
             'vc-bg' => '#F4F5F8',
             'vc-panel' => '#FFFFFF',

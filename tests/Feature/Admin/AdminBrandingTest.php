@@ -29,9 +29,16 @@ test('admin can update platform name and colors and runtime layout reflects upda
 
     $this->put(route('admin.branding.update'), [
         'platform_name' => 'Acme Academy',
+        'logo_height_px' => 44,
         'font_provider' => 'bunny',
         'font_family' => 'Figtree',
         'font_weights' => '400,500,600,700',
+        'publisher_name' => 'Acme Learning Ltd',
+        'publisher_website' => 'https://example.test',
+        'footer_tagline' => 'Friendly training from working professionals.',
+        'homepage_eyebrow' => 'Practical Mastery',
+        'homepage_title' => 'Sharpen your skills with practical learning.',
+        'homepage_subtitle' => 'Short modules. Real outcomes. Keep your own pace.',
         'color_bg' => '#101010',
         'color_panel' => '#FFFFFF',
         'color_panel_soft' => '#F7F7F7',
@@ -46,6 +53,9 @@ test('admin can update platform name and colors and runtime layout reflects upda
 
     $this->assertDatabaseHas('branding_settings', [
         'platform_name' => 'Acme Academy',
+        'logo_height_px' => 44,
+        'publisher_name' => 'Acme Learning Ltd',
+        'homepage_title' => 'Sharpen your skills with practical learning.',
         'color_bg' => '#101010',
         'color_warning' => '#F59E0B',
     ]);
@@ -53,7 +63,12 @@ test('admin can update platform name and colors and runtime layout reflects upda
     $this->get(route('courses.index'))
         ->assertOk()
         ->assertSee('Acme Academy')
+        ->assertSee('Practical Mastery')
+        ->assertSee('Sharpen your skills with practical learning.')
+        ->assertSee('Friendly training from working professionals.')
+        ->assertSee('Acme Learning Ltd')
         ->assertSee('--vc-bg: #101010;', false)
+        ->assertSee('--vc-logo-height: 44px;', false)
         ->assertSee('--vc-warning: #F59E0B;', false);
 });
 
@@ -63,9 +78,16 @@ test('admin can upload branding logo', function (): void {
 
     $this->put(route('admin.branding.update'), [
         'platform_name' => 'Logo Test',
+        'logo_height_px' => 32,
         'font_provider' => 'bunny',
         'font_family' => 'Figtree',
         'font_weights' => '400,500,600,700',
+        'publisher_name' => 'Logo Test Publisher',
+        'publisher_website' => null,
+        'footer_tagline' => null,
+        'homepage_eyebrow' => null,
+        'homepage_title' => null,
+        'homepage_subtitle' => null,
         'logo' => UploadedFile::fake()->image('logo.png', 320, 120),
     ])->assertRedirect(route('admin.branding.edit'));
 
@@ -81,9 +103,16 @@ test('invalid branding color is rejected', function (): void {
     $this->from(route('admin.branding.edit'))
         ->put(route('admin.branding.update'), [
             'platform_name' => 'Acme',
+            'logo_height_px' => 32,
             'font_provider' => 'bunny',
             'font_family' => 'Figtree',
             'font_weights' => '400,500,600,700',
+            'publisher_name' => 'Acme Publisher',
+            'publisher_website' => null,
+            'footer_tagline' => null,
+            'homepage_eyebrow' => null,
+            'homepage_title' => null,
+            'homepage_subtitle' => null,
             'color_bg' => '#12',
         ])
         ->assertRedirect(route('admin.branding.edit'))
@@ -95,9 +124,16 @@ test('google font settings are reflected in runtime layout links', function (): 
 
     $this->put(route('admin.branding.update'), [
         'platform_name' => 'Acme Academy',
+        'logo_height_px' => 32,
         'font_provider' => 'google',
         'font_family' => 'Instrument Sans',
         'font_weights' => '400,500,700',
+        'publisher_name' => 'Acme Learning Ltd',
+        'publisher_website' => null,
+        'footer_tagline' => null,
+        'homepage_eyebrow' => null,
+        'homepage_title' => null,
+        'homepage_subtitle' => null,
     ])->assertRedirect(route('admin.branding.edit'));
 
     $this->get(route('courses.index'))

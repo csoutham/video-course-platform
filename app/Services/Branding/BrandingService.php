@@ -53,9 +53,16 @@ class BrandingService
                 $raw = [
                     'platform_name' => $settings->platform_name,
                     'logo_url' => $settings->logo_url,
+                    'logo_height_px' => $settings->logo_height_px,
                     'font_provider' => $settings->font_provider,
                     'font_family' => $settings->font_family,
                     'font_weights' => $settings->font_weights,
+                    'publisher_name' => $settings->publisher_name,
+                    'publisher_website' => $settings->publisher_website,
+                    'footer_tagline' => $settings->footer_tagline,
+                    'homepage_eyebrow' => $settings->homepage_eyebrow,
+                    'homepage_title' => $settings->homepage_title,
+                    'homepage_subtitle' => $settings->homepage_subtitle,
                     'colors' => [],
                 ];
 
@@ -80,6 +87,7 @@ class BrandingService
 
         $platformName = trim((string) ($input['platform_name'] ?? $defaults['platform_name']));
         $settings->platform_name = $platformName !== '' ? $platformName : $defaults['platform_name'];
+        $settings->logo_height_px = $this->normalizeLogoHeightPx($input['logo_height_px'] ?? $defaults['logo_height_px']);
 
         $fontProvider = $this->normalizeFontProvider($input['font_provider'] ?? $defaults['font_provider']);
         $fontFamily = $this->normalizeFontFamily($input['font_family'] ?? $defaults['font_family'], (string) $defaults['font_family']);
@@ -88,6 +96,28 @@ class BrandingService
         $settings->font_provider = $fontProvider;
         $settings->font_family = $fontFamily;
         $settings->font_weights = $fontWeights;
+        $settings->publisher_name = $this->normalizeString(
+            $input['publisher_name'] ?? $defaults['publisher_name'],
+            (string) $defaults['publisher_name'],
+            120
+        );
+        $settings->publisher_website = $this->normalizeUrl($input['publisher_website'] ?? $defaults['publisher_website']);
+        $settings->footer_tagline = $this->normalizeNullableString(
+            $input['footer_tagline'] ?? $defaults['footer_tagline'],
+            255
+        );
+        $settings->homepage_eyebrow = $this->normalizeNullableString(
+            $input['homepage_eyebrow'] ?? $defaults['homepage_eyebrow'],
+            80
+        );
+        $settings->homepage_title = $this->normalizeNullableString(
+            $input['homepage_title'] ?? $defaults['homepage_title'],
+            160
+        );
+        $settings->homepage_subtitle = $this->normalizeNullableString(
+            $input['homepage_subtitle'] ?? $defaults['homepage_subtitle'],
+            500
+        );
 
         foreach ($this->tokenToColumnMap as $column) {
             $raw = $input[$column] ?? null;
@@ -111,9 +141,16 @@ class BrandingService
 
         $settings->platform_name = $defaults['platform_name'];
         $settings->logo_url = null;
+        $settings->logo_height_px = $defaults['logo_height_px'];
         $settings->font_provider = $defaults['font_provider'];
         $settings->font_family = $defaults['font_family'];
         $settings->font_weights = $defaults['font_weights'];
+        $settings->publisher_name = $defaults['publisher_name'];
+        $settings->publisher_website = $defaults['publisher_website'];
+        $settings->footer_tagline = $defaults['footer_tagline'];
+        $settings->homepage_eyebrow = $defaults['homepage_eyebrow'];
+        $settings->homepage_title = $defaults['homepage_title'];
+        $settings->homepage_subtitle = $defaults['homepage_subtitle'];
 
         foreach ($this->tokenToColumnMap as $column) {
             $settings->{$column} = null;
@@ -132,9 +169,16 @@ class BrandingService
      * @return array{
      *     platform_name:string,
      *     logo_url:?string,
+     *     logo_height_px:int,
      *     font_provider:string,
      *     font_family:string,
      *     font_weights:string,
+     *     publisher_name:string,
+     *     publisher_website:?string,
+     *     footer_tagline:?string,
+     *     homepage_eyebrow:?string,
+     *     homepage_title:?string,
+     *     homepage_subtitle:?string,
      *     colors:array<string,string>
      * }
      */
@@ -143,9 +187,16 @@ class BrandingService
         $defaults = (array) config('branding.defaults', []);
         $platformName = (string) ($defaults['platform_name'] ?? config('app.name', 'VideoCourses'));
         $logoUrl = isset($defaults['logo_url']) && is_string($defaults['logo_url']) ? $defaults['logo_url'] : null;
+        $logoHeightPx = $this->normalizeLogoHeightPx($defaults['logo_height_px'] ?? 32);
         $fontProvider = $this->normalizeFontProvider($defaults['font_provider'] ?? 'bunny');
         $fontFamily = $this->normalizeFontFamily($defaults['font_family'] ?? 'Figtree', 'Figtree');
         $fontWeights = $this->normalizeFontWeights($defaults['font_weights'] ?? '400,500,600,700', '400,500,600,700');
+        $publisherName = $this->normalizeString($defaults['publisher_name'] ?? $platformName, $platformName, 120);
+        $publisherWebsite = $this->normalizeUrl($defaults['publisher_website'] ?? null);
+        $footerTagline = $this->normalizeNullableString($defaults['footer_tagline'] ?? null, 255);
+        $homepageEyebrow = $this->normalizeNullableString($defaults['homepage_eyebrow'] ?? null, 80);
+        $homepageTitle = $this->normalizeNullableString($defaults['homepage_title'] ?? null, 160);
+        $homepageSubtitle = $this->normalizeNullableString($defaults['homepage_subtitle'] ?? null, 500);
         $colors = (array) ($defaults['colors'] ?? []);
 
         $normalizedColors = [];
@@ -156,9 +207,16 @@ class BrandingService
         return [
             'platform_name' => $platformName,
             'logo_url' => $logoUrl,
+            'logo_height_px' => $logoHeightPx,
             'font_provider' => $fontProvider,
             'font_family' => $fontFamily,
             'font_weights' => $fontWeights,
+            'publisher_name' => $publisherName,
+            'publisher_website' => $publisherWebsite,
+            'footer_tagline' => $footerTagline,
+            'homepage_eyebrow' => $homepageEyebrow,
+            'homepage_title' => $homepageTitle,
+            'homepage_subtitle' => $homepageSubtitle,
             'colors' => $normalizedColors,
         ];
     }
@@ -203,12 +261,35 @@ class BrandingService
         return new BrandingData(
             platformName: (string) ($raw['platform_name'] ?: $defaults['platform_name']),
             logoUrl: isset($raw['logo_url']) && is_string($raw['logo_url']) && $raw['logo_url'] !== '' ? $raw['logo_url'] : $defaults['logo_url'],
+            logoHeightPx: $this->normalizeLogoHeightPx($raw['logo_height_px'] ?? $defaults['logo_height_px']),
             fontProvider: $fontProvider,
             fontFamily: $fontFamily,
             fontWeights: $fontWeights,
             fontCssFamily: $fontConfig['css_family'],
             fontStylesheetUrl: $fontConfig['stylesheet_url'],
             fontPreconnectUrls: $fontConfig['preconnect_urls'],
+            publisherName: $this->normalizeString(
+                $raw['publisher_name'] ?? $defaults['publisher_name'],
+                (string) $defaults['publisher_name'],
+                120
+            ),
+            publisherWebsite: $this->normalizeUrl($raw['publisher_website'] ?? $defaults['publisher_website']),
+            footerTagline: $this->normalizeNullableString(
+                $raw['footer_tagline'] ?? $defaults['footer_tagline'],
+                255
+            ),
+            homepageEyebrow: $this->normalizeNullableString(
+                $raw['homepage_eyebrow'] ?? $defaults['homepage_eyebrow'],
+                80
+            ),
+            homepageTitle: $this->normalizeNullableString(
+                $raw['homepage_title'] ?? $defaults['homepage_title'],
+                160
+            ),
+            homepageSubtitle: $this->normalizeNullableString(
+                $raw['homepage_subtitle'] ?? $defaults['homepage_subtitle'],
+                500
+            ),
             colors: $colors,
         );
     }
@@ -332,6 +413,52 @@ class BrandingService
         }
 
         return $weights->implode(',');
+    }
+
+    private function normalizeLogoHeightPx(mixed $value): int
+    {
+        $normalized = (int) $value;
+
+        return max(16, min(120, $normalized > 0 ? $normalized : 32));
+    }
+
+    private function normalizeString(mixed $value, string $fallback, int $maxLength): string
+    {
+        $string = trim((string) $value);
+        $string = Str::of($string)->squish()->value();
+
+        if ($string === '') {
+            return Str::limit(trim($fallback), $maxLength, '');
+        }
+
+        return Str::limit($string, $maxLength, '');
+    }
+
+    private function normalizeNullableString(mixed $value, int $maxLength): ?string
+    {
+        $string = trim((string) $value);
+        $string = Str::of($string)->squish()->value();
+
+        if ($string === '') {
+            return null;
+        }
+
+        return Str::limit($string, $maxLength, '');
+    }
+
+    private function normalizeUrl(mixed $value): ?string
+    {
+        $url = trim((string) $value);
+
+        if ($url === '') {
+            return null;
+        }
+
+        if (! filter_var($url, FILTER_VALIDATE_URL)) {
+            return null;
+        }
+
+        return Str::limit($url, 255, '');
     }
 
     private function storeLogo(UploadedFile $file, ?string $existingLogoUrl = null): ?string

@@ -21,13 +21,12 @@
 
         <div class="relative grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-end">
             <div class="space-y-4">
-                <p class="vc-eyebrow">Professional Training</p>
+                <p class="vc-eyebrow">{{ $branding?->homepageEyebrow ?? 'Professional Training' }}</p>
                 <h1 class="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-                    Learn faster with curated, results-focused courses.
+                    {{ $branding?->homepageTitle ?? 'Learn faster with curated, results-focused courses.' }}
                 </h1>
                 <p class="max-w-3xl text-base text-slate-600">
-                    Each course is designed for implementation. Buy once, get immediate access, and follow clear
-                    module-based lessons with downloadable resources.
+                    {{ $branding?->homepageSubtitle ?? 'Each course is designed for implementation. Buy once, get immediate access, and follow clear module-based lessons with downloadable resources.' }}
                 </p>
             </div>
         </div>

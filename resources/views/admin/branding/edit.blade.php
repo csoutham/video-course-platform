@@ -33,7 +33,8 @@
                         <img
                             src="{{ $branding->logoUrl }}"
                             alt="{{ $branding->platformName }} logo"
-                            class="mt-2 h-16 w-auto rounded-lg border border-slate-200 bg-white object-contain p-2" />
+                            class="mt-2 w-auto rounded-lg border border-slate-200 bg-white object-contain p-2"
+                            style="height: {{ old('logo_height_px', $branding->logoHeightPx) }}px;" />
                     @endif
 
                     <input
@@ -46,6 +47,110 @@
                     @error('logo')
                         <p class="vc-error">{{ $message }}</p>
                     @enderror
+                </div>
+
+                <div>
+                    <label for="logo_height_px" class="vc-label">Logo height (px)</label>
+                    <input
+                        id="logo_height_px"
+                        name="logo_height_px"
+                        type="number"
+                        min="16"
+                        max="120"
+                        required
+                        value="{{ old('logo_height_px', $branding->logoHeightPx) }}"
+                        class="vc-input" />
+                    <p class="vc-help">Controls logo display size in navigation and auth header (16-120px).</p>
+                    @error('logo_height_px')
+                        <p class="vc-error">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Publisher and footer</h2>
+
+                    <div>
+                        <label for="publisher_name" class="vc-label">Publisher name</label>
+                        <input
+                            id="publisher_name"
+                            name="publisher_name"
+                            class="vc-input"
+                            maxlength="120"
+                            required
+                            value="{{ old('publisher_name', $branding->publisherName) }}" />
+                        @error('publisher_name')
+                            <p class="vc-error">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="publisher_website" class="vc-label">Publisher website</label>
+                        <input
+                            id="publisher_website"
+                            name="publisher_website"
+                            type="url"
+                            class="vc-input"
+                            maxlength="255"
+                            value="{{ old('publisher_website', $branding->publisherWebsite) }}" />
+                        @error('publisher_website')
+                            <p class="vc-error">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="footer_tagline" class="vc-label">Footer tagline</label>
+                        <input
+                            id="footer_tagline"
+                            name="footer_tagline"
+                            class="vc-input"
+                            maxlength="255"
+                            value="{{ old('footer_tagline', $branding->footerTagline) }}" />
+                        @error('footer_tagline')
+                            <p class="vc-error">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Homepage hero copy</h2>
+
+                    <div>
+                        <label for="homepage_eyebrow" class="vc-label">Eyebrow</label>
+                        <input
+                            id="homepage_eyebrow"
+                            name="homepage_eyebrow"
+                            class="vc-input"
+                            maxlength="80"
+                            value="{{ old('homepage_eyebrow', $branding->homepageEyebrow) }}" />
+                        @error('homepage_eyebrow')
+                            <p class="vc-error">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="homepage_title" class="vc-label">Title</label>
+                        <input
+                            id="homepage_title"
+                            name="homepage_title"
+                            class="vc-input"
+                            maxlength="160"
+                            value="{{ old('homepage_title', $branding->homepageTitle) }}" />
+                        @error('homepage_title')
+                            <p class="vc-error">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="homepage_subtitle" class="vc-label">Subtitle</label>
+                        <textarea
+                            id="homepage_subtitle"
+                            name="homepage_subtitle"
+                            class="vc-input min-h-24"
+                            maxlength="500">{{ old('homepage_subtitle', $branding->homepageSubtitle) }}</textarea>
+                        @error('homepage_subtitle')
+                            <p class="vc-error">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4">

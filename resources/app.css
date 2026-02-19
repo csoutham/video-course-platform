@@ -15,6 +15,7 @@
         --vc-brand-strong: #0b1220;
         --vc-accent: #0f766e;
         --vc-warning: #b45309;
+        --vc-logo-height: 32px;
         --vc-font-sans: 'Figtree', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
     }
 
@@ -82,6 +83,12 @@
     .vc-card-copy {
         @apply text-sm leading-relaxed;
         color: var(--vc-muted);
+    }
+
+    .vc-logo {
+        @apply w-auto;
+        height: var(--vc-logo-height);
+        max-width: min(180px, 38vw);
     }
 
     .vc-input {

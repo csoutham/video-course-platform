@@ -8,6 +8,7 @@ Enable deployment owners to configure platform branding without rebuilding Tailw
 
 - Runtime platform name override.
 - Runtime logo upload and replacement.
+- Runtime logo presentation size override (`--vc-logo-height`).
 - Runtime typography selection:
     - provider: `system`, `bunny`, or `google`
     - font family
@@ -25,6 +26,14 @@ Enable deployment owners to configure platform branding without rebuilding Tailw
     - `--vc-warning`
 - Cached branding payload for low-overhead request rendering.
 - Admin UI under `/admin/branding`.
+- Publisher/footer content controls:
+    - publisher name
+    - publisher website
+    - footer tagline
+- CMS-lite homepage hero copy controls for `/courses`:
+    - eyebrow
+    - title
+    - subtitle
 
 ## Technical Design
 
@@ -33,9 +42,16 @@ Enable deployment owners to configure platform branding without rebuilding Tailw
 - `branding_settings` singleton table:
     - `platform_name`
     - `logo_url`
+    - `logo_height_px`
     - `font_provider`
     - `font_family`
     - `font_weights`
+    - `publisher_name`
+    - `publisher_website`
+    - `footer_tagline`
+    - `homepage_eyebrow`
+    - `homepage_title`
+    - `homepage_subtitle`
     - token-specific color columns
     - timestamps
 
@@ -44,6 +60,7 @@ Enable deployment owners to configure platform branding without rebuilding Tailw
 - Tailwind build output remains static.
 - Layouts inject runtime token overrides via inline `<style>` in `<head>`.
 - Layouts conditionally inject provider-specific font stylesheet links at runtime.
+- Header logos use runtime `--vc-logo-height` and do not require recompilation.
 - If settings are missing/disabled/invalid, defaults from `config/branding.php` are used.
 
 ### Service Layer
@@ -59,6 +76,7 @@ Enable deployment owners to configure platform branding without rebuilding Tailw
 
 - `AppServiceProvider` registers a global view composer to provide `$branding`.
 - Navigation, footer, guest/public layouts, and customer-facing SEO titles consume `$branding`.
+- Catalog hero copy consumes `$branding` homepage fields.
 
 ## Admin UX
 
@@ -69,6 +87,9 @@ Actions:
 - `PUT /admin/branding`:
     - save platform name
     - save runtime font provider/family/weights
+    - save logo display size
+    - save publisher/footer text and URL
+    - save homepage hero copy
     - save color tokens
     - optionally upload logo
 - `POST /admin/branding/reset`:
@@ -79,9 +100,16 @@ Validation:
 
 - `platform_name`: required, max 120.
 - `logo`: image, max 5MB, `jpg|jpeg|png|webp`.
+- `logo_height_px`: required integer, `16-120`.
 - `font_provider`: `system|bunny|google`.
 - `font_family`: alphanumeric + space + dash.
 - `font_weights`: comma-separated hundreds (`400,500,700`).
+- `publisher_name`: required, max 120.
+- `publisher_website`: nullable valid URL, max 255.
+- `footer_tagline`: nullable, max 255.
+- `homepage_eyebrow`: nullable, max 80.
+- `homepage_title`: nullable, max 160.
+- `homepage_subtitle`: nullable, max 500.
 - color fields: strict `#RRGGBB`.
 
 ## Configuration
@@ -97,6 +125,13 @@ BRANDING_DEFAULT_PLATFORM_NAME="${APP_NAME}"
 BRANDING_DEFAULT_FONT_PROVIDER=bunny
 BRANDING_DEFAULT_FONT_FAMILY=Figtree
 BRANDING_DEFAULT_FONT_WEIGHTS=400,500,600,700
+BRANDING_DEFAULT_LOGO_HEIGHT_PX=32
+BRANDING_DEFAULT_PUBLISHER_NAME="${APP_NAME}"
+BRANDING_DEFAULT_PUBLISHER_WEBSITE=
+BRANDING_DEFAULT_FOOTER_TAGLINE="Practical video training for real-world results."
+BRANDING_DEFAULT_HOMEPAGE_EYEBROW="Professional Training"
+BRANDING_DEFAULT_HOMEPAGE_TITLE="Learn faster with curated, results-focused courses."
+BRANDING_DEFAULT_HOMEPAGE_SUBTITLE="Each course is designed for implementation. Buy once, get immediate access, and follow clear module-based lessons with downloadable resources."
 ```
 
 `config/branding.php` holds defaults and token fallback values.

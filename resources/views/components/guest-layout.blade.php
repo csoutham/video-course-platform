@@ -21,6 +21,7 @@
             <style>
                 :root {
                     --vc-font-sans: {!! $branding->fontCssFamily !!};
+                    --vc-logo-height: {{ $branding->logoHeightPx }}px;
                     @foreach ($branding->colors as $token => $value)
                         --{{ $token }}: {{ $value }};
                     @endforeach
@@ -40,7 +41,7 @@
                         <img
                             src="{{ $branding->logoUrl }}"
                             alt="{{ $branding->platformName }} logo"
-                            class="h-8 w-auto max-w-32 object-contain" />
+                            class="vc-logo object-contain" />
                     @endif
 
                     <span>{{ $branding?->platformName ?? config('app.name', 'VideoCourses') }}</span>

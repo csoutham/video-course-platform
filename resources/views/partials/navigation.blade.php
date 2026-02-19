@@ -7,7 +7,7 @@
                 <img
                     src="{{ $branding->logoUrl }}"
                     alt="{{ $branding->platformName }} logo"
-                    class="h-8 w-auto max-w-36 object-contain" />
+                    class="vc-logo object-contain" />
             @endif
 
             <span>{{ $branding?->platformName ?? config('app.name', 'VideoCourses') }}</span>
