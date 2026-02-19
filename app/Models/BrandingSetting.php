@@ -9,6 +9,9 @@ class BrandingSetting extends Model
     protected $fillable = [
         'platform_name',
         'logo_url',
+        'font_provider',
+        'font_family',
+        'font_weights',
         'color_bg',
         'color_panel',
         'color_panel_soft',

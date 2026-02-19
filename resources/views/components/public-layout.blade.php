@@ -39,11 +39,18 @@
         <meta name="twitter:description" content="{{ $pageDescription }}" />
         <meta name="twitter:image" content="{{ $pageImage }}" />
 
-        <link rel="preconnect" href="https://fonts.bunny.net" />
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
+        @if (isset($branding))
+            @foreach ($branding->fontPreconnectUrls as $preconnectUrl)
+                <link rel="preconnect" href="{{ $preconnectUrl }}" />
+            @endforeach
+            @if ($branding->fontStylesheetUrl)
+                <link href="{{ $branding->fontStylesheetUrl }}" rel="stylesheet" />
+            @endif
+        @endif
         @if (config('branding.enabled', true) && isset($branding))
             <style>
                 :root {
+                    --vc-font-sans: {!! $branding->fontCssFamily !!};
                     @foreach ($branding->colors as $token => $value)
                         --{{ $token }}: {{ $value }};
                     @endforeach

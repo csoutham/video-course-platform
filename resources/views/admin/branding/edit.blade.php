@@ -48,6 +48,59 @@
                     @enderror
                 </div>
 
+                <div class="space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Typography</h2>
+
+                    <div>
+                        <label for="font_provider" class="vc-label">Font provider</label>
+                        <select id="font_provider" name="font_provider" class="vc-input" data-font-provider>
+                            @foreach ($fontProviders as $fontProvider)
+                                <option
+                                    value="{{ $fontProvider }}"
+                                    @selected(old('font_provider', $branding->fontProvider) === $fontProvider)>
+                                    {{ str($fontProvider)->title() }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('font_provider')
+                            <p class="vc-error">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="font_family" class="vc-label">Font family</label>
+                        <input
+                            id="font_family"
+                            name="font_family"
+                            class="vc-input"
+                            maxlength="120"
+                            value="{{ old('font_family', $branding->fontFamily) }}"
+                            placeholder="e.g. Figtree, Manrope, Instrument Sans"
+                            data-font-family />
+                        @error('font_family')
+                            <p class="vc-error">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="font_weights" class="vc-label">Font weights</label>
+                        <input
+                            id="font_weights"
+                            name="font_weights"
+                            class="vc-input"
+                            maxlength="80"
+                            value="{{ old('font_weights', $branding->fontWeights) }}"
+                            placeholder="400,500,600,700"
+                            data-font-weights />
+                        <p class="vc-help">
+                            Comma-separated hundreds only (e.g. 400,500,700). Used when loading Bunny/Google fonts.
+                        </p>
+                        @error('font_weights')
+                            <p class="vc-error">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
                 <div class="space-y-4">
                     <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Core color tokens</h2>
 
@@ -104,6 +157,9 @@
                 <p class="text-sm" data-branding-preview-copy>
                     This preview uses your selected runtime branding colors without requiring an asset rebuild.
                 </p>
+                <p class="mt-2 text-sm font-medium" data-branding-preview-font>
+                    The quick brown fox jumps over the lazy dog.
+                </p>
                 <div class="mt-4 flex gap-2">
                     <button type="button" class="vc-btn-primary" data-branding-preview-primary>Primary</button>
                     <button type="button" class="vc-btn-secondary" data-branding-preview-secondary>Secondary</button>
@@ -119,6 +175,10 @@
             const colorPickers = Array.from(document.querySelectorAll('[data-branding-color-input]'));
             const nameInput = document.getElementById('platform_name');
             const previewName = document.querySelector('[data-branding-preview-name]');
+            const fontProviderInput = document.querySelector('[data-font-provider]');
+            const fontFamilyInput = document.querySelector('[data-font-family]');
+            const fontWeightsInput = document.querySelector('[data-font-weights]');
+            let dynamicFontLink = null;
 
             const syncPreview = () => {
                 colorTextInputs.forEach((input) => {
@@ -131,6 +191,37 @@
 
                 if (previewName && nameInput) {
                     previewName.textContent = nameInput.value || '{{ $defaults['platform_name'] }}';
+                }
+
+                const provider = fontProviderInput?.value || 'bunny';
+                const family = (fontFamilyInput?.value || '{{ $defaults['font_family'] }}').trim();
+                const cssFamily = provider === 'system'
+                    ? 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif'
+                    : `"${family.replaceAll('"', '')}", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`;
+
+                document.documentElement.style.setProperty('--vc-font-sans', cssFamily);
+
+                const validWeights = (fontWeightsInput?.value || '{{ $defaults['font_weights'] }}')
+                    .split(',')
+                    .map((value) => value.trim())
+                    .filter((value) => /^[1-9]00$/.test(value))
+                    .join(provider === 'google' ? ';' : ',');
+
+                const familyParam = family.replaceAll(' ', '+');
+                const href = provider === 'google'
+                    ? `https://fonts.googleapis.com/css2?family=${familyParam}:wght@${validWeights}&display=swap`
+                    : `https://fonts.bunny.net/css?family=${familyParam}:${validWeights}&display=swap`;
+
+                if (dynamicFontLink) {
+                    dynamicFontLink.remove();
+                    dynamicFontLink = null;
+                }
+
+                if (provider !== 'system' && familyParam !== '' && validWeights !== '') {
+                    dynamicFontLink = document.createElement('link');
+                    dynamicFontLink.rel = 'stylesheet';
+                    dynamicFontLink.href = href;
+                    document.head.appendChild(dynamicFontLink);
                 }
             };
 
@@ -154,6 +245,9 @@
             });
 
             nameInput?.addEventListener('input', syncPreview);
+            fontProviderInput?.addEventListener('change', syncPreview);
+            fontFamilyInput?.addEventListener('input', syncPreview);
+            fontWeightsInput?.addEventListener('input', syncPreview);
             syncPreview();
         })();
     </script>

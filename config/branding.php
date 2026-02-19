@@ -12,6 +12,9 @@ return [
     'defaults' => [
         'platform_name' => env('BRANDING_DEFAULT_PLATFORM_NAME', env('APP_NAME', 'VideoCourses')),
         'logo_url' => null,
+        'font_provider' => env('BRANDING_DEFAULT_FONT_PROVIDER', 'bunny'),
+        'font_family' => env('BRANDING_DEFAULT_FONT_FAMILY', 'Figtree'),
+        'font_weights' => env('BRANDING_DEFAULT_FONT_WEIGHTS', '400,500,600,700'),
         'colors' => [
             'vc-bg' => '#F4F5F8',
             'vc-panel' => '#FFFFFF',

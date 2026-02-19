@@ -29,6 +29,9 @@ test('admin can update platform name and colors and runtime layout reflects upda
 
     $this->put(route('admin.branding.update'), [
         'platform_name' => 'Acme Academy',
+        'font_provider' => 'bunny',
+        'font_family' => 'Figtree',
+        'font_weights' => '400,500,600,700',
         'color_bg' => '#101010',
         'color_panel' => '#FFFFFF',
         'color_panel_soft' => '#F7F7F7',
@@ -60,6 +63,9 @@ test('admin can upload branding logo', function (): void {
 
     $this->put(route('admin.branding.update'), [
         'platform_name' => 'Logo Test',
+        'font_provider' => 'bunny',
+        'font_family' => 'Figtree',
+        'font_weights' => '400,500,600,700',
         'logo' => UploadedFile::fake()->image('logo.png', 320, 120),
     ])->assertRedirect(route('admin.branding.edit'));
 
@@ -75,10 +81,30 @@ test('invalid branding color is rejected', function (): void {
     $this->from(route('admin.branding.edit'))
         ->put(route('admin.branding.update'), [
             'platform_name' => 'Acme',
+            'font_provider' => 'bunny',
+            'font_family' => 'Figtree',
+            'font_weights' => '400,500,600,700',
             'color_bg' => '#12',
         ])
         ->assertRedirect(route('admin.branding.edit'))
         ->assertSessionHasErrors('color_bg');
+});
+
+test('google font settings are reflected in runtime layout links', function (): void {
+    $this->actingAs(User::factory()->admin()->create());
+
+    $this->put(route('admin.branding.update'), [
+        'platform_name' => 'Acme Academy',
+        'font_provider' => 'google',
+        'font_family' => 'Instrument Sans',
+        'font_weights' => '400,500,700',
+    ])->assertRedirect(route('admin.branding.edit'));
+
+    $this->get(route('courses.index'))
+        ->assertOk()
+        ->assertSee('fonts.googleapis.com', false)
+        ->assertSee('fonts.gstatic.com', false)
+        ->assertSee('--vc-font-sans: "Instrument Sans"', false);
 });
 
 test('admin can reset branding to defaults', function (): void {

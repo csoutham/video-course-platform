@@ -27,16 +27,17 @@ class BrandingService
         'vc-warning' => 'color_warning',
     ];
 
+    /**
+     * @var array<int, string>
+     */
+    private array $supportedFontProviders = ['system', 'bunny', 'google'];
+
     public function current(): BrandingData
     {
         $defaults = $this->defaults();
 
         if (! $this->enabled()) {
-            return new BrandingData(
-                platformName: $defaults['platform_name'],
-                logoUrl: $defaults['logo_url'],
-                colors: $defaults['colors'],
-            );
+            return $this->buildDataFromRaw($defaults, $defaults);
         }
 
         /** @var BrandingData $branding */
@@ -46,26 +47,23 @@ class BrandingService
             function () use ($defaults): BrandingData {
                 $settings = BrandingSetting::query()->first();
                 if (! $settings) {
-                    return new BrandingData(
-                        platformName: $defaults['platform_name'],
-                        logoUrl: $defaults['logo_url'],
-                        colors: $defaults['colors'],
-                    );
+                    return $this->buildDataFromRaw($defaults, $defaults);
                 }
 
-                $colors = $defaults['colors'];
+                $raw = [
+                    'platform_name' => $settings->platform_name,
+                    'logo_url' => $settings->logo_url,
+                    'font_provider' => $settings->font_provider,
+                    'font_family' => $settings->font_family,
+                    'font_weights' => $settings->font_weights,
+                    'colors' => [],
+                ];
+
                 foreach ($this->tokenToColumnMap as $token => $column) {
-                    $value = $this->normalizeHex($settings->{$column});
-                    if ($value) {
-                        $colors[$token] = $value;
-                    }
+                    $raw['colors'][$token] = $settings->{$column};
                 }
 
-                return new BrandingData(
-                    platformName: $settings->platform_name ?: $defaults['platform_name'],
-                    logoUrl: $settings->logo_url ?: $defaults['logo_url'],
-                    colors: $colors,
-                );
+                return $this->buildDataFromRaw($raw, $defaults);
             }
         );
 
@@ -82,6 +80,14 @@ class BrandingService
 
         $platformName = trim((string) ($input['platform_name'] ?? $defaults['platform_name']));
         $settings->platform_name = $platformName !== '' ? $platformName : $defaults['platform_name'];
+
+        $fontProvider = $this->normalizeFontProvider($input['font_provider'] ?? $defaults['font_provider']);
+        $fontFamily = $this->normalizeFontFamily($input['font_family'] ?? $defaults['font_family'], (string) $defaults['font_family']);
+        $fontWeights = $this->normalizeFontWeights($input['font_weights'] ?? $defaults['font_weights'], (string) $defaults['font_weights']);
+
+        $settings->font_provider = $fontProvider;
+        $settings->font_family = $fontFamily;
+        $settings->font_weights = $fontWeights;
 
         foreach ($this->tokenToColumnMap as $column) {
             $raw = $input[$column] ?? null;
@@ -105,6 +111,9 @@ class BrandingService
 
         $settings->platform_name = $defaults['platform_name'];
         $settings->logo_url = null;
+        $settings->font_provider = $defaults['font_provider'];
+        $settings->font_family = $defaults['font_family'];
+        $settings->font_weights = $defaults['font_weights'];
 
         foreach ($this->tokenToColumnMap as $column) {
             $settings->{$column} = null;
@@ -120,22 +129,37 @@ class BrandingService
     }
 
     /**
-     * @return array{platform_name:string,logo_url:?string,colors:array<string,string>}
+     * @return array{
+     *     platform_name:string,
+     *     logo_url:?string,
+     *     font_provider:string,
+     *     font_family:string,
+     *     font_weights:string,
+     *     colors:array<string,string>
+     * }
      */
     public function defaults(): array
     {
         $defaults = (array) config('branding.defaults', []);
         $platformName = (string) ($defaults['platform_name'] ?? config('app.name', 'VideoCourses'));
         $logoUrl = isset($defaults['logo_url']) && is_string($defaults['logo_url']) ? $defaults['logo_url'] : null;
+        $fontProvider = $this->normalizeFontProvider($defaults['font_provider'] ?? 'bunny');
+        $fontFamily = $this->normalizeFontFamily($defaults['font_family'] ?? 'Figtree', 'Figtree');
+        $fontWeights = $this->normalizeFontWeights($defaults['font_weights'] ?? '400,500,600,700', '400,500,600,700');
         $colors = (array) ($defaults['colors'] ?? []);
+
+        $normalizedColors = [];
+        foreach ($this->tokenToColumnMap as $token => $_column) {
+            $normalizedColors[$token] = $this->normalizeHex($colors[$token] ?? null) ?? '#000000';
+        }
 
         return [
             'platform_name' => $platformName,
             'logo_url' => $logoUrl,
-            'colors' => array_map(
-                fn ($value): string => $this->normalizeHex($value) ?? '#000000',
-                $colors
-            ),
+            'font_provider' => $fontProvider,
+            'font_family' => $fontFamily,
+            'font_weights' => $fontWeights,
+            'colors' => $normalizedColors,
         ];
     }
 
@@ -145,6 +169,94 @@ class BrandingService
     public function tokenColumnMap(): array
     {
         return $this->tokenToColumnMap;
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public function supportedFontProviders(): array
+    {
+        return $this->supportedFontProviders;
+    }
+
+    /**
+     * @param array<string, mixed> $raw
+     * @param array<string, mixed> $defaults
+     */
+    private function buildDataFromRaw(array $raw, array $defaults): BrandingData
+    {
+        $colors = $defaults['colors'];
+        $rawColors = is_array($raw['colors'] ?? null) ? $raw['colors'] : [];
+
+        foreach ($this->tokenToColumnMap as $token => $_column) {
+            $value = $this->normalizeHex($rawColors[$token] ?? null);
+            if ($value) {
+                $colors[$token] = $value;
+            }
+        }
+
+        $fontProvider = $this->normalizeFontProvider($raw['font_provider'] ?? $defaults['font_provider']);
+        $fontFamily = $this->normalizeFontFamily($raw['font_family'] ?? $defaults['font_family'], (string) $defaults['font_family']);
+        $fontWeights = $this->normalizeFontWeights($raw['font_weights'] ?? $defaults['font_weights'], (string) $defaults['font_weights']);
+        $fontConfig = $this->buildFontConfig($fontProvider, $fontFamily, $fontWeights);
+
+        return new BrandingData(
+            platformName: (string) ($raw['platform_name'] ?: $defaults['platform_name']),
+            logoUrl: isset($raw['logo_url']) && is_string($raw['logo_url']) && $raw['logo_url'] !== '' ? $raw['logo_url'] : $defaults['logo_url'],
+            fontProvider: $fontProvider,
+            fontFamily: $fontFamily,
+            fontWeights: $fontWeights,
+            fontCssFamily: $fontConfig['css_family'],
+            fontStylesheetUrl: $fontConfig['stylesheet_url'],
+            fontPreconnectUrls: $fontConfig['preconnect_urls'],
+            colors: $colors,
+        );
+    }
+
+    /**
+     * @return array{css_family:string,stylesheet_url:?string,preconnect_urls:array<int,string>}
+     */
+    private function buildFontConfig(string $provider, string $family, string $weights): array
+    {
+        $systemFallback = 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif';
+
+        if ($provider === 'system') {
+            return [
+                'css_family' => $systemFallback,
+                'stylesheet_url' => null,
+                'preconnect_urls' => [],
+            ];
+        }
+
+        $cssFamily = '"'.str_replace('"', '', $family).'", '.$systemFallback;
+        $weightsArray = collect(explode(',', $weights))
+            ->map(fn (string $weight): string => trim($weight))
+            ->filter()
+            ->values()
+            ->all();
+
+        if ($provider === 'google') {
+            $familyParam = str_replace(' ', '+', $family);
+            $weightParam = implode(';', $weightsArray);
+
+            return [
+                'css_family' => $cssFamily,
+                'stylesheet_url' => 'https://fonts.googleapis.com/css2?family='.$familyParam.':wght@'.$weightParam.'&display=swap',
+                'preconnect_urls' => [
+                    'https://fonts.googleapis.com',
+                    'https://fonts.gstatic.com',
+                ],
+            ];
+        }
+
+        $familyParam = str_replace(' ', '+', $family);
+        $weightParam = implode(',', $weightsArray);
+
+        return [
+            'css_family' => $cssFamily,
+            'stylesheet_url' => 'https://fonts.bunny.net/css?family='.$familyParam.':'.$weightParam.'&display=swap',
+            'preconnect_urls' => ['https://fonts.bunny.net'],
+        ];
     }
 
     private function enabled(): bool
@@ -178,6 +290,48 @@ class BrandingService
         }
 
         return $normalized;
+    }
+
+    private function normalizeFontProvider(mixed $value): string
+    {
+        $provider = Str::lower(trim((string) $value));
+
+        if (! in_array($provider, $this->supportedFontProviders, true)) {
+            return 'bunny';
+        }
+
+        return $provider;
+    }
+
+    private function normalizeFontFamily(mixed $value, string $fallback): string
+    {
+        $family = trim((string) $value);
+        $family = preg_replace('/[^A-Za-z0-9\-\s]/', '', $family) ?: '';
+        $family = Str::of($family)->squish()->value();
+
+        if ($family === '') {
+            return $fallback;
+        }
+
+        return Str::limit($family, 120, '');
+    }
+
+    private function normalizeFontWeights(mixed $value, string $fallback): string
+    {
+        $weights = collect(explode(',', (string) $value))
+            ->map(fn (string $weight): string => trim($weight))
+            ->filter(fn (string $weight): bool => preg_match('/^[1-9]00$/', $weight) === 1)
+            ->map(fn (string $weight): int => (int) $weight)
+            ->filter(fn (int $weight): bool => $weight >= 100 && $weight <= 900)
+            ->unique()
+            ->sort()
+            ->values();
+
+        if ($weights->isEmpty()) {
+            return $fallback;
+        }
+
+        return $weights->implode(',');
     }
 
     private function storeLogo(UploadedFile $file, ?string $existingLogoUrl = null): ?string

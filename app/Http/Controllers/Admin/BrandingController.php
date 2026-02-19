@@ -19,6 +19,7 @@ class BrandingController extends Controller
             'branding' => $branding,
             'defaults' => $defaults,
             'tokenColumnMap' => $brandingService->tokenColumnMap(),
+            'fontProviders' => $brandingService->supportedFontProviders(),
         ]);
     }
 
@@ -27,6 +28,9 @@ class BrandingController extends Controller
         $validated = $request->validate([
             'platform_name' => ['required', 'string', 'max:120'],
             'logo' => ['nullable', 'file', 'image', 'max:5120', 'mimes:jpg,jpeg,png,webp'],
+            'font_provider' => ['required', 'string', 'in:system,bunny,google'],
+            'font_family' => ['required', 'string', 'max:120', 'regex:/^[A-Za-z0-9\-\s]+$/'],
+            'font_weights' => ['required', 'string', 'max:80', 'regex:/^[1-9]00(,[1-9]00)*$/'],
             'color_bg' => ['nullable', 'regex:/^#([A-Fa-f0-9]{6})$/'],
             'color_panel' => ['nullable', 'regex:/^#([A-Fa-f0-9]{6})$/'],
             'color_panel_soft' => ['nullable', 'regex:/^#([A-Fa-f0-9]{6})$/'],
