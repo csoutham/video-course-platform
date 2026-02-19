@@ -34,7 +34,7 @@
                             src="{{ $branding->logoUrl }}"
                             alt="{{ $branding->platformName }} logo"
                             class="mt-2 w-auto rounded-lg border border-slate-200 bg-white object-contain p-2"
-                            style="height: {{ old('logo_height_px', $branding->logoHeightPx) }}px;" />
+                            style="height: {{ old('logo_height_px', $branding->logoHeightPx) }}px" />
                     @endif
 
                     <input
@@ -67,7 +67,9 @@
                 </div>
 
                 <div class="space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                    <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Publisher and footer</h2>
+                    <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">
+                        Publisher and footer
+                    </h2>
 
                     <div>
                         <label for="publisher_name" class="vc-label">Publisher name</label>
@@ -146,7 +148,9 @@
                             id="homepage_subtitle"
                             name="homepage_subtitle"
                             class="vc-input min-h-24"
-                            maxlength="500">{{ old('homepage_subtitle', $branding->homepageSubtitle) }}</textarea>
+                            maxlength="500">
+{{ old('homepage_subtitle', $branding->homepageSubtitle) }}</textarea
+                        >
                         @error('homepage_subtitle')
                             <p class="vc-error">{{ $message }}</p>
                         @enderror
