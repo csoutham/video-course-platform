@@ -3,283 +3,365 @@
         <p class="vc-alert vc-alert-success mb-6">{{ session('status') }}</p>
     @endif
 
-    <section class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
-        <article class="vc-panel p-6">
-            <form
-                method="POST"
-                action="{{ route('admin.branding.update') }}"
-                enctype="multipart/form-data"
-                class="space-y-6">
+    <section
+        class="sticky top-0 z-50 -mx-4 border-y border-slate-200/90 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:-mx-8 lg:px-8">
+        <div class="mx-auto flex max-w-none flex-wrap items-center justify-between gap-3">
+            <div class="inline-flex rounded-xl border border-slate-200 bg-white p-1">
+                <button
+                    type="button"
+                    data-branding-tab-button="brand"
+                    class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
+                    Brand
+                </button>
+                <button
+                    type="button"
+                    data-branding-tab-button="homepage"
+                    class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
+                    Homepage
+                </button>
+                <button
+                    type="button"
+                    data-branding-tab-button="theme"
+                    class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
+                    Theme
+                </button>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button form="branding-settings-form" type="submit" class="vc-btn-primary">Save branding</button>
+                <form id="branding-reset-form" method="POST" action="{{ route('admin.branding.reset') }}">
+                    @csrf
+                    <button type="submit" class="vc-btn-danger" onclick="return confirm('Reset branding to defaults?');">
+                        Reset defaults
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="mt-6">
+        <form
+            id="branding-settings-form"
+            method="POST"
+            action="{{ route('admin.branding.update') }}"
+            enctype="multipart/form-data"
+            class="space-y-6">
                 @csrf
                 @method('PUT')
 
-                <div>
-                    <label for="platform_name" class="vc-label">Platform name</label>
-                    <input
-                        id="platform_name"
-                        name="platform_name"
-                        required
-                        maxlength="120"
-                        value="{{ old('platform_name', $branding->platformName) }}"
-                        class="vc-input" />
-                    @error('platform_name')
-                        <p class="vc-error">{{ $message }}</p>
-                    @enderror
-                </div>
+            <section class="vc-panel p-6" data-branding-tab-panel="brand">
+                <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
+                    <article class="space-y-6">
+                        <div>
+                            <label for="platform_name" class="vc-label">Platform name</label>
+                            <input
+                                id="platform_name"
+                                name="platform_name"
+                                required
+                                maxlength="120"
+                                value="{{ old('platform_name', $branding->platformName) }}"
+                                class="vc-input" />
+                            @error('platform_name')
+                                <p class="vc-error">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                <div>
-                    <label for="logo" class="vc-label">Logo</label>
-                    @if ($branding->logoUrl)
-                        <img
-                            src="{{ $branding->logoUrl }}"
-                            alt="{{ $branding->platformName }} logo"
-                            class="mt-2 w-auto rounded-lg border border-slate-200 bg-white object-contain p-2"
-                            style="height: {{ old('logo_height_px', $branding->logoHeightPx) }}px" />
-                    @endif
+                        <div>
+                            <label for="logo" class="vc-label">Logo</label>
+                            @if ($branding->logoUrl)
+                                <img
+                                    src="{{ $branding->logoUrl }}"
+                                    alt="{{ $branding->platformName }} logo"
+                                    class="mt-2 w-auto rounded-lg border border-slate-200 bg-white object-contain p-2"
+                                    style="height: {{ old('logo_height_px', $branding->logoHeightPx) }}px" />
+                            @endif
 
-                    <input
-                        id="logo"
-                        name="logo"
-                        type="file"
-                        accept="image/png,image/jpeg,image/webp"
-                        class="vc-input" />
-                    <p class="vc-help">PNG/JPG/WEBP up to 5MB. Replacing logo removes the previous file.</p>
-                    @error('logo')
-                        <p class="vc-error">{{ $message }}</p>
-                    @enderror
-                </div>
+                            <input
+                                id="logo"
+                                name="logo"
+                                type="file"
+                                accept="image/png,image/jpeg,image/webp"
+                                class="vc-input" />
+                            <p class="vc-help">PNG/JPG/WEBP up to 5MB. Replacing logo removes the previous file.</p>
+                            @error('logo')
+                                <p class="vc-error">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                <div>
-                    <label for="logo_height_px" class="vc-label">Logo height (px)</label>
-                    <input
-                        id="logo_height_px"
-                        name="logo_height_px"
-                        type="number"
-                        min="16"
-                        max="120"
-                        required
-                        value="{{ old('logo_height_px', $branding->logoHeightPx) }}"
-                        class="vc-input" />
-                    <p class="vc-help">Controls logo display size in navigation and auth header (16-120px).</p>
-                    @error('logo_height_px')
-                        <p class="vc-error">{{ $message }}</p>
-                    @enderror
-                </div>
+                        <div>
+                            <label for="logo_height_px" class="vc-label">Logo height (px)</label>
+                            <input
+                                id="logo_height_px"
+                                name="logo_height_px"
+                                type="number"
+                                min="16"
+                                max="120"
+                                required
+                                value="{{ old('logo_height_px', $branding->logoHeightPx) }}"
+                                class="vc-input" />
+                            <p class="vc-help">Controls logo display size in navigation and auth header (16-120px).</p>
+                            @error('logo_height_px')
+                                <p class="vc-error">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </article>
 
-                <div class="space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                    <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">
-                        Publisher and footer
-                    </h2>
+                    <aside class="vc-panel-soft p-4">
+                        <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Publisher and footer</h2>
 
-                    <div>
-                        <label for="publisher_name" class="vc-label">Publisher name</label>
-                        <input
-                            id="publisher_name"
-                            name="publisher_name"
-                            class="vc-input"
-                            maxlength="120"
-                            required
-                            value="{{ old('publisher_name', $branding->publisherName) }}" />
-                        @error('publisher_name')
-                            <p class="vc-error">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="publisher_website" class="vc-label">Publisher website</label>
-                        <input
-                            id="publisher_website"
-                            name="publisher_website"
-                            type="url"
-                            class="vc-input"
-                            maxlength="255"
-                            value="{{ old('publisher_website', $branding->publisherWebsite) }}" />
-                        @error('publisher_website')
-                            <p class="vc-error">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="footer_tagline" class="vc-label">Footer tagline</label>
-                        <input
-                            id="footer_tagline"
-                            name="footer_tagline"
-                            class="vc-input"
-                            maxlength="255"
-                            value="{{ old('footer_tagline', $branding->footerTagline) }}" />
-                        @error('footer_tagline')
-                            <p class="vc-error">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                    <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Homepage hero copy</h2>
-
-                    <div>
-                        <label for="homepage_eyebrow" class="vc-label">Eyebrow</label>
-                        <input
-                            id="homepage_eyebrow"
-                            name="homepage_eyebrow"
-                            class="vc-input"
-                            maxlength="80"
-                            value="{{ old('homepage_eyebrow', $branding->homepageEyebrow) }}" />
-                        @error('homepage_eyebrow')
-                            <p class="vc-error">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="homepage_title" class="vc-label">Title</label>
-                        <input
-                            id="homepage_title"
-                            name="homepage_title"
-                            class="vc-input"
-                            maxlength="160"
-                            value="{{ old('homepage_title', $branding->homepageTitle) }}" />
-                        @error('homepage_title')
-                            <p class="vc-error">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="homepage_subtitle" class="vc-label">Subtitle</label>
-                        <textarea
-                            id="homepage_subtitle"
-                            name="homepage_subtitle"
-                            class="vc-input min-h-24"
-                            maxlength="500">
-{{ old('homepage_subtitle', $branding->homepageSubtitle) }}</textarea
-                        >
-                        @error('homepage_subtitle')
-                            <p class="vc-error">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                    <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Typography</h2>
-
-                    <div>
-                        <label for="font_provider" class="vc-label">Font provider</label>
-                        <select id="font_provider" name="font_provider" class="vc-input" data-font-provider>
-                            @foreach ($fontProviders as $fontProvider)
-                                <option
-                                    value="{{ $fontProvider }}"
-                                    @selected(old('font_provider', $branding->fontProvider) === $fontProvider)>
-                                    {{ str($fontProvider)->title() }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('font_provider')
-                            <p class="vc-error">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="font_family" class="vc-label">Font family</label>
-                        <input
-                            id="font_family"
-                            name="font_family"
-                            class="vc-input"
-                            maxlength="120"
-                            value="{{ old('font_family', $branding->fontFamily) }}"
-                            placeholder="e.g. Figtree, Manrope, Instrument Sans"
-                            data-font-family />
-                        @error('font_family')
-                            <p class="vc-error">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="font_weights" class="vc-label">Font weights</label>
-                        <input
-                            id="font_weights"
-                            name="font_weights"
-                            class="vc-input"
-                            maxlength="80"
-                            value="{{ old('font_weights', $branding->fontWeights) }}"
-                            placeholder="400,500,600,700"
-                            data-font-weights />
-                        <p class="vc-help">
-                            Comma-separated hundreds only (e.g. 400,500,700). Used when loading Bunny/Google fonts.
-                        </p>
-                        @error('font_weights')
-                            <p class="vc-error">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Core color tokens</h2>
-
-                    <div class="grid gap-4 md:grid-cols-2">
-                        @foreach ($tokenColumnMap as $token => $column)
-                            @php
-                                $label = str($token)->replace('vc-', '')->replace('-', ' ')->title();
-                                $value = old($column, $branding->colors[$token] ?? $defaults['colors'][$token] ?? '#000000');
-                            @endphp
-
-                            <div class="rounded-xl border border-slate-200 bg-white p-4">
-                                <label for="{{ $column }}" class="vc-label">{{ $label }}</label>
-                                <div class="mt-2 flex items-center gap-2">
-                                    <input
-                                        id="{{ $column }}"
-                                        type="color"
-                                        value="{{ $value }}"
-                                        class="h-10 w-14 rounded-lg border border-slate-300 bg-white p-1"
-                                        data-branding-color-input />
-                                    <input
-                                        name="{{ $column }}"
-                                        value="{{ $value }}"
-                                        class="vc-input mt-0"
-                                        pattern="^#([A-Fa-f0-9]{6})$"
-                                        maxlength="7"
-                                        data-branding-color-text />
-                                </div>
-                                @error($column)
+                        <div class="mt-4 space-y-4">
+                            <div>
+                                <label for="publisher_name" class="vc-label">Publisher name</label>
+                                <input
+                                    id="publisher_name"
+                                    name="publisher_name"
+                                    class="vc-input"
+                                    maxlength="120"
+                                    required
+                                    value="{{ old('publisher_name', $branding->publisherName) }}" />
+                                @error('publisher_name')
                                     <p class="vc-error">{{ $message }}</p>
                                 @enderror
                             </div>
-                        @endforeach
-                    </div>
-                </div>
 
-                <div class="flex flex-wrap items-center gap-3">
-                    <button type="submit" class="vc-btn-primary">Save branding</button>
-                </div>
-            </form>
-            <form method="POST" action="{{ route('admin.branding.reset') }}" class="mt-3">
-                @csrf
-                <button type="submit" class="vc-btn-danger" onclick="return confirm('Reset branding to defaults?');">
-                    Reset defaults
-                </button>
-            </form>
-        </article>
+                            <div>
+                                <label for="publisher_website" class="vc-label">Publisher website</label>
+                                <input
+                                    id="publisher_website"
+                                    name="publisher_website"
+                                    type="url"
+                                    class="vc-input"
+                                    maxlength="255"
+                                    value="{{ old('publisher_website', $branding->publisherWebsite) }}" />
+                                @error('publisher_website')
+                                    <p class="vc-error">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-        <aside class="vc-panel p-6">
-            <p class="vc-eyebrow">Preview</p>
-            <h2 class="vc-card-title mt-2" data-branding-preview-name>
-                {{ old('platform_name', $branding->platformName) }}
-            </h2>
-            <div class="vc-panel mt-4 p-4" data-branding-preview-surface>
-                <p class="text-sm" data-branding-preview-copy>
-                    This preview uses your selected runtime branding colors without requiring an asset rebuild.
-                </p>
-                <p class="mt-2 text-sm font-medium" data-branding-preview-font>
-                    The quick brown fox jumps over the lazy dog.
-                </p>
-                <div class="mt-4 flex gap-2">
-                    <button type="button" class="vc-btn-primary" data-branding-preview-primary>Primary</button>
-                    <button type="button" class="vc-btn-secondary" data-branding-preview-secondary>Secondary</button>
+                            <div>
+                                <label for="footer_tagline" class="vc-label">Footer tagline</label>
+                                <input
+                                    id="footer_tagline"
+                                    name="footer_tagline"
+                                    class="vc-input"
+                                    maxlength="255"
+                                    value="{{ old('footer_tagline', $branding->footerTagline) }}" />
+                                @error('footer_tagline')
+                                    <p class="vc-error">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </aside>
                 </div>
-            </div>
-            <p class="vc-help mt-4">Live preview updates as you change fields. Final values are validated on save.</p>
-        </aside>
+            </section>
+
+            <section class="vc-panel hidden p-6" data-branding-tab-panel="homepage">
+                <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
+                    <article class="space-y-4">
+                        <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Homepage hero copy</h2>
+
+                        <div>
+                            <label for="homepage_eyebrow" class="vc-label">Eyebrow</label>
+                            <input
+                                id="homepage_eyebrow"
+                                name="homepage_eyebrow"
+                                class="vc-input"
+                                maxlength="80"
+                                value="{{ old('homepage_eyebrow', $branding->homepageEyebrow) }}" />
+                            @error('homepage_eyebrow')
+                                <p class="vc-error">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="homepage_title" class="vc-label">Title</label>
+                            <input
+                                id="homepage_title"
+                                name="homepage_title"
+                                class="vc-input"
+                                maxlength="160"
+                                value="{{ old('homepage_title', $branding->homepageTitle) }}" />
+                            @error('homepage_title')
+                                <p class="vc-error">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="homepage_subtitle" class="vc-label">Subtitle</label>
+                            <textarea
+                                id="homepage_subtitle"
+                                name="homepage_subtitle"
+                                class="vc-input min-h-32"
+                                maxlength="500">{{ old('homepage_subtitle', $branding->homepageSubtitle) }}</textarea>
+                            @error('homepage_subtitle')
+                                <p class="vc-error">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </article>
+
+                    <aside class="vc-panel-soft p-4">
+                        <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Where this appears</h2>
+                        <p class="vc-help mt-2">
+                            These fields power the marketing header copy on <code>/courses</code>. Leave empty to use
+                            system defaults.
+                        </p>
+                    </aside>
+                </div>
+            </section>
+
+            <section class="vc-panel hidden p-6" data-branding-tab-panel="theme">
+                <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
+                    <article class="space-y-6">
+                        <div class="space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                            <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Typography</h2>
+
+                            <div>
+                                <label for="font_provider" class="vc-label">Font provider</label>
+                                <select id="font_provider" name="font_provider" class="vc-input" data-font-provider>
+                                    @foreach ($fontProviders as $fontProvider)
+                                        <option
+                                            value="{{ $fontProvider }}"
+                                            @selected(old('font_provider', $branding->fontProvider) === $fontProvider)>
+                                            {{ str($fontProvider)->title() }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('font_provider')
+                                    <p class="vc-error">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="font_family" class="vc-label">Font family</label>
+                                <input
+                                    id="font_family"
+                                    name="font_family"
+                                    class="vc-input"
+                                    maxlength="120"
+                                    value="{{ old('font_family', $branding->fontFamily) }}"
+                                    placeholder="e.g. Figtree, Manrope, Instrument Sans"
+                                    data-font-family />
+                                @error('font_family')
+                                    <p class="vc-error">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="font_weights" class="vc-label">Font weights</label>
+                                <input
+                                    id="font_weights"
+                                    name="font_weights"
+                                    class="vc-input"
+                                    maxlength="80"
+                                    value="{{ old('font_weights', $branding->fontWeights) }}"
+                                    placeholder="400,500,600,700"
+                                    data-font-weights />
+                                <p class="vc-help">
+                                    Comma-separated hundreds only (e.g. 400,500,700). Used when loading Bunny/Google fonts.
+                                </p>
+                                @error('font_weights')
+                                    <p class="vc-error">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Core color tokens</h2>
+
+                            <div class="grid gap-4 md:grid-cols-2">
+                                @foreach ($tokenColumnMap as $token => $column)
+                                    @php
+                                        $label = str($token)->replace('vc-', '')->replace('-', ' ')->title();
+                                        $value = old($column, $branding->colors[$token] ?? $defaults['colors'][$token] ?? '#000000');
+                                    @endphp
+
+                                    <div class="rounded-xl border border-slate-200 bg-white p-4">
+                                        <label for="{{ $column }}" class="vc-label">{{ $label }}</label>
+                                        <div class="mt-2 flex items-center gap-2">
+                                            <input
+                                                id="{{ $column }}"
+                                                type="color"
+                                                value="{{ $value }}"
+                                                class="h-10 w-14 rounded-lg border border-slate-300 bg-white p-1"
+                                                data-branding-color-input />
+                                            <input
+                                                name="{{ $column }}"
+                                                value="{{ $value }}"
+                                                class="vc-input mt-0"
+                                                pattern="^#([A-Fa-f0-9]{6})$"
+                                                maxlength="7"
+                                                data-branding-color-text />
+                                        </div>
+                                        @error($column)
+                                            <p class="vc-error">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </article>
+
+                    <aside class="vc-panel p-6">
+                        <p class="vc-eyebrow">Preview</p>
+                        <h2 class="vc-card-title mt-2" data-branding-preview-name>
+                            {{ old('platform_name', $branding->platformName) }}
+                        </h2>
+                        <div class="vc-panel mt-4 p-4" data-branding-preview-surface>
+                            <p class="text-sm" data-branding-preview-copy>
+                                This preview uses your selected runtime branding colors without requiring an asset rebuild.
+                            </p>
+                            <p class="mt-2 text-sm font-medium" data-branding-preview-font>
+                                The quick brown fox jumps over the lazy dog.
+                            </p>
+                            <div class="mt-4 flex gap-2">
+                                <button type="button" class="vc-btn-primary" data-branding-preview-primary>Primary</button>
+                                <button type="button" class="vc-btn-secondary" data-branding-preview-secondary>
+                                    Secondary
+                                </button>
+                            </div>
+                        </div>
+                        <p class="vc-help mt-4">Live preview updates as you change fields. Final values are validated on save.</p>
+                    </aside>
+                </div>
+            </section>
+        </form>
     </section>
 
     <script>
         (() => {
+            const storageKey = 'admin-branding-edit-tab';
+            const tabButtons = () => Array.from(document.querySelectorAll('[data-branding-tab-button]'));
+            const tabPanels = () => Array.from(document.querySelectorAll('[data-branding-tab-panel]'));
+
+            const setActiveTab = (tab) => {
+                const panels = tabPanels();
+                const buttons = tabButtons();
+                const target = panels.some((panel) => panel.dataset.brandingTabPanel === tab) ? tab : 'brand';
+
+                buttons.forEach((button) => {
+                    const isActive = button.dataset.brandingTabButton === target;
+                    button.classList.toggle('bg-slate-900', isActive);
+                    button.classList.toggle('text-white', isActive);
+                    button.classList.toggle('hover:bg-slate-800', isActive);
+                    button.classList.toggle('text-slate-700', !isActive);
+                    button.classList.toggle('hover:bg-slate-100', !isActive);
+                });
+
+                panels.forEach((panel) => {
+                    panel.classList.toggle('hidden', panel.dataset.brandingTabPanel !== target);
+                });
+
+                window.localStorage.setItem(storageKey, target);
+            };
+
+            tabButtons().forEach((button) => {
+                if (button.dataset.tabsBound === '1') {
+                    return;
+                }
+                button.dataset.tabsBound = '1';
+                button.addEventListener('click', () => setActiveTab(button.dataset.brandingTabButton));
+            });
+
             const colorTextInputs = Array.from(document.querySelectorAll('[data-branding-color-text]'));
             const colorPickers = Array.from(document.querySelectorAll('[data-branding-color-input]'));
             const nameInput = document.getElementById('platform_name');
@@ -359,6 +441,8 @@
             fontProviderInput?.addEventListener('change', syncPreview);
             fontFamilyInput?.addEventListener('input', syncPreview);
             fontWeightsInput?.addEventListener('input', syncPreview);
+
+            setActiveTab(window.localStorage.getItem(storageKey) || 'brand');
             syncPreview();
         })();
     </script>
