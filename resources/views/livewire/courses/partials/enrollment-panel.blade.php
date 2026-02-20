@@ -6,7 +6,7 @@
         @elseif ($course->is_free)
             Get access now{{ $course->free_access_mode === 'claim_link' ? ' with a secure claim link.' : '.' }}
         @else
-            Complete checkout to unlock this course immediately.
+                Complete checkout to unlock this course immediately.
         @endif
     </p>
 
@@ -14,9 +14,11 @@
         @error('preorder')
             <p class="vc-error">{{ $message }}</p>
         @enderror
+
         @if ($course->release_at)
             <p class="text-xs text-slate-600">
-                Release date: <span class="font-semibold text-slate-800">{{ $course->release_at->toFormattedDateString() }}</span>
+                Release date:
+                <span class="font-semibold text-slate-800">{{ $course->release_at->toFormattedDateString() }}</span>
             </p>
         @endif
 
@@ -33,7 +35,7 @@
                         class="vc-input"
                         placeholder="you@example.com"
                         @auth
-                        readonly
+                            readonly
                         @endauth />
                     @error('email')
                         <p class="vc-error">{{ $message }}</p>

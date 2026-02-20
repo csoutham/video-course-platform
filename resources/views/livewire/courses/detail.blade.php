@@ -45,7 +45,8 @@
                 <p class="text-xs font-semibold tracking-[0.14em] text-slate-500 uppercase">Pricing</p>
                 <p class="mt-3 text-4xl font-semibold tracking-tight text-slate-900">
                     @if ($isPreorderMode ?? false)
-                        {{ strtoupper($course->price_currency) }} {{ number_format(($preorderPriceAmount ?? 0) / 100, 2) }}
+                        {{ strtoupper($course->price_currency) }}
+                        {{ number_format(($preorderPriceAmount ?? 0) / 100, 2) }}
                     @elseif ($course->is_free)
                         Free
                     @else
@@ -58,7 +59,7 @@
                     @elseif ($course->is_free)
                         No payment required. Enroll instantly and start learning right away.
                     @else
-                        One-time purchase. Instant access to all published lessons and resources in this course.
+                            One-time purchase. Instant access to all published lessons and resources in this course.
                     @endif
                 </p>
                 <ul class="mt-5 space-y-2 text-sm text-slate-600">

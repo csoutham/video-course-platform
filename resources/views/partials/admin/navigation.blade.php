@@ -15,7 +15,9 @@
 
 <nav class="space-y-1 p-3">
     @foreach ($items as $item)
-        <a href="{{ route($item['route']) }}" class="va-side-link {{ request()->routeIs($item['active']) ? 'is-active' : '' }}">
+        <a
+            href="{{ route($item['route']) }}"
+            class="va-side-link {{ request()->routeIs($item['active']) ? 'is-active' : '' }}">
             {{ $item['label'] }}
         </a>
     @endforeach

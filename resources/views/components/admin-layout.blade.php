@@ -1,8 +1,8 @@
 @props([
-    'maxWidth' => 'max-w-none',
-    'containerPadding' => 'px-4 py-6 lg:px-8',
-    'metaTitle' => null,
-    'metaDescription' => null,
+'maxWidth' => 'max-w-none',
+'containerPadding' => 'px-4 py-6 lg:px-8',
+'metaTitle' => null,
+'metaDescription' => null,
 ])
 
 @php
@@ -36,18 +36,30 @@
                         aria-label="Open admin menu"
                         aria-controls="admin-nav-drawer"
                         aria-expanded="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
 
-                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 text-sm font-semibold text-slate-900">
+                    <a
+                        href="{{ route('admin.dashboard') }}"
+                        class="flex items-center gap-2 text-sm font-semibold text-slate-900">
                         @if ($branding?->logoUrl)
                             <img
                                 src="{{ $branding->logoUrl }}"
                                 alt="{{ $brandingName }} logo"
                                 class="h-7 w-auto max-w-[150px] object-contain" />
                         @endif
+
                         <span>{{ $brandingName }} Admin</span>
                     </a>
                 </div>
@@ -64,7 +76,8 @@
         </header>
 
         <div class="mx-auto flex max-w-none gap-0">
-            <aside class="va-sidebar hidden min-h-[calc(100vh-57px)] w-72 shrink-0 border-r border-slate-200 bg-white lg:block">
+            <aside
+                class="va-sidebar hidden min-h-[calc(100vh-57px)] w-72 shrink-0 border-r border-slate-200 bg-white lg:block">
                 @include('partials.admin.navigation')
             </aside>
 
@@ -74,7 +87,9 @@
         </div>
 
         <div id="admin-nav-drawer" class="pointer-events-none fixed inset-0 z-[60] lg:hidden" aria-hidden="true">
-            <div data-admin-nav-backdrop class="absolute inset-0 bg-slate-900/40 opacity-0 transition-opacity duration-200"></div>
+            <div
+                data-admin-nav-backdrop
+                class="absolute inset-0 bg-slate-900/40 opacity-0 transition-opacity duration-200"></div>
             <aside
                 data-admin-nav-panel
                 class="absolute top-0 left-0 h-full w-[82vw] max-w-xs -translate-x-full border-r border-slate-200 bg-white shadow-xl transition-transform duration-200">
@@ -85,8 +100,17 @@
                         data-admin-nav-close
                         class="rounded-md p-2 text-slate-500 hover:bg-slate-100"
                         aria-label="Close admin menu">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>

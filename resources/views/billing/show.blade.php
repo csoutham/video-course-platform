@@ -49,17 +49,22 @@
             <section class="vc-panel p-6">
                 <h2 class="vc-card-title">Preorder payment issues</h2>
                 <p class="mt-1 text-sm text-slate-600">
-                    One or more preorder charges failed at release. Update payment details and complete checkout from the course page.
+                    One or more preorder charges failed at release. Update payment details and complete checkout from
+                    the course page.
                 </p>
                 <div class="mt-4 space-y-3">
                     @foreach ($failedPreorders as $reservation)
                         <article class="rounded-xl border border-amber-200 bg-amber-50 p-4">
-                            <p class="text-sm font-semibold text-slate-900">{{ $reservation->course?->title ?? 'Course' }}</p>
+                            <p class="text-sm font-semibold text-slate-900">
+                                {{ $reservation->course?->title ?? 'Course' }}
+                            </p>
                             <p class="mt-1 text-xs text-amber-800">
                                 {{ strtoupper($reservation->status) }}{{ $reservation->failure_message ? ': '.$reservation->failure_message : '' }}
                             </p>
                             @if ($reservation->course?->slug)
-                                <a href="{{ route('courses.show', $reservation->course->slug) }}" class="vc-btn-secondary mt-3">
+                                <a
+                                    href="{{ route('courses.show', $reservation->course->slug) }}"
+                                    class="vc-btn-secondary mt-3">
                                     Open course page
                                 </a>
                             @endif
