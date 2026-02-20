@@ -70,7 +70,7 @@ class Course extends Model
         return $query->where('is_published', true);
     }
 
-    public function getThumbnailUrlAttribute(?string $value): ?string
+    protected function getThumbnailUrlAttribute(?string $value): ?string
     {
         return PublicMediaUrl::resolve($value);
     }

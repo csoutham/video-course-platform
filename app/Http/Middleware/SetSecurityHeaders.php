@@ -36,4 +36,3 @@ class SetSecurityHeaders
         return $response;
     }
 }
-
