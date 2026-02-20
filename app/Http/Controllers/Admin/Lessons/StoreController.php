@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\CourseLessons;
+namespace App\Http\Controllers\Admin\Lessons;
 
 use App\Http\Controllers\Concerns\InvokesControllerAction;
 
@@ -10,7 +10,7 @@ class StoreController
 
     protected static function targetClass(): string
     {
-        return \App\Http\Controllers\Admin\CourseLessonsController::class;
+        return \App\Http\Controllers\Admin\LessonsController::class;
     }
 
     protected static function targetMethod(): string

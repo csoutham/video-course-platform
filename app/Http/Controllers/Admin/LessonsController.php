@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use RuntimeException;
 
-class CourseLessonsController extends Controller
+class LessonsController extends Controller
 {
     public function store(
         CourseModule $module,

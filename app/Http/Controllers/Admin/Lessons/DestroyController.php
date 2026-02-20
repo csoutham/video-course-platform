@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Admin\CourseResources;
+namespace App\Http\Controllers\Admin\Lessons;
 
 use App\Http\Controllers\Concerns\InvokesControllerAction;
 
-class StoreForCourseController
+class DestroyController
 {
     use InvokesControllerAction;
 
     protected static function targetClass(): string
     {
-        return \App\Http\Controllers\Admin\CourseResourcesController::class;
+        return \App\Http\Controllers\Admin\LessonsController::class;
     }
 
     protected static function targetMethod(): string
     {
-        return "storeForCourse";
+        return "destroy";
     }
 }

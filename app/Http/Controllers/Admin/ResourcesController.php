@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class CourseResourcesController extends Controller
+class ResourcesController extends Controller
 {
     public function storeForCourse(Request $request, Course $course): RedirectResponse
     {

@@ -8,7 +8,7 @@ use App\Models\CourseModule;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
-class CourseModulesController extends Controller
+class ModulesController extends Controller
 {
     public function store(Course $course, Request $request): RedirectResponse
     {
