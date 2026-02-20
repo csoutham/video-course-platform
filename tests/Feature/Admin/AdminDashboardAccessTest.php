@@ -22,5 +22,8 @@ test('admin users can open dashboard', function (): void {
 
     $this->get(route('admin.dashboard'))
          ->assertOk()
-         ->assertSeeText('Recent Orders');
+         ->assertSeeText('Recent Orders')
+         ->assertSee('data-admin-shell="true"', false)
+         ->assertSee('Admin Menu')
+         ->assertDontSee('All rights reserved.');
 });

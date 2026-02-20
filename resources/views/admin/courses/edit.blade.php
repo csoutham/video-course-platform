@@ -1,4 +1,4 @@
-<x-public-layout maxWidth="max-w-none" containerPadding="px-4 py-6 lg:px-8" title="Edit Course">
+<x-admin-layout maxWidth="max-w-none" containerPadding="px-4 py-6 lg:px-8" title="Edit Course">
     @php
         $moduleCount = $course->modules->count();
         $lessonCount = $course->modules->sum(fn ($module) => $module->lessons->count());
@@ -1196,4 +1196,4 @@
             bindAsyncCurriculumForms();
         })();
     </script>
-</x-public-layout>
+</x-admin-layout>

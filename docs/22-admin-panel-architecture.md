@@ -13,7 +13,7 @@ Replace DB/manual operational workflows with a secure, maintainable admin interf
 ## Why This Approach
 
 - Delivers immediate operational value with minimal dependency risk.
-- Keeps admin UX aligned with existing public layout and Tailwind system.
+- Keeps admin UX under `/admin` while isolating operational screens from customer-facing navigation/layout.
 - Enables incremental shipping in small commits with focused feature tests.
 - Preserves future migration path to Filament if CRUD complexity grows.
 
@@ -106,6 +106,12 @@ No advanced analytics in phase 1.
 2. All mutations audited with operator context.
 3. Sensitive models protected from unsafe edits.
 4. Non-admin users receive deny response for `/admin/*`.
+
+## UX Boundary (Current)
+
+- Admin uses a dedicated `x-admin-layout` shell and `partials/admin/navigation`.
+- Customer pages use `x-public-layout` and never expose admin links.
+- Admin toast/feedback rendering is isolated to admin pages only.
 
 ## Rollout Plan
 

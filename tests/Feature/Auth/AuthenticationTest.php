@@ -66,7 +66,7 @@ test('navigation menu can be rendered', function (): void {
 
 });
 
-test('admin users can see admin navigation link', function (): void {
+test('admin users do not see admin links on customer navigation', function (): void {
     $user = User::factory()->admin()->create();
 
     $this->actingAs($user);
@@ -75,7 +75,8 @@ test('admin users can see admin navigation link', function (): void {
 
     $response
         ->assertOk()
-        ->assertSee('Admin');
+        ->assertDontSee('Admin')
+        ->assertDontSee('Branding');
 
 });
 

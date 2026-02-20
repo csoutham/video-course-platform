@@ -1,4 +1,4 @@
-<x-public-layout maxWidth="max-w-none" containerPadding="px-4 py-6 lg:px-8" title="Admin Dashboard">
+<x-admin-layout maxWidth="max-w-none" containerPadding="px-4 py-6 lg:px-8" title="Admin Dashboard">
     <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <article class="vc-panel p-4">
             <p class="text-xs font-semibold tracking-wide text-slate-500 uppercase">Courses</p>
@@ -67,4 +67,4 @@
             </div>
         @endif
     </section>
-</x-public-layout>
+</x-admin-layout>

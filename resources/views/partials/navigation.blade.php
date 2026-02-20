@@ -35,18 +35,6 @@
                     class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
                     Receipts
                 </a>
-                @can('access-admin')
-                    <a
-                        href="{{ route('admin.dashboard') }}"
-                        class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
-                        Admin
-                    </a>
-                    <a
-                        href="{{ route('admin.branding.edit') }}"
-                        class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
-                        Branding
-                    </a>
-                @endcan
 
                 <a href="{{ route('profile') }}" class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
                     Profile
@@ -117,14 +105,6 @@
                 <a href="{{ route('receipts.index') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
                     Receipts
                 </a>
-                @can('access-admin')
-                    <a href="{{ route('admin.dashboard') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
-                        Admin
-                    </a>
-                    <a href="{{ route('admin.branding.edit') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
-                        Branding
-                    </a>
-                @endcan
 
                 <a href="{{ route('profile') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">Profile</a>
                 <form method="POST" action="{{ route('logout') }}" class="pt-2">

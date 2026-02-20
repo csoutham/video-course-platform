@@ -66,7 +66,6 @@
     </head>
     <body class="vc-shell flex min-h-screen flex-col text-slate-900 antialiased">
         @include('partials.navigation')
-        @include('partials.admin-toast')
 
         <main class="{{ $maxWidth }} {{ $containerPadding }} mx-auto w-full flex-1">
             {{ $slot }}
