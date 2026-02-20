@@ -35,6 +35,10 @@ MAIL_MAILER=log
 MAIL_FROM_ADDRESS=hello@example.com
 MAIL_FROM_NAME="Video Courses"
 GIFTS_ENABLED=false
+
+SECURITY_HEADERS_ENABLED=true
+SECURITY_HSTS_ENABLED=true
+SECURITY_HSTS_MAX_AGE=31536000
 ```
 
 Notes:
@@ -46,6 +50,7 @@ Notes:
 - For signed Stream playback, configure `CF_STREAM_*` signing values and enable signed URLs in Cloudflare Stream.
 - `MAIL_MAILER` must be configured in each environment to deliver purchase receipt emails.
 - Set `GIFTS_ENABLED=true` only when gift flows are ready for production use.
+- Security headers/HSTS should remain enabled in production unless you have a specific proxy edge policy replacing them.
 
 ## 2) Stripe Product/Price Mapping (Critical)
 

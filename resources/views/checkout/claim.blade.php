@@ -5,8 +5,12 @@
         <div>
             <p class="vc-eyebrow">Secure Claim</p>
             <h1 class="mt-1 text-2xl font-semibold text-slate-900">
-                {{ $order->items->first()?->course?->title ?? 'Course access' }}
+                Claim your course access
             </h1>
+            <p class="mt-2 text-sm text-slate-600">
+                Course:
+                <span class="font-semibold text-slate-900">{{ $order->items->first()?->course?->title ?? 'Course access' }}</span>
+            </p>
             <p class="mt-2 text-sm text-slate-600">
                 Purchased with:
                 <span class="font-medium text-slate-900">{{ $order->email }}</span>
@@ -27,20 +31,23 @@
             <form method="POST" action="{{ route('claim-purchase.store', $claimToken->token) }}" class="space-y-4">
                 @csrf
                 <p class="text-sm text-slate-600">
-                    You are signed in with the matching email. Confirm below to add this purchase to your account.
+                    You are signed in with the matching email. Confirm to add this course to your library.
                 </p>
                 <button type="submit" class="vc-btn-primary">Add this purchase</button>
             </form>
         @elseif ($existingUser)
             <div class="space-y-3">
                 <p class="text-sm text-slate-600">
-                    An account already exists for this email. Sign in, then reopen this claim link.
+                    An account already exists for this email. Sign in and then reopen this claim link.
                 </p>
                 <a href="{{ route('login') }}" class="vc-btn-primary">Sign in</a>
             </div>
         @else
             <form method="POST" action="{{ route('claim-purchase.store', $claimToken->token) }}" class="space-y-4">
                 @csrf
+                <p class="text-sm text-slate-600">
+                    Create your account to claim this purchase and start learning immediately.
+                </p>
                 <div>
                     <label for="name" class="vc-label">Name</label>
                     <input id="name" name="name" type="text" value="{{ old('name') }}" required class="vc-input" />

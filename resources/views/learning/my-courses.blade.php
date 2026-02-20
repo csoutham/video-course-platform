@@ -10,7 +10,9 @@
 
         @if ($courses->isEmpty())
             <div class="vc-panel border-dashed p-6 text-sm text-slate-600">
-                You do not have any courses yet. Buy a course to get started.
+                <p class="font-medium text-slate-800">No courses in your library yet.</p>
+                <p class="mt-1">Browse the catalog to get started, or claim a recent purchase from your email link.</p>
+                <a href="{{ route('courses.index') }}" class="vc-btn-primary mt-4">Browse courses</a>
             </div>
         @else
             <div class="grid gap-6 md:grid-cols-2">

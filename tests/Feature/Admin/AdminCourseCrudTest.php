@@ -2,6 +2,7 @@
 
 use App\Models\Course;
 use App\Models\User;
+use App\Services\Learning\CloudflareStreamCatalogService;
 use App\Services\Learning\CloudflareStreamMetadataService;
 use App\Services\Payments\StripeCoursePricingService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,6 +13,11 @@ uses(RefreshDatabase::class);
 
 test('admin can view create course screen', function (): void {
     $this->actingAs(User::factory()->admin()->create());
+    $catalogMock = \Mockery::mock(CloudflareStreamCatalogService::class);
+    $catalogMock->shouldReceive('listVideos')
+        ->once()
+        ->andReturn([]);
+    $this->app->instance(CloudflareStreamCatalogService::class, $catalogMock);
 
     $this->get(route('admin.courses.create'))
         ->assertOk()

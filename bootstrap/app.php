@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureAdmin;
+use App\Http\Middleware\SetSecurityHeaders;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Application;
@@ -22,6 +23,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => EnsureAdmin::class,
         ]);
+
+        $middleware->append(SetSecurityHeaders::class);
 
         $middleware->validateCsrfTokens(except: [
             'webhooks/stripe',

@@ -6,6 +6,9 @@
             <p class="vc-eyebrow">Gift claim</p>
             <h1 class="mt-1 text-2xl font-semibold text-slate-900">Claim your gifted course</h1>
             <p class="mt-2 text-sm text-slate-600">
+                Add this gift to your account to unlock course access in your library.
+            </p>
+            <p class="mt-2 text-sm text-slate-600">
                 Course:
                 <span class="font-semibold text-slate-900">{{ $giftPurchase->course->title }}</span>
             </p>
@@ -41,6 +44,9 @@
             @else
                 <form method="POST" action="{{ route('gift-claim.store', $claimToken->token) }}" class="space-y-4">
                     @csrf
+                    <p class="text-sm text-slate-600">
+                        Create your account using the recipient email to claim this gift.
+                    </p>
 
                     <div>
                         <label for="name" class="vc-label">Name</label>

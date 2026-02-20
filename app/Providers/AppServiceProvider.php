@@ -73,6 +73,28 @@ class AppServiceProvider extends ServiceProvider
 
             return Limit::perMinute(120)->by($key);
         });
+
+        RateLimiter::for('checkout-start', function (Request $request): Limit {
+            $key = $request->user()?->id
+                ? 'checkout-user:'.$request->user()->id
+                : 'checkout-ip:'.$request->ip();
+
+            return Limit::perMinute(30)->by($key);
+        });
+
+        RateLimiter::for('claim-store', function (Request $request): Limit {
+            $token = (string) ($request->route('token') ?? 'unknown');
+
+            return Limit::perMinute(12)->by('claim:'.$request->ip().':'.$token);
+        });
+
+        RateLimiter::for('gift-claim-store', function (Request $request): Limit {
+            $token = (string) ($request->route('token') ?? 'unknown');
+
+            return Limit::perMinute(12)->by('gift-claim:'.$request->ip().':'.$token);
+        });
+
+        RateLimiter::for('stripe-webhook', fn (Request $request): Limit => Limit::perMinute(240)->by('stripe-webhook:'.$request->ip()));
     }
 
     private function configureSecurity(): void

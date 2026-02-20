@@ -28,14 +28,22 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', fn (): RedirectResponse => to_route('courses.index'));
 Route::get('/courses', Catalog::class)->name('courses.index');
 Route::get('/courses/{slug}', Detail::class)->name('courses.show');
-Route::post('/checkout/{course}', CheckoutController::class)->name('checkout.start');
+Route::post('/checkout/{course}', CheckoutController::class)
+    ->middleware('throttle:checkout-start')
+    ->name('checkout.start');
 Route::get('/checkout/success', CheckoutSuccessController::class)->name('checkout.success');
 Route::view('/checkout/cancel', 'checkout.cancel')->name('checkout.cancel');
 Route::get('/claim-purchase/{token}', [ClaimPurchaseController::class, 'show'])->name('claim-purchase.show');
-Route::post('/claim-purchase/{token}', [ClaimPurchaseController::class, 'store'])->name('claim-purchase.store');
+Route::post('/claim-purchase/{token}', [ClaimPurchaseController::class, 'store'])
+    ->middleware('throttle:claim-store')
+    ->name('claim-purchase.store');
 Route::get('/gift-claim/{token}', [GiftClaimController::class, 'show'])->name('gift-claim.show');
-Route::post('/gift-claim/{token}', [GiftClaimController::class, 'store'])->name('gift-claim.store');
-Route::post('/webhooks/stripe', StripeWebhookController::class)->name('webhooks.stripe');
+Route::post('/gift-claim/{token}', [GiftClaimController::class, 'store'])
+    ->middleware('throttle:gift-claim-store')
+    ->name('gift-claim.store');
+Route::post('/webhooks/stripe', StripeWebhookController::class)
+    ->middleware('throttle:stripe-webhook')
+    ->name('webhooks.stripe');
 
 Route::middleware('auth')->group(function (): void {
     Route::get('/my-courses', MyCoursesController::class)->name('my-courses.index');

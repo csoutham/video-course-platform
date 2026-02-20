@@ -15,6 +15,11 @@
 - Auth middleware on learner and download routes.
 - Policy checks for active entitlement before serving protected content.
 - Sanctum token auth on `/api/v1/mobile/*` endpoints with scoped token abilities.
+- Route throttles for sensitive flows:
+    - checkout start
+    - purchase claim submit
+    - gift claim submit
+    - Stripe webhook endpoint
 
 ### Payment Integrity
 
@@ -37,6 +42,16 @@
 
 - Keep Stripe, Stream, and R2 credentials in environment secrets.
 - Rotate secrets on a defined schedule and incident response triggers.
+
+### Response Hardening
+
+- Baseline security response headers on web responses:
+    - `X-Content-Type-Options: nosniff`
+    - `X-Frame-Options: SAMEORIGIN`
+    - `Referrer-Policy: strict-origin-when-cross-origin`
+    - `Permissions-Policy` restrictive baseline
+    - `X-XSS-Protection: 0`
+- HSTS enabled for secure requests in production-like deployments.
 
 ## Audit Logging
 
