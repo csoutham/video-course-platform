@@ -15,6 +15,7 @@
 - `subscriptions`: Stripe subscription state per user/customer.
 - `billing_settings`: singleton Stripe subscription + portal configuration.
 - `preorder_reservations`: setup-intent reservations and release-charge outcomes.
+- `course_reviews`: learner and manually imported rating/review records.
 - `stripe_events`: idempotent webhook processing ledger.
 
 ## Suggested Fields
@@ -57,6 +58,9 @@
 - `release_at` (nullable timestamp)
 - `preorder_price_amount` (nullable integer)
 - `stripe_preorder_price_id` (nullable Stripe price id for preorder pricing)
+- `reviews_approved_count` (cached approved review count)
+- `rating_average` (cached average from approved reviews)
+- `rating_distribution_json` (cached 1-5 rating distribution for approved reviews)
 - `created_at`, `updated_at`
 
 ### course_modules
@@ -224,6 +228,33 @@ Constraints:
 - `failure_code` (nullable)
 - `failure_message` (nullable)
 - `created_at`, `updated_at`
+
+### course_reviews
+
+- `id`
+- `course_id` (index)
+- `user_id` (nullable index)
+- `source` (`native|udemy_manual`)
+- `reviewer_name` (nullable; used for manual imports)
+- `rating` (`1..5`)
+- `title` (nullable)
+- `body` (nullable)
+- `status` (`pending|approved|rejected|hidden`)
+- `original_reviewed_at` (nullable timestamp, used for imported historical dates)
+- `last_submitted_at` (nullable)
+- `approved_at` (nullable)
+- `approved_by_user_id` (nullable)
+- `rejected_at` (nullable)
+- `rejected_by_user_id` (nullable)
+- `hidden_at` (nullable)
+- `hidden_by_user_id` (nullable)
+- `moderation_note` (nullable)
+- `created_at`, `updated_at`
+
+Constraints:
+
+- Unique native review per learner per course: (`course_id`, `user_id`)
+- Multiple imported rows allowed via nullable `user_id`
 
 ### stripe_events
 

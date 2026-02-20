@@ -37,6 +37,8 @@ class Catalog extends Component
                     ? route('learn.show', ['course' => $course->slug])
                     : route('courses.show', $course->slug),
                 'thumbnail' => $course->thumbnail_url ?: null,
+                'ratingAverage' => $course->rating_average !== null ? (float) $course->rating_average : null,
+                'reviewCount' => (int) $course->reviews_approved_count,
             ];
         });
 
@@ -61,6 +63,13 @@ class Catalog extends Component
                             'availability' => 'https://schema.org/InStock',
                             'url' => route('courses.show', $course->slug),
                         ],
+                        'aggregateRating' => (int) $course->reviews_approved_count > 0
+                            ? [
+                                '@type' => 'AggregateRating',
+                                'ratingValue' => (float) $course->rating_average,
+                                'reviewCount' => (int) $course->reviews_approved_count,
+                            ]
+                            : null,
                     ],
                 ],
             )->all(),

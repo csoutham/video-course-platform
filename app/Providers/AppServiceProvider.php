@@ -95,6 +95,14 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('stripe-webhook', fn (Request $request): Limit => Limit::perMinute(240)->by('stripe-webhook:'.$request->ip()));
+
+        RateLimiter::for('reviews-submit', function (Request $request): Limit {
+            $key = $request->user()?->id
+                ? 'reviews-user:'.$request->user()->id
+                : 'reviews-ip:'.$request->ip();
+
+            return Limit::perMinute(20)->by($key);
+        });
     }
 
     private function configureSecurity(): void

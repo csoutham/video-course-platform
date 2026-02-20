@@ -3,9 +3,11 @@
 namespace App\Livewire\Courses;
 
 use App\Models\Course;
+use App\Models\CourseReview;
 use App\Services\Branding\BrandingService;
 use App\Services\Billing\BillingSettingsService;
 use App\Services\Learning\VideoPlaybackService;
+use App\Services\Reviews\CourseReviewEligibilityService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
@@ -26,6 +28,7 @@ class Detail extends Component
     {
         $branding = resolve(BrandingService::class)->current();
         $billingSettings = resolve(BillingSettingsService::class)->current();
+        $reviewsEnabled = (bool) config('learning.reviews_enabled');
 
         $course = Course::query()
             ->published()
@@ -36,6 +39,30 @@ class Detail extends Component
 
         abort_if(! $course, 404);
 
+        $approvedReviews = collect();
+        $viewerReview = null;
+        $reviewEligibility = null;
+        if ($reviewsEnabled) {
+            $approvedReviews = CourseReview::query()
+                ->where('course_id', $course->id)
+                ->approved()
+                ->with(['user:id,name'])
+                ->orderByDesc('original_reviewed_at')
+                ->orderByDesc('approved_at')
+                ->orderByDesc('created_at')
+                ->limit(12)
+                ->get();
+
+            if (auth()->check()) {
+                $viewerReview = CourseReview::query()
+                    ->where('course_id', $course->id)
+                    ->where('user_id', auth()->id())
+                    ->first();
+
+                $reviewEligibility = resolve(CourseReviewEligibilityService::class)->evaluate(auth()->user(), $course);
+            }
+        }
+
         $introVideoEmbedUrl = null;
         if ($course->intro_video_id) {
             try {
@@ -44,6 +71,26 @@ class Detail extends Component
                 $introVideoEmbedUrl = null;
             }
         }
+
+        $reviewSchema = $approvedReviews
+            ->take(5)
+            ->map(fn (CourseReview $review): array => [
+                '@type' => 'Review',
+                'author' => [
+                    '@type' => 'Person',
+                    'name' => $review->public_reviewer_name,
+                ],
+                'reviewRating' => [
+                    '@type' => 'Rating',
+                    'ratingValue' => (int) $review->rating,
+                    'bestRating' => 5,
+                ],
+                'name' => (string) ($review->title ?: 'Course review'),
+                'reviewBody' => (string) ($review->body ?: ''),
+                'datePublished' => $review->display_date?->toDateString(),
+            ])
+            ->values()
+            ->all();
 
         $courseSchemaJson = json_encode([
             '@context' => 'https://schema.org',
@@ -64,6 +111,14 @@ class Detail extends Component
                 'availability' => 'https://schema.org/InStock',
                 'url' => route('courses.show', $course->slug),
             ],
+            'aggregateRating' => (int) $course->reviews_approved_count > 0
+                ? [
+                    '@type' => 'AggregateRating',
+                    'ratingValue' => (float) ($course->rating_average ?? 0),
+                    'reviewCount' => (int) $course->reviews_approved_count,
+                ]
+                : null,
+            'review' => $reviewSchema,
             'video' => $introVideoEmbedUrl
                 ? [
                     '@type' => 'VideoObject',
@@ -90,11 +145,15 @@ class Detail extends Component
         $isPreorderMode = $preordersEnabled && $course->is_preorder_enabled && ! $course->isReleased();
         $isPreorderWindowActive = $isPreorderMode && $course->isPreorderWindowActive();
         $preorderPriceAmount = (int) ($course->preorder_price_amount ?? 0);
+        $ratingDistribution = collect(range(1, 5))
+            ->mapWithKeys(fn (int $value): array => [(string) $value => (int) ($course->rating_distribution_json[(string) $value] ?? 0)])
+            ->all();
 
         return view('livewire.courses.detail', [
             'course' => $course,
             'giftsEnabled' => (bool) config('learning.gifts_enabled'),
             'subscriptionsEnabled' => (bool) config('learning.subscriptions_enabled'),
+            'reviewsEnabled' => $reviewsEnabled,
             'subscriptionMonthlyPriceId' => $billingSettings->stripe_subscription_monthly_price_id,
             'subscriptionYearlyPriceId' => $billingSettings->stripe_subscription_yearly_price_id,
             'preordersEnabled' => $preordersEnabled,
@@ -121,6 +180,10 @@ class Detail extends Component
             'lessonCount' => $lessonCount,
             'lessonCountLabel' => Str::plural('lesson', $lessonCount),
             'totalDurationLabel' => $totalDurationLabel,
+            'approvedReviews' => $approvedReviews,
+            'viewerReview' => $viewerReview,
+            'reviewEligibility' => $reviewEligibility,
+            'ratingDistribution' => $ratingDistribution,
         ]);
     }
 }

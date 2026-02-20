@@ -2,6 +2,7 @@
     $items = [
         ['label' => 'Dashboard', 'route' => 'admin.dashboard', 'active' => 'admin.dashboard'],
         ['label' => 'Courses', 'route' => 'admin.courses.index', 'active' => 'admin.courses.*'],
+        ['label' => 'Reviews', 'route' => 'admin.reviews.index', 'active' => 'admin.reviews.*'],
         ['label' => 'Orders', 'route' => 'admin.orders.index', 'active' => 'admin.orders.*'],
         ['label' => 'Users', 'route' => 'admin.users.index', 'active' => 'admin.users.*'],
         ['label' => 'Branding', 'route' => 'admin.branding.edit', 'active' => 'admin.branding.*'],

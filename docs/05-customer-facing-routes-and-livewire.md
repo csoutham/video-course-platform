@@ -8,6 +8,10 @@
   - Catalog list and filters.
 - `GET /courses/{slug}`
   - Course detail and buy CTA.
+- `POST /courses/{course:slug}/reviews`
+  - Auth-only learner review submission/update (rating required, text optional).
+- `DELETE /courses/{course:slug}/reviews`
+  - Auth-only learner review deletion.
 - `POST /checkout/{course}`
   - Paid courses: creates Stripe Checkout Session for self-purchase or gift purchase.
   - Free courses: creates zero-value local order and routes to success/claim flow.
@@ -54,7 +58,7 @@
   - Outputs: paginated course cards.
 - `CourseDetail`
   - Inputs: course slug.
-  - Outputs: overview, curriculum preview, purchase CTA.
+  - Outputs: overview, curriculum preview, purchase CTA, rating summary, approved reviews, learner review form.
 - `CheckoutButton`
   - Inputs: course ID, optional coupon code, optional gift recipient fields.
   - Action: create Stripe session and redirect.
@@ -70,6 +74,7 @@
 - Catalog/detail are public.
 - Checkout is public but validates course publish/purchasable state.
 - Checkout supports both paid and free enrollment paths from same endpoint.
+- Review submission requires enabled reviews feature, active course access, and minimum progress threshold.
 - Subscription checkout requires authenticated user.
 - Standard checkout is blocked for unreleased preorder courses.
 - Player and download routes require auth plus active entitlement.

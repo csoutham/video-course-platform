@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\Billing\UpdateController as AdminBillingUpdateCon
 use App\Http\Controllers\Admin\Branding\EditController as AdminBrandingEditController;
 use App\Http\Controllers\Admin\Branding\ResetController as AdminBrandingResetController;
 use App\Http\Controllers\Admin\Branding\UpdateController as AdminBrandingUpdateController;
+use App\Http\Controllers\Admin\Courses\Reviews\ImportCommitController as AdminCourseReviewsImportCommitController;
+use App\Http\Controllers\Admin\Courses\Reviews\ImportPreviewController as AdminCourseReviewsImportPreviewController;
 use App\Http\Controllers\Admin\Lessons\DestroyController as AdminLessonsDestroyController;
 use App\Http\Controllers\Admin\Lessons\StoreController as AdminLessonsStoreController;
 use App\Http\Controllers\Admin\Lessons\UpdateController as AdminLessonsUpdateController;
@@ -25,6 +27,13 @@ use App\Http\Controllers\Admin\Imports\Udemy\CommitController as AdminImportsUde
 use App\Http\Controllers\Admin\Imports\Udemy\PreviewController as AdminImportsUdemyPreviewController;
 use App\Http\Controllers\Admin\Imports\Udemy\ShowController as AdminImportsUdemyShowController;
 use App\Http\Controllers\Admin\Orders\IndexController as AdminOrdersIndexController;
+use App\Http\Controllers\Admin\Reviews\ApproveController as AdminReviewsApproveController;
+use App\Http\Controllers\Admin\Reviews\DestroyController as AdminReviewsDestroyController;
+use App\Http\Controllers\Admin\Reviews\HideController as AdminReviewsHideController;
+use App\Http\Controllers\Admin\Reviews\IndexController as AdminReviewsIndexController;
+use App\Http\Controllers\Admin\Reviews\RejectController as AdminReviewsRejectController;
+use App\Http\Controllers\Admin\Reviews\UnhideController as AdminReviewsUnhideController;
+use App\Http\Controllers\Admin\Reviews\UpdateController as AdminReviewsUpdateController;
 use App\Http\Controllers\Admin\Users\IndexController as AdminUsersIndexController;
 use App\Http\Controllers\Admin\Users\ShowController as AdminUsersShowController;
 use App\Http\Controllers\Learning\CoursePlayerController;
@@ -47,6 +56,8 @@ use App\Http\Controllers\Payments\SubscriptionCheckoutController;
 use App\Http\Controllers\Payments\ClaimPurchase\ShowController as ClaimPurchaseShowController;
 use App\Http\Controllers\Payments\ClaimPurchase\StoreController as ClaimPurchaseStoreController;
 use App\Http\Controllers\Payments\StripeWebhookController;
+use App\Http\Controllers\Reviews\DestroyController as ReviewsDestroyController;
+use App\Http\Controllers\Reviews\StoreController as ReviewsStoreController;
 use App\Livewire\Courses\Catalog;
 use App\Livewire\Courses\Detail;
 use Illuminate\Http\RedirectResponse;
@@ -55,6 +66,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', fn (): RedirectResponse => to_route('courses.index'));
 Route::get('/courses', Catalog::class)->name('courses.index');
 Route::get('/courses/{slug}', Detail::class)->name('courses.show');
+Route::post('/courses/{course:slug}/reviews', ReviewsStoreController::class)
+    ->middleware(['auth', 'throttle:reviews-submit'])
+    ->name('courses.reviews.store');
+Route::delete('/courses/{course:slug}/reviews', ReviewsDestroyController::class)
+    ->middleware('auth')
+    ->name('courses.reviews.destroy');
 Route::post('/checkout/subscription', SubscriptionCheckoutController::class)
     ->middleware(['auth', 'throttle:checkout-start'])
     ->name('checkout.subscription.start');
@@ -119,6 +136,17 @@ Route::middleware(['auth', 'admin'])
         Route::post('/modules/{module}/resources', AdminResourcesStoreForModuleController::class)->name('resources.module.store');
         Route::post('/lessons/{lesson}/resources', AdminResourcesStoreForLessonController::class)->name('resources.lesson.store');
         Route::delete('/resources/{resource}', AdminResourcesDestroyController::class)->name('resources.destroy');
+        Route::get('/reviews', AdminReviewsIndexController::class)->name('reviews.index');
+        Route::post('/reviews/{review}/approve', AdminReviewsApproveController::class)->name('reviews.approve');
+        Route::post('/reviews/{review}/reject', AdminReviewsRejectController::class)->name('reviews.reject');
+        Route::post('/reviews/{review}/hide', AdminReviewsHideController::class)->name('reviews.hide');
+        Route::post('/reviews/{review}/unhide', AdminReviewsUnhideController::class)->name('reviews.unhide');
+        Route::put('/reviews/{review}', AdminReviewsUpdateController::class)->name('reviews.update');
+        Route::delete('/reviews/{review}', AdminReviewsDestroyController::class)->name('reviews.destroy');
+        Route::post('/courses/{course}/reviews/import/preview', AdminCourseReviewsImportPreviewController::class)
+            ->name('courses.reviews.import.preview');
+        Route::post('/courses/{course}/reviews/import/commit', AdminCourseReviewsImportCommitController::class)
+            ->name('courses.reviews.import.commit');
         Route::get('/orders', AdminOrdersIndexController::class)->name('orders.index');
         Route::get('/users', AdminUsersIndexController::class)->name('users.index');
         Route::get('/users/{user}', AdminUsersShowController::class)->name('users.show');

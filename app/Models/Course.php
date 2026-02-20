@@ -41,6 +41,9 @@ class Course extends Model
         'release_at',
         'preorder_price_amount',
         'stripe_preorder_price_id',
+        'reviews_approved_count',
+        'rating_average',
+        'rating_distribution_json',
     ];
 
     #[\Override]
@@ -57,6 +60,9 @@ class Course extends Model
             'source_payload_json' => 'array',
             'source_last_imported_at' => 'datetime',
             'kit_tag_id' => 'integer',
+            'reviews_approved_count' => 'integer',
+            'rating_average' => 'decimal:2',
+            'rating_distribution_json' => 'array',
         ];
     }
 
@@ -76,6 +82,11 @@ class Course extends Model
             ->whereNull('module_id')
             ->whereNull('lesson_id')
             ->orderBy('sort_order');
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(CourseReview::class)->latest('approved_at');
     }
 
     protected function scopePublished(Builder $query): Builder

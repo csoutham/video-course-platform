@@ -13,6 +13,7 @@ Allow admins to migrate course structure from Udemy into this platform by supply
 - Upsert by source URL.
 - Course metadata import.
 - Curriculum shell import (module + lessons from public syllabus sections).
+- Manual historical rating/review entry is supported separately from this importer on the Course Edit `Ratings and Reviews` tab.
 
 ### Out of scope
 
@@ -20,6 +21,7 @@ Allow admins to migrate course structure from Udemy into this platform by supply
 - Resource/download migration.
 - Quizzes/assignments/exercises migration.
 - Any private/authenticated scraping.
+- Automatic import/scraping of Udemy review text or ratings from protected endpoints.
 
 ## Data Sources
 

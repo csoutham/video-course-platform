@@ -36,6 +36,8 @@ Replace DB/manual operational workflows with a secure, maintainable admin interf
     - syncs lesson duration from Cloudflare metadata
 - `/admin/orders` read-only listing with status filter is implemented.
 - `/admin/users` list + per-user progress page is implemented, showing purchased courses, aggregated lesson/video progress, and per-course lesson activity logs.
+- `/admin/reviews` moderation queue is implemented for ratings/reviews across all courses.
+- Course edit now includes a Ratings and Reviews tab with manual Udemy review bulk entry, preview parsing, and commit flow.
 - Feature tests cover guest/non-admin/admin access control and page visibility.
 
 ## Admin Scope (Phase 1)
@@ -46,6 +48,7 @@ Replace DB/manual operational workflows with a secure, maintainable admin interf
 - Modules
 - Lessons
 - Lesson resources
+- Ratings and reviews moderation
 
 ### Commerce
 

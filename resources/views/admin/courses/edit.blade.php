@@ -26,6 +26,12 @@
                     class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
                     Assets
                 </button>
+                <button
+                    type="button"
+                    data-admin-tab-button="reviews"
+                    class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
+                    Ratings and Reviews
+                </button>
             </div>
 
             <p class="text-xs text-slate-600" data-course-count-summary>
@@ -1035,6 +1041,251 @@
         @endif
     </section>
 
+    <section id="reviews" class="vc-panel hidden p-6" data-admin-tab-panel="reviews">
+        <h2 class="text-lg font-semibold tracking-tight text-slate-900">Ratings and Reviews</h2>
+        <p class="mt-2 text-sm text-slate-600">
+            Import historical review rows and moderate learner submissions.
+        </p>
+
+        <div class="mt-4 grid gap-4 lg:grid-cols-2">
+            <article class="rounded-xl border border-slate-200 bg-white p-4">
+                <h3 class="text-sm font-semibold tracking-wide text-slate-700 uppercase">
+                    Import Udemy Reviews (Manual)
+                </h3>
+                <p class="mt-2 text-sm text-slate-600">
+                    Paste one review per line. Supported formats: pipe (`rating | name | title | body | date`), tab,
+                    or CSV.
+                </p>
+
+                <form
+                    class="mt-3 space-y-3"
+                    method="POST"
+                    action="{{ route('admin.courses.reviews.import.preview', $course) }}">
+                    @csrf
+                    <textarea
+                        name="source_text"
+                        rows="7"
+                        class="vc-input font-mono text-xs"
+                        placeholder="5 | Alex Smith | Excellent | Very practical | 2025-10-14">{{ old('review_source_text') }}</textarea>
+                    <button type="submit" class="vc-btn-secondary">Parse Preview</button>
+                </form>
+
+                @if (!empty($reviewImportErrors))
+                    <div class="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+                        <p class="font-semibold">Import warnings</p>
+                        <ul class="mt-2 list-disc space-y-1 pl-5">
+                            @foreach ($reviewImportErrors as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                @if (!empty($reviewImportPreviewRows))
+                    <form
+                        method="POST"
+                        action="{{ route('admin.courses.reviews.import.commit', $course) }}"
+                        class="mt-4 space-y-3">
+                        @csrf
+                        <div class="max-h-96 overflow-y-auto rounded-lg border border-slate-200">
+                            <table class="min-w-full divide-y divide-slate-200 text-xs">
+                                <thead class="bg-slate-50 text-left font-semibold tracking-wide text-slate-600 uppercase">
+                                    <tr>
+                                        <th class="px-2 py-2">Rating</th>
+                                        <th class="px-2 py-2">Reviewer</th>
+                                        <th class="px-2 py-2">Title</th>
+                                        <th class="px-2 py-2">Body</th>
+                                        <th class="px-2 py-2">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white text-slate-700">
+                                    @foreach ($reviewImportPreviewRows as $index => $row)
+                                        <tr>
+                                            <td class="px-2 py-2">
+                                                <input
+                                                    name="rows[{{ $index }}][rating]"
+                                                    type="number"
+                                                    min="1"
+                                                    max="5"
+                                                    value="{{ $row['rating'] }}"
+                                                    class="vc-input !mt-0 py-1 text-xs" />
+                                            </td>
+                                            <td class="px-2 py-2">
+                                                <input
+                                                    name="rows[{{ $index }}][reviewer_name]"
+                                                    value="{{ $row['reviewer_name'] }}"
+                                                    class="vc-input !mt-0 py-1 text-xs" />
+                                            </td>
+                                            <td class="px-2 py-2">
+                                                <input
+                                                    name="rows[{{ $index }}][title]"
+                                                    value="{{ $row['title'] }}"
+                                                    class="vc-input !mt-0 py-1 text-xs" />
+                                            </td>
+                                            <td class="px-2 py-2">
+                                                <input
+                                                    name="rows[{{ $index }}][body]"
+                                                    value="{{ $row['body'] }}"
+                                                    class="vc-input !mt-0 py-1 text-xs" />
+                                            </td>
+                                            <td class="px-2 py-2">
+                                                <input
+                                                    name="rows[{{ $index }}][original_reviewed_at]"
+                                                    value="{{ $row['original_reviewed_at'] }}"
+                                                    class="vc-input !mt-0 py-1 text-xs"
+                                                    placeholder="YYYY-MM-DD" />
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <button type="submit" class="vc-btn-primary">Commit Imported Reviews</button>
+                    </form>
+                @endif
+            </article>
+
+            <article class="rounded-xl border border-slate-200 bg-white p-4">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <h3 class="text-sm font-semibold tracking-wide text-slate-700 uppercase">Course Reviews</h3>
+                    <a href="{{ route('admin.reviews.index', ['course_id' => $course->id]) }}" class="vc-link">
+                        Open moderation queue
+                    </a>
+                </div>
+
+                @if ($course->reviews->isEmpty())
+                    <p class="mt-3 text-sm text-slate-600">No reviews for this course yet.</p>
+                @else
+                    <div class="mt-3 max-h-[30rem] space-y-3 overflow-y-auto pr-1">
+                        @foreach ($course->reviews as $review)
+                            <article class="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                                <form method="POST" action="{{ route('admin.reviews.update', $review) }}" class="space-y-2">
+                                    @csrf
+                                    @method('PUT')
+
+                                    <div class="flex items-center justify-between gap-2">
+                                        <p class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                            {{ str($review->source)->replace('_', ' ') }} · {{ $review->status }}
+                                        </p>
+                                        <p class="text-xs text-slate-500">
+                                            {{ $review->display_date?->format('Y-m-d') ?? 'n/a' }}
+                                        </p>
+                                    </div>
+
+                                    <div class="grid gap-2 sm:grid-cols-2">
+                                        <div>
+                                            <label class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                                Reviewer
+                                            </label>
+                                            <input
+                                                name="reviewer_name"
+                                                value="{{ $review->reviewer_name ?? $review->user?->name }}"
+                                                class="vc-input !mt-0 py-1.5 text-xs"
+                                                @disabled($review->source === \App\Models\CourseReview::SOURCE_NATIVE) />
+                                        </div>
+                                        <div>
+                                            <label class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                                Rating
+                                            </label>
+                                            <input
+                                                name="rating"
+                                                type="number"
+                                                min="1"
+                                                max="5"
+                                                value="{{ $review->rating }}"
+                                                class="vc-input !mt-0 py-1.5 text-xs" />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                            Title
+                                        </label>
+                                        <input
+                                            name="title"
+                                            value="{{ $review->title }}"
+                                            class="vc-input !mt-0 py-1.5 text-xs" />
+                                    </div>
+
+                                    <div>
+                                        <label class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                            Body
+                                        </label>
+                                        <textarea name="body" rows="3" class="vc-input !mt-0 text-xs">{{ $review->body }}</textarea>
+                                    </div>
+
+                                    <div>
+                                        <label class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
+                                            Original review date
+                                        </label>
+                                        <input
+                                            name="original_reviewed_at"
+                                            value="{{ $review->original_reviewed_at?->toDateString() }}"
+                                            placeholder="YYYY-MM-DD"
+                                            class="vc-input !mt-0 py-1.5 text-xs" />
+                                    </div>
+
+                                    <div class="flex flex-wrap gap-2 pt-1">
+                                        <button type="submit" class="vc-btn-secondary !px-3 !py-1.5 !text-xs">
+                                            Save
+                                        </button>
+                                    </div>
+                                </form>
+
+                                <div class="mt-2 flex flex-wrap gap-2">
+                                    @if ($review->status !== \App\Models\CourseReview::STATUS_APPROVED)
+                                        <form method="POST" action="{{ route('admin.reviews.approve', $review) }}">
+                                            @csrf
+                                            <button type="submit" class="vc-btn-secondary !px-3 !py-1.5 !text-xs">
+                                                Approve
+                                            </button>
+                                        </form>
+                                    @endif
+
+                                    @if ($review->status !== \App\Models\CourseReview::STATUS_REJECTED)
+                                        <form method="POST" action="{{ route('admin.reviews.reject', $review) }}">
+                                            @csrf
+                                            <button type="submit" class="vc-btn-secondary !px-3 !py-1.5 !text-xs">
+                                                Reject
+                                            </button>
+                                        </form>
+                                    @endif
+
+                                    @if ($review->status !== \App\Models\CourseReview::STATUS_HIDDEN)
+                                        <form method="POST" action="{{ route('admin.reviews.hide', $review) }}">
+                                            @csrf
+                                            <button type="submit" class="vc-btn-secondary !px-3 !py-1.5 !text-xs">
+                                                Hide
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form method="POST" action="{{ route('admin.reviews.unhide', $review) }}">
+                                            @csrf
+                                            <button type="submit" class="vc-btn-secondary !px-3 !py-1.5 !text-xs">
+                                                Unhide
+                                            </button>
+                                        </form>
+                                    @endif
+
+                                    <form method="POST" action="{{ route('admin.reviews.destroy', $review) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button
+                                            type="submit"
+                                            class="inline-flex items-center rounded-md border border-rose-200 bg-rose-50 px-2.5 py-1.5 text-xs font-medium text-rose-700 transition hover:bg-rose-100">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </article>
+                        @endforeach
+                    </div>
+                @endif
+            </article>
+        </div>
+    </section>
+
     <div
         id="admin-curriculum-toast"
         class="vc-toast vc-toast-success pointer-events-none fixed top-4 right-4 z-[70] hidden w-[min(92vw,420px)] text-sm"></div>
@@ -1086,7 +1337,9 @@
                     ? 'curriculum'
                     : window.location.hash === '#assets'
                       ? 'assets'
-                      : null;
+                      : window.location.hash === '#reviews'
+                        ? 'reviews'
+                        : null;
             const savedTab = localStorage.getItem(storageKey);
             setActiveTab(hashTab ?? savedTab ?? 'details');
 

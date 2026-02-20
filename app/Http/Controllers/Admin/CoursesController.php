@@ -188,6 +188,7 @@ class CoursesController extends Controller
             'modules.resources' => fn ($query) => $query->orderBy('sort_order'),
             'modules.lessons' => fn ($query) => $query->orderBy('sort_order'),
             'modules.lessons.resources' => fn ($query) => $query->orderBy('sort_order'),
+            'reviews' => fn ($query) => $query->with('user:id,name,email')->latest('updated_at'),
         ]);
 
         [$streamVideos, $streamCatalogStatus, $streamCatalogFilterNotice] = $this->resolveStreamCatalog($streamCatalogService, $course);
@@ -197,6 +198,8 @@ class CoursesController extends Controller
             'streamVideos' => $streamVideos,
             'streamCatalogStatus' => $streamCatalogStatus,
             'streamCatalogFilterNotice' => $streamCatalogFilterNotice,
+            'reviewImportPreviewRows' => session()->get('course_review_import_preview:'.$course->id, []),
+            'reviewImportErrors' => session('review_import_errors', []),
         ]);
     }
 

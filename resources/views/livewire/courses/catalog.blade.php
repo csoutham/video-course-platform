@@ -69,6 +69,18 @@
                         <h2 class="text-xl font-semibold tracking-tight text-slate-900">
                             {{ $card['course']->title }}
                         </h2>
+                        <div class="flex items-center gap-2 text-sm text-slate-600">
+                            @if ($card['reviewCount'] > 0 && $card['ratingAverage'] !== null)
+                                <span class="font-semibold text-slate-900">{{ number_format($card['ratingAverage'], 1) }}</span>
+                                <span aria-hidden="true">★</span>
+                                <span>
+                                    ({{ $card['reviewCount'] }}
+                                    {{ \Illuminate\Support\Str::plural('review', $card['reviewCount']) }})
+                                </span>
+                            @else
+                                <span>No reviews yet</span>
+                            @endif
+                        </div>
                         <p class="line-clamp-3 text-sm leading-relaxed text-slate-600">
                             {{ $card['course']->description }}
                         </p>
