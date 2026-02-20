@@ -4,9 +4,7 @@
 @endphp
 
 @if (request()->routeIs('admin.*') && is_string($message) && trim($message) !== '')
-    <div
-        class="pointer-events-none fixed top-4 right-4 z-[70] w-[min(92vw,420px)]"
-        data-admin-toast-container>
+    <div class="pointer-events-none fixed top-4 right-4 z-[70] w-[min(92vw,420px)]" data-admin-toast-container>
         <div
             class="vc-toast {{ $isError ? 'vc-toast-error' : 'vc-toast-success' }} pointer-events-auto"
             role="status"
