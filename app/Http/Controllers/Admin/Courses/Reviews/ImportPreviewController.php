@@ -15,8 +15,6 @@ class ImportPreviewController extends Controller
         Course $course,
         CourseReviewImportService $importService,
     ): RedirectResponse {
-        abort_unless((bool) config('learning.reviews_enabled'), 404);
-
         $validated = $request->validate([
             'source_text' => ['required', 'string', 'max:120000'],
         ]);

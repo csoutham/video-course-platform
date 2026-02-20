@@ -15,8 +15,6 @@ class UpdateController extends Controller
         CourseReview $review,
         CourseRatingAggregateService $aggregateService,
     ): RedirectResponse {
-        abort_unless((bool) config('learning.reviews_enabled'), 404);
-
         $validated = $request->validate([
             'reviewer_name' => ['nullable', 'string', 'max:120'],
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
@@ -40,4 +38,3 @@ class UpdateController extends Controller
         return back()->with('status', 'Review updated.');
     }
 }
-

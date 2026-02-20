@@ -17,6 +17,14 @@ test('non admin users cannot access admin reviews', function (): void {
         ->assertForbidden();
 });
 
+test('admin reviews queue remains available even when public reviews are disabled', function (): void {
+    config()->set('learning.reviews_enabled', false);
+
+    $this->actingAs(User::factory()->admin()->create())
+        ->get(route('admin.reviews.index'))
+        ->assertOk();
+});
+
 test('admin can view reviews queue and moderate pending review', function (): void {
     $admin = User::factory()->admin()->create();
     $course = Course::factory()->published()->create();
@@ -89,4 +97,3 @@ test('admin can preview and commit manual imported reviews for a course', functi
     expect($course->reviews_approved_count)->toBe(2);
     expect((float) $course->rating_average)->toBe(4.5);
 });
-

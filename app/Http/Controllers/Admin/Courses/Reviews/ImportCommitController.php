@@ -18,8 +18,6 @@ class ImportCommitController extends Controller
         CourseReviewImportService $importService,
         CourseRatingAggregateService $aggregateService,
     ): RedirectResponse {
-        abort_unless((bool) config('learning.reviews_enabled'), 404);
-
         $validated = $request->validate([
             'rows' => ['required', 'array', 'min:1'],
             'rows.*.rating' => ['required', 'integer', 'min:1', 'max:5'],
@@ -47,4 +45,3 @@ class ImportCommitController extends Controller
         return 'course_review_import_preview:'.$course->id;
     }
 }
-

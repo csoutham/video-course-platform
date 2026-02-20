@@ -15,11 +15,8 @@ class UnhideController extends Controller
         CourseReview $review,
         CourseReviewModerationService $moderationService,
     ): RedirectResponse {
-        abort_unless((bool) config('learning.reviews_enabled'), 404);
-
         $moderationService->unhide($review, $request->user(), $request->input('moderation_note'));
 
         return back()->with('status', 'Review restored.');
     }
 }
-

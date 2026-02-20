@@ -11,8 +11,6 @@ class DestroyController extends Controller
 {
     public function __invoke(CourseReview $review, CourseRatingAggregateService $aggregateService): RedirectResponse
     {
-        abort_unless((bool) config('learning.reviews_enabled'), 404);
-
         $course = $review->course;
         $review->delete();
 
@@ -23,4 +21,3 @@ class DestroyController extends Controller
         return back()->with('status', 'Review deleted.');
     }
 }
-

@@ -11,8 +11,6 @@ class IndexController extends Controller
 {
     public function __invoke(Request $request): View
     {
-        abort_unless((bool) config('learning.reviews_enabled'), 404);
-
         $status = $request->string('status')->toString();
         $source = $request->string('source')->toString();
         $courseId = $request->integer('course_id');
@@ -68,4 +66,3 @@ class IndexController extends Controller
         ]);
     }
 }
-
