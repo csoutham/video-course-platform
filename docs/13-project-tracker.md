@@ -92,3 +92,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-19: Switched image upload paths (course thumbnails, branding logos) to configurable R2-backed disk (`IMAGE_UPLOAD_DISK`) for zero-downtime-safe asset delivery.
 - 2026-02-20: Added explicit Flysystem S3 adapter dependency (`league/flysystem-aws-s3-v3`) to fix R2 upload runtime class resolution.
 - 2026-02-20: Added `MEDIA_PUBLIC_URL` runtime media base URL support for thumbnails/logos so deployed public domains can be changed without data rewrites.
+- 2026-02-20: Replaced inline admin status banners with fixed top-right toast notifications to prevent content layout shifts.

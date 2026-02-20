@@ -4,12 +4,6 @@
         $lessonCount = $course->modules->sum(fn ($module) => $module->lessons->count());
     @endphp
 
-    @if (session('status'))
-        <section class="vc-panel mt-4 p-4 text-sm text-slate-700">
-            {{ session('status') }}
-        </section>
-    @endif
-
     <section
         class="sticky top-0 z-50 -mx-4 border-y border-slate-200/90 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:-mx-8 lg:px-8">
         <div class="mx-auto flex max-w-none flex-wrap items-center justify-between gap-3">
@@ -938,7 +932,7 @@
 
     <div
         id="admin-curriculum-toast"
-        class="pointer-events-none fixed top-4 left-1/2 z-50 hidden -translate-x-1/2 rounded-xl px-4 py-3 text-sm font-medium text-white shadow-lg"></div>
+        class="vc-toast vc-toast-success pointer-events-none fixed top-4 right-4 z-[70] hidden w-[min(92vw,420px)] text-sm"></div>
 
     <script>
         (() => {
@@ -1168,8 +1162,8 @@
 
                             if (toastEl) {
                                 toastEl.textContent = form.dataset.asyncSuccess || 'Saved.';
-                                toastEl.classList.remove('hidden', 'bg-rose-600');
-                                toastEl.classList.add('bg-emerald-600');
+                                toastEl.classList.remove('hidden', 'vc-toast-error');
+                                toastEl.classList.add('vc-toast-success');
                                 clearTimeout(window.__adminCurriculumToastTimeout);
                                 window.__adminCurriculumToastTimeout = window.setTimeout(() => {
                                     toastEl.classList.add('hidden');
@@ -1178,8 +1172,8 @@
                         } catch (error) {
                             if (toastEl) {
                                 toastEl.textContent = 'Update failed. Retrying with full page submit...';
-                                toastEl.classList.remove('hidden', 'bg-emerald-600');
-                                toastEl.classList.add('bg-rose-600');
+                                toastEl.classList.remove('hidden', 'vc-toast-success');
+                                toastEl.classList.add('vc-toast-error');
                                 clearTimeout(window.__adminCurriculumToastTimeout);
                                 window.__adminCurriculumToastTimeout = window.setTimeout(() => {
                                     toastEl.classList.add('hidden');

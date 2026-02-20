@@ -181,4 +181,20 @@
     .vc-link:hover {
         color: var(--vc-brand-strong);
     }
+
+    .vc-toast {
+        @apply relative rounded-xl border px-4 py-3 shadow-lg backdrop-blur-sm transition;
+    }
+
+    .vc-toast-success {
+        @apply border-emerald-200 bg-emerald-50/95 text-emerald-900;
+    }
+
+    .vc-toast-error {
+        @apply border-rose-200 bg-rose-50/95 text-rose-900;
+    }
+
+    .vc-toast-leave {
+        @apply translate-y-1 opacity-0;
+    }
 }
