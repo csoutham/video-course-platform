@@ -101,4 +101,5 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-20: Added subscription foundation: billing settings admin page, customer billing page/portal route, subscription checkout route, Stripe subscription/invoice webhook sync, and subscription-aware learning access checks.
 - 2026-02-20: Added preorder flow foundation: preorder checkout route, setup-intent reservation via webhook, preorder release command scheduler, and admin course preorder configuration fields.
 - 2026-02-20: Fixed MySQL preorder reservations migration failure by removing invalid `->index()` chaining from foreign key definitions that produced duplicate constraint name `1`.
+- 2026-02-20: Updated admin course editor Stream search to match only Cloudflare video titles (not IDs), reducing false-positive search results.
 - 2026-02-20: Updated admin UX shell with a fixed desktop sidebar, removed Imports from admin nav, and fixed course edit tabs beneath the top header so content scrolls under both bars.

@@ -118,7 +118,7 @@
                     type="text"
                     data-stream-search
                     class="vc-input mb-2"
-                    placeholder="Search videos by name or UID"
+                    placeholder="Search videos by title"
                     autocomplete="off" />
                 <select id="intro_video_id" name="intro_video_id" class="vc-input" data-stream-select>
                     <option value="">No intro video</option>
@@ -131,6 +131,7 @@
                     @foreach ($streamVideos as $video)
                         <option
                             value="{{ $video['uid'] }}"
+                            data-video-title="{{ $video['name'] }}"
                             @selected(old('intro_video_id', $course->intro_video_id) === $video['uid'])>
                             {{ $video['name'] }} ({{ $video['uid'] }})
                         </option>
@@ -690,7 +691,7 @@
                                             type="text"
                                             data-stream-search
                                             class="vc-input !mt-0 mb-2 py-1.5 text-sm"
-                                            placeholder="Search videos by name or UID"
+                                            placeholder="Search videos by title"
                                             autocomplete="off" />
                                         <select
                                             name="stream_video_id"
@@ -698,7 +699,9 @@
                                             data-stream-select>
                                             <option value="">No video yet</option>
                                             @foreach ($streamVideos as $video)
-                                                <option value="{{ $video['uid'] }}">
+                                                <option
+                                                    value="{{ $video['uid'] }}"
+                                                    data-video-title="{{ $video['name'] }}">
                                                     {{ $video['name'] }} ({{ $video['uid'] }})
                                                 </option>
                                             @endforeach
@@ -818,7 +821,7 @@
                                                         type="text"
                                                         data-stream-search
                                                         class="vc-input !mt-0 mb-2 py-1.5 text-sm"
-                                                        placeholder="Search videos by name or UID"
+                                                        placeholder="Search videos by title"
                                                         autocomplete="off" />
                                                     <select
                                                         name="stream_video_id"
@@ -834,6 +837,7 @@
                                                         @foreach ($streamVideos as $video)
                                                             <option
                                                                 value="{{ $video['uid'] }}"
+                                                                data-video-title="{{ $video['name'] }}"
                                                                 @selected($lesson->stream_video_id === $video['uid'])>
                                                                 {{ $video['name'] }} ({{ $video['uid'] }})
                                                             </option>
@@ -1180,7 +1184,7 @@
                                 return;
                             }
 
-                            option.hidden = !normalize(option.textContent).includes(term);
+                            option.hidden = !normalize(option.dataset.videoTitle).includes(term);
                         });
                     };
 
