@@ -46,6 +46,7 @@
                             {{ $totalDurationLabel }} total video
                         </span>
                     @endif
+
                     @if ($reviewsEnabled && $course->reviews_approved_count > 0 && $course->rating_average !== null)
                         <span class="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
                             {{ number_format((float) $course->rating_average, 1) }} ★
@@ -165,6 +166,7 @@
                                                 ? (int) round(($count / $course->reviews_approved_count) * 100)
                                                 : 0;
                                     @endphp
+
                                     <div class="flex items-center gap-2 text-xs">
                                         <span class="w-10 font-medium text-slate-700">{{ $ratingValue }}★</span>
                                         <div class="h-2 flex-1 overflow-hidden rounded-full bg-slate-200">
@@ -181,7 +183,10 @@
                         <div class="space-y-3">
                             @auth
                                 @if ($reviewEligibility && $reviewEligibility['can_submit'])
-                                    <form method="POST" action="{{ route('courses.reviews.store', $course) }}" class="space-y-3">
+                                    <form
+                                        method="POST"
+                                        action="{{ route('courses.reviews.store', $course) }}"
+                                        class="space-y-3">
                                         @csrf
                                         <div class="grid gap-3 sm:grid-cols-2">
                                             <div>
@@ -214,7 +219,9 @@
                                                 name="body"
                                                 rows="4"
                                                 class="vc-input"
-                                                maxlength="2000">{{ old('body', $viewerReview?->body) }}</textarea>
+                                                maxlength="2000">
+{{ old('body', $viewerReview?->body) }}</textarea
+                                            >
                                         </div>
 
                                         <div class="flex flex-wrap items-center gap-2">
@@ -227,7 +234,7 @@
                                                     class="rounded-full bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700">
                                                     Pending moderation
                                                 </span>
-                                            @elseif($viewerReview?->status === \App\Models\CourseReview::STATUS_REJECTED)
+                                            @elseif ($viewerReview?->status === \App\Models\CourseReview::STATUS_REJECTED)
                                                 <span
                                                     class="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
                                                     Needs update before approval
@@ -248,14 +255,14 @@
                                         </form>
                                     @endif
                                 @else
-                                    <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+                                    <div
+                                        class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
                                         @if ($reviewEligibility && $reviewEligibility['reason'] === 'insufficient_progress')
-                                            You can review this course at
-                                            {{ $reviewEligibility['required_percent'] }}% progress. Current progress:
-                                            {{ $reviewEligibility['progress_percent'] }}%.
+                                            You can review this course at {{ $reviewEligibility['required_percent'] }}%
+                                            progress. Current progress: {{ $reviewEligibility['progress_percent'] }}%.
                                         @else
-                                            Reviews are available to active learners once eligibility requirements are
-                                            met.
+                                                Reviews are available to active learners once eligibility requirements
+                                                are met.
                                         @endif
                                     </div>
                                 @endif
@@ -277,12 +284,19 @@
                                                     {{ $review->display_date?->format('M j, Y') }}
                                                 </p>
                                             </div>
-                                            <p class="mt-1 text-sm font-semibold text-amber-700">{{ $review->rating }} ★</p>
+                                            <p class="mt-1 text-sm font-semibold text-amber-700">
+                                                {{ $review->rating }} ★
+                                            </p>
                                             @if ($review->title)
-                                                <p class="mt-1 text-sm font-semibold text-slate-900">{{ $review->title }}</p>
+                                                <p class="mt-1 text-sm font-semibold text-slate-900">
+                                                    {{ $review->title }}
+                                                </p>
                                             @endif
+
                                             @if ($review->body)
-                                                <p class="mt-1 text-sm leading-relaxed text-slate-700">{{ $review->body }}</p>
+                                                <p class="mt-1 text-sm leading-relaxed text-slate-700">
+                                                    {{ $review->body }}
+                                                </p>
                                             @endif
                                         </article>
                                     @endforeach

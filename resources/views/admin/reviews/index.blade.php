@@ -17,7 +17,9 @@
                 <select id="status" name="status" class="vc-input">
                     <option value="">All</option>
                     @foreach ($statuses as $status)
-                        <option value="{{ $status }}" @selected($selectedStatus === $status)>{{ ucfirst($status) }}</option>
+                        <option value="{{ $status }}" @selected($selectedStatus === $status)>
+                            {{ ucfirst($status) }}
+                        </option>
                     @endforeach
                 </select>
             </div>
@@ -27,7 +29,9 @@
                 <select id="source" name="source" class="vc-input">
                     <option value="">All</option>
                     @foreach ($sources as $source)
-                        <option value="{{ $source }}" @selected($selectedSource === $source)>{{ str($source)->replace('_', ' ')->title() }}</option>
+                        <option value="{{ $source }}" @selected($selectedSource === $source)>
+                            {{ str($source)->replace('_', ' ')->title() }}
+                        </option>
                     @endforeach
                 </select>
             </div>
@@ -37,7 +41,9 @@
                 <select id="course_id" name="course_id" class="vc-input">
                     <option value="">All</option>
                     @foreach ($courses as $course)
-                        <option value="{{ $course->id }}" @selected($selectedCourseId === $course->id)>{{ $course->title }}</option>
+                        <option value="{{ $course->id }}" @selected($selectedCourseId === $course->id)>
+                            {{ $course->title }}
+                        </option>
                     @endforeach
                 </select>
             </div>
@@ -74,7 +80,9 @@
                     @foreach ($reviews as $review)
                         <tr>
                             <td class="px-4 py-3">
-                                <a href="{{ route('admin.courses.edit', $review->course_id) }}#reviews" class="vc-link">
+                                <a
+                                    href="{{ route('admin.courses.edit', $review->course_id) }}#reviews"
+                                    class="vc-link">
                                     {{ $review->course?->title ?? 'Unknown course' }}
                                 </a>
                             </td>
@@ -159,4 +167,3 @@
         </section>
     @endif
 </x-admin-layout>
-

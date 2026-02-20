@@ -129,14 +129,14 @@ class CourseReviewImportService
     private function splitLine(string $line): array
     {
         if (str_contains($line, "\t")) {
-            return array_map('trim', explode("\t", $line));
+            return array_map(trim(...), explode("\t", $line));
         }
 
         if (str_contains($line, '|')) {
-            return array_map('trim', explode('|', $line));
+            return array_map(trim(...), explode('|', $line));
         }
 
-        return array_map('trim', str_getcsv($line));
+        return array_map(trim(...), str_getcsv($line, escape: '\\'));
     }
 
     private function nullableTrimmed(mixed $value): ?string

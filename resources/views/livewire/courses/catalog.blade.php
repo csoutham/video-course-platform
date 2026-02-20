@@ -71,7 +71,9 @@
                         </h2>
                         <div class="flex items-center gap-2 text-sm text-slate-600">
                             @if ($card['reviewCount'] > 0 && $card['ratingAverage'] !== null)
-                                <span class="font-semibold text-slate-900">{{ number_format($card['ratingAverage'], 1) }}</span>
+                                <span class="font-semibold text-slate-900">
+                                    {{ number_format($card['ratingAverage'], 1) }}
+                                </span>
                                 <span aria-hidden="true">★</span>
                                 <span>
                                     ({{ $card['reviewCount'] }}

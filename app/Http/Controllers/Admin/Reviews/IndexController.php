@@ -26,13 +26,13 @@ class IndexController extends Controller
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where(function ($inner) use ($search): void {
                     $inner
-                        ->where('reviewer_name', 'like', '%'.$search.'%')
-                        ->orWhere('title', 'like', '%'.$search.'%')
-                        ->orWhere('body', 'like', '%'.$search.'%')
+                        ->whereLike('reviewer_name', '%'.$search.'%')
+                        ->orWhereLike('title', '%'.$search.'%')
+                        ->orWhereLike('body', '%'.$search.'%')
                         ->orWhereHas('user', function ($userQuery) use ($search): void {
                             $userQuery
-                                ->where('name', 'like', '%'.$search.'%')
-                                ->orWhere('email', 'like', '%'.$search.'%');
+                                ->whereLike('name', '%'.$search.'%')
+                                ->orWhereLike('email', '%'.$search.'%');
                         });
                 });
             })

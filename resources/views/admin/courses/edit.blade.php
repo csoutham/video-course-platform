@@ -1043,9 +1043,7 @@
 
     <section id="reviews" class="vc-panel hidden p-6" data-admin-tab-panel="reviews">
         <h2 class="text-lg font-semibold tracking-tight text-slate-900">Ratings and Reviews</h2>
-        <p class="mt-2 text-sm text-slate-600">
-            Import historical review rows and moderate learner submissions.
-        </p>
+        <p class="mt-2 text-sm text-slate-600">Import historical review rows and moderate learner submissions.</p>
 
         <div class="mt-4 grid gap-4 lg:grid-cols-2">
             <article class="rounded-xl border border-slate-200 bg-white p-4">
@@ -1053,8 +1051,8 @@
                     Import Udemy Reviews (Manual)
                 </h3>
                 <p class="mt-2 text-sm text-slate-600">
-                    Paste one review per line. Supported formats: pipe (`rating | name | title | body | date`), tab,
-                    or CSV.
+                    Paste one review per line. Supported formats: pipe (`rating | name | title | body | date`), tab, or
+                    CSV.
                 </p>
 
                 <form
@@ -1066,7 +1064,9 @@
                         name="source_text"
                         rows="7"
                         class="vc-input font-mono text-xs"
-                        placeholder="5 | Alex Smith | Excellent | Very practical | 2025-10-14">{{ old('review_source_text') }}</textarea>
+                        placeholder="5 | Alex Smith | Excellent | Very practical | 2025-10-14">
+{{ old('review_source_text') }}</textarea
+                    >
                     <button type="submit" class="vc-btn-secondary">Parse Preview</button>
                 </form>
 
@@ -1089,7 +1089,8 @@
                         @csrf
                         <div class="max-h-96 overflow-y-auto rounded-lg border border-slate-200">
                             <table class="min-w-full divide-y divide-slate-200 text-xs">
-                                <thead class="bg-slate-50 text-left font-semibold tracking-wide text-slate-600 uppercase">
+                                <thead
+                                    class="bg-slate-50 text-left font-semibold tracking-wide text-slate-600 uppercase">
                                     <tr>
                                         <th class="px-2 py-2">Rating</th>
                                         <th class="px-2 py-2">Reviewer</th>
@@ -1160,7 +1161,10 @@
                     <div class="mt-3 max-h-[30rem] space-y-3 overflow-y-auto pr-1">
                         @foreach ($course->reviews as $review)
                             <article class="rounded-lg border border-slate-200 bg-slate-50 p-3">
-                                <form method="POST" action="{{ route('admin.reviews.update', $review) }}" class="space-y-2">
+                                <form
+                                    method="POST"
+                                    action="{{ route('admin.reviews.update', $review) }}"
+                                    class="space-y-2">
                                     @csrf
                                     @method('PUT')
 
@@ -1212,7 +1216,9 @@
                                         <label class="text-xs font-semibold tracking-wide text-slate-600 uppercase">
                                             Body
                                         </label>
-                                        <textarea name="body" rows="3" class="vc-input !mt-0 text-xs">{{ $review->body }}</textarea>
+                                        <textarea name="body" rows="3" class="vc-input !mt-0 text-xs">
+{{ $review->body }}</textarea
+                                        >
                                     </div>
 
                                     <div>
