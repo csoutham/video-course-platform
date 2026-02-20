@@ -46,9 +46,7 @@ class BillingSettingsService
             default => null,
         };
 
-        if (! is_string($priceId) || $priceId === '') {
-            throw new InvalidArgumentException('Subscription pricing is not configured for this interval.');
-        }
+        throw_if(! is_string($priceId) || $priceId === '', InvalidArgumentException::class, 'Subscription pricing is not configured for this interval.');
 
         return $priceId;
     }

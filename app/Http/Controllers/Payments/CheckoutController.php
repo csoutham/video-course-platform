@@ -24,6 +24,14 @@ class CheckoutController extends Controller
     ): RedirectResponse {
         abort_if(! $course->is_published, 404);
 
+        if ((bool) config('learning.preorders_enabled')
+            && $course->is_preorder_enabled
+            && ! $course->isReleased()) {
+            return back()->withErrors([
+                'preorder' => 'This course is currently in preorder. Use the preorder option on the course page.',
+            ])->withInput();
+        }
+
         $validated = $request->validate([
             'email' => ['nullable', 'email'],
             'promotion_code' => ['nullable', 'string', 'max:255'],

@@ -18,8 +18,12 @@ This plan preserves existing flows: one-time checkout, gifts, claim links, recei
   - Billing pages (`/billing`, `/billing/portal`) and admin billing settings (`/admin/billing`).
   - Stripe webhook subscription sync for `customer.subscription.*` and `invoice.*`.
   - Subscription-aware course access and My Courses inclusion for non-excluded published courses.
+  - Preorder checkout endpoint (`/preorder/{course}`) with Stripe Checkout `mode=setup`.
+  - Preorder setup webhook branch that records `preorder_reservations`.
+  - Scheduled preorder release command (`videocourses:preorders-release`) for off-session charge attempts.
+  - Admin course preorder configuration fields (window, release date, preorder price, Stripe preorder price id).
 - In progress:
-  - Preorder reservation/charge lifecycle and release command.
+  - Expanded recovery automation for failed off-session preorder charges (currently surfaced via billing recovery panel).
 
 ## Product Decisions Locked
 

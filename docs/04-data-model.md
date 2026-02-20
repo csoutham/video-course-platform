@@ -12,6 +12,9 @@
 - `order_items`: line items, one course per item for v1.
 - `gift_purchases`: gift order metadata and recipient claim status.
 - `entitlements`: access grants from paid orders.
+- `subscriptions`: Stripe subscription state per user/customer.
+- `billing_settings`: singleton Stripe subscription + portal configuration.
+- `preorder_reservations`: setup-intent reservations and release-charge outcomes.
 - `stripe_events`: idempotent webhook processing ledger.
 
 ## Suggested Fields
@@ -47,6 +50,13 @@
 - `is_free` (boolean; when true, Stripe checkout is bypassed)
 - `free_access_mode` (`claim_link|direct`)
 - `is_published`
+- `is_subscription_excluded` (boolean; excludes course from platform subscription access)
+- `is_preorder_enabled` (boolean)
+- `preorder_starts_at` (nullable timestamp)
+- `preorder_ends_at` (nullable timestamp)
+- `release_at` (nullable timestamp)
+- `preorder_price_amount` (nullable integer)
+- `stripe_preorder_price_id` (nullable Stripe price id for preorder pricing)
 - `created_at`, `updated_at`
 
 ### course_modules
@@ -112,6 +122,8 @@
 - Uses Stripe session IDs for paid checkouts and `free_*` synthetic IDs for free enrollments.
 - `stripe_customer_id` (nullable)
 - `status` (`pending|paid|failed|refunded`)
+- `order_type` (`one_time|subscription|preorder`)
+- `subscription_id` (nullable FK for recurring subscription invoice orders)
 - `subtotal_amount`
 - `discount_amount`
 - `total_amount`
@@ -163,8 +175,55 @@ Constraints:
 ### purchase_claim_tokens
 
 - Existing table supports both order and gift claims.
-- `purpose` (`order_claim|gift_claim`)
+- `purpose` (`order_claim|gift_claim|preorder_claim`)
 - `gift_purchase_id` (nullable unique for gift claim tokens)
+
+### billing_settings
+
+- `id` (singleton row)
+- `stripe_subscription_monthly_price_id` (nullable)
+- `stripe_subscription_yearly_price_id` (nullable)
+- `subscription_currency` (`usd|gbp`)
+- `stripe_billing_portal_enabled` (boolean)
+- `stripe_billing_portal_configuration_id` (nullable)
+- `created_at`, `updated_at`
+
+### subscriptions
+
+- `id`
+- `user_id` (nullable index)
+- `email`
+- `stripe_customer_id` (index)
+- `stripe_subscription_id` (unique)
+- `stripe_price_id`
+- `interval` (`monthly|yearly`)
+- `status` (`active|trialing|past_due|canceled|incomplete|incomplete_expired|unpaid`)
+- `current_period_start` (nullable)
+- `current_period_end` (nullable index)
+- `cancel_at_period_end` (boolean)
+- `canceled_at` (nullable)
+- `ended_at` (nullable)
+- `created_at`, `updated_at`
+
+### preorder_reservations
+
+- `id`
+- `course_id` (index)
+- `user_id` (nullable index)
+- `email` (index)
+- `stripe_customer_id` (index)
+- `stripe_setup_intent_id` (unique)
+- `stripe_payment_method_id`
+- `reserved_price_amount`
+- `currency`
+- `status` (`reserved|charge_pending|charged|action_required|failed|canceled`)
+- `release_at` (index)
+- `charged_order_id` (nullable FK `orders.id`)
+- `stripe_payment_intent_id` (nullable)
+- `charged_at` (nullable)
+- `failure_code` (nullable)
+- `failure_message` (nullable)
+- `created_at`, `updated_at`
 
 ### stripe_events
 

@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 
 class PurchaseClaimService
 {
-    public function issueForOrder(Order $order): PurchaseClaimToken
+    public function issueForOrder(Order $order, string $purpose = 'order_claim'): PurchaseClaimToken
     {
         $expiresAt = CarbonImmutable::now()->addDays(7);
 
@@ -22,7 +22,7 @@ class PurchaseClaimService
         return PurchaseClaimToken::query()->updateOrCreate(
             ['order_id' => $order->id],
             [
-                'purpose' => 'order_claim',
+                'purpose' => $purpose,
                 'token' => Str::random(64),
                 'expires_at' => $expiresAt,
                 'consumed_at' => null,
@@ -33,7 +33,7 @@ class PurchaseClaimService
     public function resolveActiveToken(string $token): ?PurchaseClaimToken
     {
         return PurchaseClaimToken::query()
-            ->where('purpose', 'order_claim')
+            ->whereIn('purpose', ['order_claim', 'preorder_claim'])
             ->where('token', $token)
             ->whereNull('consumed_at')
             ->where('expires_at', '>', now())

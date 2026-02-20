@@ -13,9 +13,7 @@ class SubscriptionSyncService
     {
         $stripeSubscriptionId = (string) Arr::get($payload, 'id');
 
-        if ($stripeSubscriptionId === '') {
-            throw new \InvalidArgumentException('Missing stripe subscription id.');
-        }
+        throw_if($stripeSubscriptionId === '', \InvalidArgumentException::class, 'Missing stripe subscription id.');
 
         $customerId = (string) Arr::get($payload, 'customer');
         $status = (string) Arr::get($payload, 'status', 'incomplete');

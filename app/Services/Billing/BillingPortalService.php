@@ -19,15 +19,11 @@ class BillingPortalService
     {
         $settings = $this->billingSettingsService->current();
 
-        if (! $settings->stripe_billing_portal_enabled) {
-            throw new InvalidArgumentException('Billing portal is not enabled yet.');
-        }
+        throw_unless($settings->stripe_billing_portal_enabled, InvalidArgumentException::class, 'Billing portal is not enabled yet.');
 
         $customerId = $this->customerResolver->resolveForUser($user);
 
-        if (! $customerId) {
-            throw new InvalidArgumentException('No Stripe customer found for your account yet.');
-        }
+        throw_unless($customerId, InvalidArgumentException::class, 'No Stripe customer found for your account yet.');
 
         $stripe = new StripeClient((string) config('services.stripe.secret'));
 

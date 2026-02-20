@@ -8,10 +8,12 @@ use App\Models\Entitlement;
 use App\Models\GiftPurchase;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\PreorderReservation;
 use App\Models\PurchaseClaimToken;
 use App\Models\StripeEvent;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Services\Preorders\PreorderCheckoutService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -597,5 +599,65 @@ test('invoice paid webhook creates subscription order', function (): void {
         'subscription_id' => $subscription->id,
         'status' => 'paid',
         'total_amount' => 1500,
+    ]);
+});
+
+test('preorder setup webhook reserves preorder instead of creating order', function (): void {
+    config()->set('services.stripe.webhook_secret', 'whsec_test');
+    config()->set('learning.preorders_enabled', true);
+
+    $course = Course::factory()->published()->create([
+        'is_preorder_enabled' => true,
+        'preorder_starts_at' => now()->subDay(),
+        'preorder_ends_at' => now()->addDays(7),
+        'release_at' => now()->addDays(10),
+        'preorder_price_amount' => 6900,
+    ]);
+
+    $mock = \Mockery::mock(PreorderCheckoutService::class);
+    $mock->shouldReceive('resolveSetupIntentPaymentMethod')
+        ->once()
+        ->with('seti_test_1')
+        ->andReturn('pm_test_1');
+    $this->app->instance(PreorderCheckoutService::class, $mock);
+
+    $payload = [
+        'id' => 'evt_preorder_setup_1',
+        'object' => 'event',
+        'type' => 'checkout.session.completed',
+        'data' => [
+            'object' => [
+                'id' => 'cs_preorder_setup_1',
+                'object' => 'checkout.session',
+                'setup_intent' => 'seti_test_1',
+                'customer' => 'cus_preorder_1',
+                'customer_email' => 'preorder@example.com',
+                'metadata' => [
+                    'flow' => 'preorder_setup',
+                    'course_id' => (string) $course->id,
+                    'customer_email' => 'preorder@example.com',
+                ],
+            ],
+        ],
+    ];
+
+    $jsonPayload = json_encode($payload, JSON_THROW_ON_ERROR);
+    $signature = ($this->generateSignatureHeader)($jsonPayload, 'whsec_test');
+
+    $this->withHeaders([
+        'Stripe-Signature' => $signature,
+    ])->postJson(route('webhooks.stripe'), $payload)->assertOk();
+
+    $this->assertDatabaseHas('preorder_reservations', [
+        'course_id' => $course->id,
+        'email' => 'preorder@example.com',
+        'stripe_setup_intent_id' => 'seti_test_1',
+        'stripe_payment_method_id' => 'pm_test_1',
+        'status' => 'reserved',
+    ]);
+
+    expect(PreorderReservation::query()->count())->toBe(1);
+    $this->assertDatabaseMissing('orders', [
+        'stripe_checkout_session_id' => 'cs_preorder_setup_1',
     ]);
 });

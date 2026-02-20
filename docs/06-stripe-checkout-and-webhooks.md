@@ -4,6 +4,9 @@
 
 - Use Stripe Checkout hosted page.
 - Map each course to a Stripe Price ID.
+- Map subscription plans (monthly/yearly) from admin-configured Stripe price IDs.
+- Use Stripe Billing Portal for self-service subscription management.
+- Use Stripe Checkout `mode=setup` for preorder reservations.
 - Allow course-level free mode (`is_free`) that bypasses Stripe and creates local zero-value orders.
 - Support optional promotion/coupon code entry.
 - Support optional gift checkout mode with recipient details.
@@ -23,6 +26,7 @@ Include metadata sufficient to reconcile internal records:
 - `recipient_name` (if gift and provided)
 - `gift_message_present` (`0|1`)
 - `source` (optional analytics)
+- `flow` (`subscription|preorder_setup|...`) for non-standard checkout paths
 
 ## Webhook Events Consumed
 
@@ -30,6 +34,11 @@ Include metadata sufficient to reconcile internal records:
 - `checkout.session.async_payment_succeeded`
 - `checkout.session.async_payment_failed`
 - `charge.refunded`
+- `customer.subscription.created`
+- `customer.subscription.updated`
+- `customer.subscription.deleted`
+- `invoice.paid`
+- `invoice.payment_failed`
 
 ## Webhook Controller Rules
 
@@ -42,12 +51,15 @@ Include metadata sufficient to reconcile internal records:
 7. Send receipt email after commit for first paid transition.
 8. For gift orders, create gift record and send recipient + buyer gift emails.
 9. Mark event processed timestamp.
+10. For preorder setup sessions, create/update preorder reservation and skip order/entitlement creation.
+11. For subscription events, sync local subscription state and create subscription invoice orders on `invoice.paid`.
 
 ## Order State Transitions
 
 - `pending -> paid` on successful checkout/payment event.
 - `pending -> failed` on async payment failure.
 - `paid -> refunded` on refund event.
+- Subscription invoice orders are recorded as `order_type=subscription` with `stripe_checkout_session_id=subinv_<invoice_id>`.
 
 ## Entitlement Transitions
 
@@ -55,6 +67,7 @@ Include metadata sufficient to reconcile internal records:
 - Ensure duplicate events do not create duplicate entitlements.
 - Revoke entitlement on refunded order according to policy.
 - Gift order: skip buyer entitlement grant; grant entitlement only when recipient claims.
+- Subscription access: no per-course entitlement row required when active subscription is valid and course is not excluded.
 
 ## Error Handling
 

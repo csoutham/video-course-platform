@@ -36,6 +36,8 @@ MAIL_MAILER=log
 MAIL_FROM_ADDRESS=hello@example.com
 MAIL_FROM_NAME="Video Courses"
 GIFTS_ENABLED=false
+SUBSCRIPTIONS_ENABLED=false
+PREORDERS_ENABLED=false
 
 SECURITY_HEADERS_ENABLED=true
 SECURITY_HSTS_ENABLED=true
@@ -53,6 +55,8 @@ Notes:
 - For signed Stream playback, configure `CF_STREAM_*` signing values and enable signed URLs in Cloudflare Stream.
 - `MAIL_MAILER` must be configured in each environment to deliver purchase receipt emails.
 - Set `GIFTS_ENABLED=true` only when gift flows are ready for production use.
+- Set `SUBSCRIPTIONS_ENABLED=true` only after monthly/yearly Stripe price IDs are configured in `/admin/billing`.
+- Set `PREORDERS_ENABLED=true` only after preorder fields are configured on target courses and release scheduler is active.
 - Security headers/HSTS should remain enabled in production unless you have a specific proxy edge policy replacing them.
 
 ## 2) Stripe Product/Price Mapping (Critical)
@@ -117,6 +121,11 @@ Recommended events for this app:
 - `checkout.session.async_payment_succeeded`
 - `checkout.session.async_payment_failed`
 - `charge.refunded`
+- `customer.subscription.created`
+- `customer.subscription.updated`
+- `customer.subscription.deleted`
+- `invoice.paid`
+- `invoice.payment_failed`
 
 ## 4) Cloudflare Stream Setup
 
@@ -193,6 +202,8 @@ php artisan tinker --execute="App\\Models\\LessonResource::query()->select('id',
 7. Confirm access appears under `My Courses`.
 8. Confirm receipt email is delivered with Stripe receipt link, and guest purchases include the claim link.
 9. (If gifts enabled) run a gift checkout and confirm recipient + buyer gift emails are delivered.
+10. (If subscriptions enabled) start checkout from subscription CTA and confirm `/billing` portal access.
+11. (If preorders enabled) run preorder setup and verify reservation row exists after webhook.
 
 If payment succeeded but no claim button appears:
 
@@ -204,7 +215,23 @@ If payment succeeded but no claim button appears:
 php artisan videocourses:stripe-reprocess <stripe_event_id>
 ```
 
-## 7) Production Webhook and App URL Checklist
+## 7) Preorder Release Scheduler
+
+- Ensure the scheduler runs in each environment:
+
+```bash
+php artisan schedule:work
+```
+
+- The release command is:
+
+```bash
+php artisan videocourses:preorders-release
+```
+
+- It processes due `preorder_reservations` and attempts off-session Stripe charges.
+
+## 8) Production Webhook and App URL Checklist
 
 Before production cutover:
 
@@ -214,7 +241,7 @@ Before production cutover:
 4. Ensure queue worker is running for any async side effects.
 5. Validate one real payment in low-value test product.
 
-## 8) Quick SQL for Debugging Purchase State
+## 9) Quick SQL for Debugging Purchase State
 
 ```sql
 -- Find most recent orders

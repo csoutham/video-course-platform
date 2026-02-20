@@ -265,3 +265,23 @@ test('free gift checkout issues gift claim and sends gift emails', function (): 
     Mail::assertSent(GiftPurchaseConfirmationMail::class, fn (GiftPurchaseConfirmationMail $mail): bool => $mail->hasTo('buyer@example.com'));
     Mail::assertNotSent(PurchaseReceiptMail::class);
 });
+
+test('standard checkout is blocked for unreleased preorder courses', function (): void {
+    config()->set('learning.preorders_enabled', true);
+
+    $course = Course::factory()->published()->create([
+        'is_preorder_enabled' => true,
+        'release_at' => now()->addWeek(),
+        'preorder_starts_at' => now()->subDay(),
+        'preorder_ends_at' => now()->addDays(5),
+        'preorder_price_amount' => 7900,
+        'stripe_price_id' => 'price_regular_1',
+    ]);
+
+    $this->from(route('courses.show', $course->slug))
+        ->post(route('checkout.start', $course), [
+            'email' => 'guest@example.com',
+        ])
+        ->assertRedirect(route('courses.show', $course->slug))
+        ->assertSessionHasErrors('preorder');
+});

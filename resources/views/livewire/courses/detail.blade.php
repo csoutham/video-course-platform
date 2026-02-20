@@ -12,6 +12,12 @@
 @endpush
 
 <div class="space-y-8">
+    @if (request()->query('preorder') === 'reserved')
+        <div class="vc-alert vc-alert-success">Preorder reserved. You will be charged automatically at release.</div>
+    @elseif (request()->query('preorder') === 'cancel')
+        <div class="vc-alert vc-alert-warning">Preorder checkout was canceled.</div>
+    @endif
+
     <section class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
         <div class="grid gap-0 lg:grid-cols-[1.35fr_minmax(320px,0.65fr)]">
             <div class="space-y-4 p-7 sm:p-8">
@@ -38,17 +44,21 @@
             <div class="border-t border-slate-200 bg-slate-50 p-7 sm:p-8 lg:border-t-0 lg:border-l">
                 <p class="text-xs font-semibold tracking-[0.14em] text-slate-500 uppercase">Pricing</p>
                 <p class="mt-3 text-4xl font-semibold tracking-tight text-slate-900">
-                    @if ($course->is_free)
+                    @if ($isPreorderMode ?? false)
+                        {{ strtoupper($course->price_currency) }} {{ number_format(($preorderPriceAmount ?? 0) / 100, 2) }}
+                    @elseif ($course->is_free)
                         Free
                     @else
                         {{ strtoupper($course->price_currency) }} {{ number_format($course->price_amount / 100, 2) }}
                     @endif
                 </p>
                 <p class="mt-2 text-sm text-slate-600">
-                    @if ($course->is_free)
+                    @if ($isPreorderMode ?? false)
+                        Reserve this course now. Payment is captured automatically when the course is released.
+                    @elseif ($course->is_free)
                         No payment required. Enroll instantly and start learning right away.
                     @else
-                            One-time purchase. Instant access to all published lessons and resources in this course.
+                        One-time purchase. Instant access to all published lessons and resources in this course.
                     @endif
                 </p>
                 <ul class="mt-5 space-y-2 text-sm text-slate-600">

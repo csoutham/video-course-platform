@@ -86,12 +86,21 @@ class Detail extends Component
             )
             : null;
 
+        $preordersEnabled = (bool) config('learning.preorders_enabled');
+        $isPreorderMode = $preordersEnabled && $course->is_preorder_enabled && ! $course->isReleased();
+        $isPreorderWindowActive = $isPreorderMode && $course->isPreorderWindowActive();
+        $preorderPriceAmount = (int) ($course->preorder_price_amount ?? 0);
+
         return view('livewire.courses.detail', [
             'course' => $course,
             'giftsEnabled' => (bool) config('learning.gifts_enabled'),
             'subscriptionsEnabled' => (bool) config('learning.subscriptions_enabled'),
             'subscriptionMonthlyPriceId' => $billingSettings->stripe_subscription_monthly_price_id,
             'subscriptionYearlyPriceId' => $billingSettings->stripe_subscription_yearly_price_id,
+            'preordersEnabled' => $preordersEnabled,
+            'isPreorderMode' => $isPreorderMode,
+            'isPreorderWindowActive' => $isPreorderWindowActive,
+            'preorderPriceAmount' => $preorderPriceAmount,
             'courseSchemaJson' => $courseSchemaJson,
             'introVideoEmbedUrl' => $introVideoEmbedUrl,
             'metaDescription' => Str::limit(strip_tags((string) ($course->long_description ?: $course->description)), 155),

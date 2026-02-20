@@ -11,6 +11,10 @@
 - `POST /checkout/{course}`
   - Paid courses: creates Stripe Checkout Session for self-purchase or gift purchase.
   - Free courses: creates zero-value local order and routes to success/claim flow.
+- `POST /checkout/subscription`
+  - Auth-only subscription checkout start (`monthly|yearly`) via Stripe Checkout.
+- `POST /preorder/{course}`
+  - Preorder setup checkout (`mode=setup`) to reserve payment method for release-time charge.
 - `GET /checkout/success`
   - User-facing confirmation state pending webhook finalization.
 - `GET /checkout/cancel`
@@ -28,6 +32,10 @@
   - List of user’s active entitlements.
 - `GET /gifts`
   - List of gifts purchased by current authenticated user.
+- `GET /billing`
+  - Subscription status and preorder payment issue recovery panel.
+- `POST /billing/portal`
+  - Redirects to Stripe Billing Portal session when enabled.
 - `GET /receipts`
   - List of user's Stripe-paid order receipts (non-zero, Stripe-backed only).
 - `GET /receipts/{order:public_id}`
@@ -62,8 +70,10 @@
 - Catalog/detail are public.
 - Checkout is public but validates course publish/purchasable state.
 - Checkout supports both paid and free enrollment paths from same endpoint.
+- Subscription checkout requires authenticated user.
+- Standard checkout is blocked for unreleased preorder courses.
 - Player and download routes require auth plus active entitlement.
-- Authorization policy checks user-course entitlement on every protected request.
+- Authorization policy checks user-course entitlement or active subscription (when enabled) on protected learning requests.
 
 ## UX State Requirements
 

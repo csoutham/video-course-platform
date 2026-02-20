@@ -65,16 +65,44 @@ class CoursesController extends Controller
             'is_free' => ['nullable', 'boolean'],
             'is_subscription_excluded' => ['nullable', 'boolean'],
             'free_access_mode' => ['nullable', 'string', 'in:direct,claim_link'],
+            'is_preorder_enabled' => ['nullable', 'boolean'],
+            'preorder_starts_at' => ['nullable', 'date'],
+            'preorder_ends_at' => ['nullable', 'date', 'after_or_equal:preorder_starts_at'],
+            'release_at' => ['nullable', 'date', 'after_or_equal:preorder_starts_at'],
+            'preorder_price_amount' => ['nullable', 'integer', 'min:0'],
+            'auto_create_preorder_stripe_price' => ['nullable', 'boolean'],
             'auto_create_stripe_price' => ['nullable', 'boolean'],
         ]);
 
         $isFree = (bool) ($validated['is_free'] ?? false);
         $priceAmount = (int) ($validated['price_amount'] ?? 0);
+        $isPreorderEnabled = (bool) ($validated['is_preorder_enabled'] ?? false);
+        $preorderPriceAmount = (int) ($validated['preorder_price_amount'] ?? 0);
 
         if (! $isFree && $priceAmount < 100) {
             return back()
                 ->withInput()
                 ->withErrors(['price_amount' => 'Paid courses must be at least 100 (cents/pence).']);
+        }
+
+        if ($isFree && $isPreorderEnabled) {
+            return back()->withInput()->withErrors([
+                'is_preorder_enabled' => 'Free courses cannot be configured as preorders.',
+            ]);
+        }
+
+        if ($isPreorderEnabled) {
+            if ($preorderPriceAmount < 100) {
+                return back()->withInput()->withErrors([
+                    'preorder_price_amount' => 'Preorder price must be at least 100 (cents/pence).',
+                ]);
+            }
+
+            if (! ($validated['release_at'] ?? null)) {
+                return back()->withInput()->withErrors([
+                    'release_at' => 'Release date is required when preorder is enabled.',
+                ]);
+            }
         }
 
         $introVideoId = ($validated['intro_video_id'] ?? null) ?: null;
@@ -107,6 +135,12 @@ class CoursesController extends Controller
             'free_access_mode' => (string) ($validated['free_access_mode'] ?? 'claim_link'),
             'stripe_price_id' => null,
             'is_published' => (bool) ($validated['is_published'] ?? false),
+            'is_preorder_enabled' => $isPreorderEnabled,
+            'preorder_starts_at' => $isPreorderEnabled ? ($validated['preorder_starts_at'] ?? null) : null,
+            'preorder_ends_at' => $isPreorderEnabled ? ($validated['preorder_ends_at'] ?? null) : null,
+            'release_at' => $isPreorderEnabled ? ($validated['release_at'] ?? null) : null,
+            'preorder_price_amount' => $isPreorderEnabled ? $preorderPriceAmount : null,
+            'stripe_preorder_price_id' => null,
         ]));
 
         if (! $isFree && (bool) ($validated['auto_create_stripe_price'] ?? true)) {
@@ -123,6 +157,23 @@ class CoursesController extends Controller
 
                 return to_route('admin.courses.edit', $course)
                     ->with('status', 'Course created, but Stripe price provisioning failed: '.$exception->getMessage());
+            }
+        }
+
+        if ($isPreorderEnabled && (bool) ($validated['auto_create_preorder_stripe_price'] ?? true)) {
+            try {
+                $preorderPriceId = $pricingService->createPreorderPriceForCourse($course);
+                $course->forceFill([
+                    'stripe_preorder_price_id' => $preorderPriceId,
+                ])->save();
+            } catch (Throwable $exception) {
+                Log::warning('admin_preorder_stripe_price_provision_failed', [
+                    'course_id' => $course->id,
+                    'message' => $exception->getMessage(),
+                ]);
+
+                return to_route('admin.courses.edit', $course)
+                    ->with('status', 'Course created, but preorder Stripe price provisioning failed: '.$exception->getMessage());
             }
         }
 
@@ -172,16 +223,45 @@ class CoursesController extends Controller
             'is_free' => ['nullable', 'boolean'],
             'is_subscription_excluded' => ['nullable', 'boolean'],
             'free_access_mode' => ['nullable', 'string', 'in:direct,claim_link'],
+            'is_preorder_enabled' => ['nullable', 'boolean'],
+            'preorder_starts_at' => ['nullable', 'date'],
+            'preorder_ends_at' => ['nullable', 'date', 'after_or_equal:preorder_starts_at'],
+            'release_at' => ['nullable', 'date', 'after_or_equal:preorder_starts_at'],
+            'preorder_price_amount' => ['nullable', 'integer', 'min:0'],
+            'stripe_preorder_price_id' => ['nullable', 'string', 'max:255'],
+            'refresh_preorder_stripe_price' => ['nullable', 'boolean'],
             'refresh_stripe_price' => ['nullable', 'boolean'],
         ]);
 
         $isFree = (bool) ($validated['is_free'] ?? false);
         $priceAmount = (int) ($validated['price_amount'] ?? 0);
+        $isPreorderEnabled = (bool) ($validated['is_preorder_enabled'] ?? false);
+        $preorderPriceAmount = (int) ($validated['preorder_price_amount'] ?? 0);
 
         if (! $isFree && $priceAmount < 100) {
             return back()
                 ->withInput()
                 ->withErrors(['price_amount' => 'Paid courses must be at least 100 (cents/pence).']);
+        }
+
+        if ($isFree && $isPreorderEnabled) {
+            return back()->withInput()->withErrors([
+                'is_preorder_enabled' => 'Free courses cannot be configured as preorders.',
+            ]);
+        }
+
+        if ($isPreorderEnabled) {
+            if ($preorderPriceAmount < 100) {
+                return back()->withInput()->withErrors([
+                    'preorder_price_amount' => 'Preorder price must be at least 100 (cents/pence).',
+                ]);
+            }
+
+            if (! ($validated['release_at'] ?? null)) {
+                return back()->withInput()->withErrors([
+                    'release_at' => 'Release date is required when preorder is enabled.',
+                ]);
+            }
         }
 
         $introVideoId = ($validated['intro_video_id'] ?? null) ?: null;
@@ -214,6 +294,12 @@ class CoursesController extends Controller
             'is_subscription_excluded' => (bool) ($validated['is_subscription_excluded'] ?? false),
             'free_access_mode' => (string) ($validated['free_access_mode'] ?? 'claim_link'),
             'is_published' => (bool) ($validated['is_published'] ?? false),
+            'is_preorder_enabled' => $isPreorderEnabled,
+            'preorder_starts_at' => $isPreorderEnabled ? ($validated['preorder_starts_at'] ?? null) : null,
+            'preorder_ends_at' => $isPreorderEnabled ? ($validated['preorder_ends_at'] ?? null) : null,
+            'release_at' => $isPreorderEnabled ? ($validated['release_at'] ?? null) : null,
+            'preorder_price_amount' => $isPreorderEnabled ? $preorderPriceAmount : null,
+            'stripe_preorder_price_id' => $isPreorderEnabled ? ($validated['stripe_preorder_price_id'] ?? null) : null,
         ])->save();
 
         if (! $isFree && (bool) ($validated['refresh_stripe_price'] ?? false)) {
@@ -229,6 +315,22 @@ class CoursesController extends Controller
 
                 return to_route('admin.courses.edit', $course)
                     ->with('status', 'Course updated, but Stripe price refresh failed: '.$exception->getMessage());
+            }
+        }
+
+        if ($isPreorderEnabled && (bool) ($validated['refresh_preorder_stripe_price'] ?? false)) {
+            try {
+                $course->forceFill([
+                    'stripe_preorder_price_id' => $pricingService->createPreorderPriceForCourse($course),
+                ])->save();
+            } catch (Throwable $exception) {
+                Log::warning('admin_preorder_stripe_price_refresh_failed', [
+                    'course_id' => $course->id,
+                    'message' => $exception->getMessage(),
+                ]);
+
+                return to_route('admin.courses.edit', $course)
+                    ->with('status', 'Course updated, but preorder Stripe price refresh failed: '.$exception->getMessage());
             }
         }
 

@@ -42,6 +42,7 @@ use App\Http\Controllers\Gifts\GiftClaim\StoreController as GiftClaimStoreContro
 use App\Http\Controllers\Gifts\MyGiftsController;
 use App\Http\Controllers\Payments\CheckoutController;
 use App\Http\Controllers\Payments\CheckoutSuccessController;
+use App\Http\Controllers\Payments\PreorderCheckoutController;
 use App\Http\Controllers\Payments\SubscriptionCheckoutController;
 use App\Http\Controllers\Payments\ClaimPurchase\ShowController as ClaimPurchaseShowController;
 use App\Http\Controllers\Payments\ClaimPurchase\StoreController as ClaimPurchaseStoreController;
@@ -60,6 +61,9 @@ Route::post('/checkout/subscription', SubscriptionCheckoutController::class)
 Route::post('/checkout/{course}', CheckoutController::class)
     ->middleware('throttle:checkout-start')
     ->name('checkout.start');
+Route::post('/preorder/{course}', PreorderCheckoutController::class)
+    ->middleware('throttle:checkout-start')
+    ->name('preorder.start');
 Route::get('/checkout/success', CheckoutSuccessController::class)->name('checkout.success');
 Route::view('/checkout/cancel', 'checkout.cancel')->name('checkout.cancel');
 Route::get('/claim-purchase/{token}', ClaimPurchaseShowController::class)->name('claim-purchase.show');

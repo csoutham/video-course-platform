@@ -43,10 +43,14 @@
             <div>
                 <label for="subscription_currency" class="vc-label">Subscription currency</label>
                 <select id="subscription_currency" name="subscription_currency" class="vc-input">
-                    <option value="usd" @selected(old('subscription_currency', $settings->subscription_currency) === 'usd')>
+                    <option
+                        value="usd"
+                        @selected(old('subscription_currency', $settings->subscription_currency) === 'usd')>
                         USD
                     </option>
-                    <option value="gbp" @selected(old('subscription_currency', $settings->subscription_currency) === 'gbp')>
+                    <option
+                        value="gbp"
+                        @selected(old('subscription_currency', $settings->subscription_currency) === 'gbp')>
                         GBP
                     </option>
                 </select>

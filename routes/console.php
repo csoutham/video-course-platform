@@ -10,6 +10,7 @@ use App\Services\Learning\CloudflareStreamMetadataService;
 use App\Services\Payments\EntitlementService;
 use App\Services\Payments\StripeWebhookService;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
 
 Artisan::command('videocourses:stripe-reprocess {event_id}', function ($event_id): int {
     $event = StripeEvent::query()->firstWhere('stripe_event_id', $event_id);
@@ -122,3 +123,24 @@ Artisan::command('videocourses:stream-sync-durations {--course_id=} {--force}', 
 
     return self::SUCCESS;
 })->purpose('Sync lesson durations from Cloudflare Stream metadata API');
+
+Artisan::command('videocourses:preorders-release', function (): int {
+    if (! (bool) config('learning.preorders_enabled')) {
+        $this->info('Preorders are disabled.');
+
+        return self::SUCCESS;
+    }
+
+    $result = resolve(\App\Services\Preorders\PreorderReleaseService::class)->releaseDueReservations();
+
+    $this->info(sprintf(
+        'Processed %d reservation(s): %d charged, %d failed.',
+        $result['processed'],
+        $result['charged'],
+        $result['failed'],
+    ));
+
+    return self::SUCCESS;
+})->purpose('Attempt off-session charges for due preorder reservations and grant access on success.');
+
+Schedule::command('videocourses:preorders-release')->everyTenMinutes();

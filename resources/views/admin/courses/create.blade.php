@@ -198,6 +198,87 @@
                 </div>
             </div>
 
+            <div class="vc-panel-soft space-y-4 p-4">
+                <label class="flex items-center gap-2 text-sm text-slate-700">
+                    <input
+                        class="vc-checkbox"
+                        type="checkbox"
+                        name="is_preorder_enabled"
+                        value="1"
+                        @checked(old('is_preorder_enabled')) />
+                    Enable preorder mode
+                </label>
+                @error('is_preorder_enabled')
+                    <p class="vc-error">{{ $message }}</p>
+                @enderror
+
+                <div class="grid gap-4 sm:grid-cols-3">
+                    <div>
+                        <label for="preorder_starts_at" class="vc-label">Preorder starts</label>
+                        <input
+                            id="preorder_starts_at"
+                            name="preorder_starts_at"
+                            type="datetime-local"
+                            value="{{ old('preorder_starts_at') }}"
+                            class="vc-input" />
+                        @error('preorder_starts_at')
+                            <p class="vc-error">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label for="preorder_ends_at" class="vc-label">Preorder ends</label>
+                        <input
+                            id="preorder_ends_at"
+                            name="preorder_ends_at"
+                            type="datetime-local"
+                            value="{{ old('preorder_ends_at') }}"
+                            class="vc-input" />
+                        @error('preorder_ends_at')
+                            <p class="vc-error">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label for="release_at" class="vc-label">Release date</label>
+                        <input
+                            id="release_at"
+                            name="release_at"
+                            type="datetime-local"
+                            value="{{ old('release_at') }}"
+                            class="vc-input" />
+                        @error('release_at')
+                            <p class="vc-error">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label for="preorder_price_amount" class="vc-label">Preorder price (cents/pence)</label>
+                        <input
+                            id="preorder_price_amount"
+                            name="preorder_price_amount"
+                            type="number"
+                            min="0"
+                            value="{{ old('preorder_price_amount') }}"
+                            class="vc-input" />
+                        @error('preorder_price_amount')
+                            <p class="vc-error">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="flex items-end">
+                        <label class="flex items-center gap-2 text-sm text-slate-700">
+                            <input
+                                class="vc-checkbox"
+                                type="checkbox"
+                                name="auto_create_preorder_stripe_price"
+                                value="1"
+                                @checked(old('auto_create_preorder_stripe_price', '1')) />
+                            Auto-create preorder Stripe price
+                        </label>
+                    </div>
+                </div>
+            </div>
+
             <div class="space-y-2">
                 <label class="flex items-center gap-2 text-sm text-slate-700">
                     <input

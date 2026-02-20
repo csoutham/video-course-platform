@@ -13,6 +13,7 @@ use App\Services\Claims\GiftClaimService;
 use App\Services\Claims\PurchaseClaimService;
 use App\Services\Gifts\GiftNotificationService;
 use App\Services\Marketing\KitAudienceService;
+use App\Services\Preorders\PreorderReleaseService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -32,6 +33,7 @@ class StripeWebhookService
         private readonly KitAudienceService $kitAudienceService,
         private readonly AuditLogService $auditLogService,
         private readonly SubscriptionSyncService $subscriptionSyncService,
+        private readonly PreorderReleaseService $preorderReleaseService,
     ) {
     }
 
@@ -80,6 +82,13 @@ class StripeWebhookService
     private function processEvent(Event $event): void
     {
         $object = $event->data->object->toArray();
+
+        if (in_array($event->type, ['checkout.session.completed', 'checkout.session.async_payment_succeeded'], true)
+            && Arr::get($object, 'metadata.flow') === 'preorder_setup') {
+            $this->preorderReleaseService->reserveFromCheckoutSession($object);
+
+            return;
+        }
 
         match ($event->type) {
             'checkout.session.completed', 'checkout.session.async_payment_succeeded' => $this->markOrderPaid($object),
