@@ -4,6 +4,7 @@ namespace App\Livewire\Courses;
 
 use App\Models\Course;
 use App\Services\Branding\BrandingService;
+use App\Services\Billing\BillingSettingsService;
 use App\Services\Learning\VideoPlaybackService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
@@ -24,6 +25,7 @@ class Detail extends Component
     public function render(VideoPlaybackService $videoPlaybackService): View
     {
         $branding = resolve(BrandingService::class)->current();
+        $billingSettings = resolve(BillingSettingsService::class)->current();
 
         $course = Course::query()
             ->published()
@@ -87,6 +89,9 @@ class Detail extends Component
         return view('livewire.courses.detail', [
             'course' => $course,
             'giftsEnabled' => (bool) config('learning.gifts_enabled'),
+            'subscriptionsEnabled' => (bool) config('learning.subscriptions_enabled'),
+            'subscriptionMonthlyPriceId' => $billingSettings->stripe_subscription_monthly_price_id,
+            'subscriptionYearlyPriceId' => $billingSettings->stripe_subscription_yearly_price_id,
             'courseSchemaJson' => $courseSchemaJson,
             'introVideoEmbedUrl' => $introVideoEmbedUrl,
             'metaDescription' => Str::limit(strip_tags((string) ($course->long_description ?: $course->description)), 155),

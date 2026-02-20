@@ -230,6 +230,15 @@
                             @checked(old('is_free', $course->is_free)) />
                         Free course (lead magnet)
                     </label>
+                    <label class="flex items-center gap-2 text-sm text-slate-700">
+                        <input
+                            class="vc-checkbox"
+                            type="checkbox"
+                            name="is_subscription_excluded"
+                            value="1"
+                            @checked(old('is_subscription_excluded', $course->is_subscription_excluded)) />
+                        Exclude from subscription access
+                    </label>
                     <p class="text-xs text-slate-500">
                         Free courses bypass Stripe checkout and use instant enrollment or claim links.
                     </p>

@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\PurchaseClaimToken;
 use App\Models\StripeEvent;
+use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
@@ -499,4 +500,102 @@ test('refund webhook revokes claimed gift', function (): void {
         'status' => 'revoked',
     ]);
 
+});
+
+test('subscription webhook creates or updates subscription record', function (): void {
+    config()->set('services.stripe.webhook_secret', 'whsec_test');
+
+    $user = User::factory()->create();
+
+    $payload = [
+        'id' => 'evt_subscription_created_1',
+        'object' => 'event',
+        'type' => 'customer.subscription.created',
+        'data' => [
+            'object' => [
+                'id' => 'sub_test_1',
+                'object' => 'subscription',
+                'customer' => 'cus_sub_test_1',
+                'status' => 'active',
+                'current_period_start' => now()->subDay()->timestamp,
+                'current_period_end' => now()->addMonth()->timestamp,
+                'cancel_at_period_end' => false,
+                'metadata' => [
+                    'user_id' => (string) $user->id,
+                    'customer_email' => $user->email,
+                ],
+                'items' => [
+                    'data' => [[
+                        'price' => [
+                            'id' => 'price_monthly_1',
+                            'recurring' => ['interval' => 'month'],
+                        ],
+                    ]],
+                ],
+            ],
+        ],
+    ];
+
+    $jsonPayload = json_encode($payload, JSON_THROW_ON_ERROR);
+    $signature = ($this->generateSignatureHeader)($jsonPayload, 'whsec_test');
+
+    $this->withHeaders([
+        'Stripe-Signature' => $signature,
+    ])->postJson(route('webhooks.stripe'), $payload)->assertOk();
+
+    $this->assertDatabaseHas('subscriptions', [
+        'stripe_subscription_id' => 'sub_test_1',
+        'stripe_customer_id' => 'cus_sub_test_1',
+        'user_id' => $user->id,
+        'status' => 'active',
+        'interval' => 'monthly',
+    ]);
+});
+
+test('invoice paid webhook creates subscription order', function (): void {
+    config()->set('services.stripe.webhook_secret', 'whsec_test');
+
+    $user = User::factory()->create();
+    $subscription = Subscription::query()->create([
+        'user_id' => $user->id,
+        'email' => $user->email,
+        'stripe_customer_id' => 'cus_sub_invoice_1',
+        'stripe_subscription_id' => 'sub_invoice_1',
+        'stripe_price_id' => 'price_invoice_1',
+        'interval' => 'monthly',
+        'status' => 'active',
+    ]);
+
+    $payload = [
+        'id' => 'evt_invoice_paid_1',
+        'object' => 'event',
+        'type' => 'invoice.paid',
+        'data' => [
+            'object' => [
+                'id' => 'in_test_1',
+                'object' => 'invoice',
+                'subscription' => $subscription->stripe_subscription_id,
+                'currency' => 'usd',
+                'subtotal' => 1500,
+                'amount_paid' => 1500,
+                'total' => 1500,
+                'payment_intent' => 'pi_test_invoice_1',
+            ],
+        ],
+    ];
+
+    $jsonPayload = json_encode($payload, JSON_THROW_ON_ERROR);
+    $signature = ($this->generateSignatureHeader)($jsonPayload, 'whsec_test');
+
+    $this->withHeaders([
+        'Stripe-Signature' => $signature,
+    ])->postJson(route('webhooks.stripe'), $payload)->assertOk();
+
+    $this->assertDatabaseHas('orders', [
+        'stripe_checkout_session_id' => 'subinv_in_test_1',
+        'order_type' => 'subscription',
+        'subscription_id' => $subscription->id,
+        'status' => 'paid',
+        'total_amount' => 1500,
+    ]);
 });

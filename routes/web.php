@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\Billing\EditController as AdminBillingEditController;
+use App\Http\Controllers\Admin\Billing\UpdateController as AdminBillingUpdateController;
 use App\Http\Controllers\Admin\Branding\EditController as AdminBrandingEditController;
 use App\Http\Controllers\Admin\Branding\ResetController as AdminBrandingResetController;
 use App\Http\Controllers\Admin\Branding\UpdateController as AdminBrandingUpdateController;
@@ -33,11 +35,14 @@ use App\Http\Controllers\Learning\Receipts\IndexController as ReceiptsIndexContr
 use App\Http\Controllers\Learning\Receipts\ViewController as ReceiptsViewController;
 use App\Http\Controllers\Learning\ResourceDownload\DownloadController as ResourceDownloadDownloadController;
 use App\Http\Controllers\Learning\ResourceDownload\StreamController as ResourceDownloadStreamController;
+use App\Http\Controllers\Billing\PortalController as BillingPortalController;
+use App\Http\Controllers\Billing\ShowController as BillingShowController;
 use App\Http\Controllers\Gifts\GiftClaim\ShowController as GiftClaimShowController;
 use App\Http\Controllers\Gifts\GiftClaim\StoreController as GiftClaimStoreController;
 use App\Http\Controllers\Gifts\MyGiftsController;
 use App\Http\Controllers\Payments\CheckoutController;
 use App\Http\Controllers\Payments\CheckoutSuccessController;
+use App\Http\Controllers\Payments\SubscriptionCheckoutController;
 use App\Http\Controllers\Payments\ClaimPurchase\ShowController as ClaimPurchaseShowController;
 use App\Http\Controllers\Payments\ClaimPurchase\StoreController as ClaimPurchaseStoreController;
 use App\Http\Controllers\Payments\StripeWebhookController;
@@ -49,6 +54,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', fn (): RedirectResponse => to_route('courses.index'));
 Route::get('/courses', Catalog::class)->name('courses.index');
 Route::get('/courses/{slug}', Detail::class)->name('courses.show');
+Route::post('/checkout/subscription', SubscriptionCheckoutController::class)
+    ->middleware(['auth', 'throttle:checkout-start'])
+    ->name('checkout.subscription.start');
 Route::post('/checkout/{course}', CheckoutController::class)
     ->middleware('throttle:checkout-start')
     ->name('checkout.start');
@@ -69,6 +77,8 @@ Route::post('/webhooks/stripe', StripeWebhookController::class)
 Route::middleware('auth')->group(function (): void {
     Route::get('/my-courses', MyCoursesController::class)->name('my-courses.index');
     Route::get('/gifts', MyGiftsController::class)->name('gifts.index');
+    Route::get('/billing', BillingShowController::class)->name('billing.show');
+    Route::post('/billing/portal', BillingPortalController::class)->name('billing.portal');
     Route::get('/receipts', ReceiptsIndexController::class)->name('receipts.index');
     Route::get('/receipts/{order:public_id}', ReceiptsViewController::class)->name('receipts.view');
     Route::get('/learn/{course:slug}/{lessonSlug?}', CoursePlayerController::class)->name('learn.show');
@@ -111,6 +121,8 @@ Route::middleware(['auth', 'admin'])
         Route::get('/branding', AdminBrandingEditController::class)->name('branding.edit');
         Route::put('/branding', AdminBrandingUpdateController::class)->name('branding.update');
         Route::post('/branding/reset', AdminBrandingResetController::class)->name('branding.reset');
+        Route::get('/billing', AdminBillingEditController::class)->name('billing.edit');
+        Route::put('/billing', AdminBillingUpdateController::class)->name('billing.update');
     });
 
 Route::view('profile', 'profile')

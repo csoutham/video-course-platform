@@ -8,6 +8,13 @@
             <p class="vc-subtitle">Courses you can start or continue right now.</p>
         </div>
 
+        @if ($hasActiveSubscription ?? false)
+            <div class="vc-alert vc-alert-info">
+                Your subscription is active. Included courses are available in your library.
+                <a href="{{ route('billing.show') }}" class="vc-link ml-1">Manage billing</a>
+            </div>
+        @endif
+
         @if ($courses->isEmpty())
             <div class="vc-panel border-dashed p-6 text-sm text-slate-600">
                 <p class="font-medium text-slate-800">No courses in your library yet.</p>

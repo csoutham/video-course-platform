@@ -9,6 +9,18 @@ Add two monetization capabilities on top of the current one-time purchase flow:
 
 This plan preserves existing flows: one-time checkout, gifts, claim links, receipts, entitlement rules, and learning UI.
 
+## Implementation Status (2026-02-20)
+
+- Completed:
+  - Admin UI isolation under dedicated `/admin` shell.
+  - Subscription schema/model foundation (`billing_settings`, `subscriptions`, course/order extensions).
+  - Subscription checkout endpoint (`/checkout/subscription`) with login requirement and Stripe Checkout `mode=subscription`.
+  - Billing pages (`/billing`, `/billing/portal`) and admin billing settings (`/admin/billing`).
+  - Stripe webhook subscription sync for `customer.subscription.*` and `invoice.*`.
+  - Subscription-aware course access and My Courses inclusion for non-excluded published courses.
+- In progress:
+  - Preorder reservation/charge lifecycle and release command.
+
 ## Product Decisions Locked
 
 - Subscription management: Stripe Customer Portal.

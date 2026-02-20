@@ -98,3 +98,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-20: Added decision-complete subscriptions and preorders implementation spec in `/docs/29-subscriptions-and-preorders.md`.
 - 2026-02-20: Renamed admin course-structure controllers from `Course*` prefixes to concise names (`LessonsController`, `ModulesController`, `ResourcesController`) and updated invokable route wiring accordingly.
 - 2026-02-20: Isolated admin UI under a dedicated `x-admin-layout` and `partials/admin/navigation`; removed admin links from customer navigation.
+- 2026-02-20: Added subscription foundation: billing settings admin page, customer billing page/portal route, subscription checkout route, Stripe subscription/invoice webhook sync, and subscription-aware learning access checks.

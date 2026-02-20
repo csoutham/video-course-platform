@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\PublicMediaUrl;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +34,13 @@ class Course extends Model
         'is_free',
         'free_access_mode',
         'is_published',
+        'is_subscription_excluded',
+        'is_preorder_enabled',
+        'preorder_starts_at',
+        'preorder_ends_at',
+        'release_at',
+        'preorder_price_amount',
+        'stripe_preorder_price_id',
     ];
 
     #[\Override]
@@ -41,6 +49,11 @@ class Course extends Model
         return [
             'is_published' => 'boolean',
             'is_free' => 'boolean',
+            'is_subscription_excluded' => 'boolean',
+            'is_preorder_enabled' => 'boolean',
+            'preorder_starts_at' => 'datetime',
+            'preorder_ends_at' => 'datetime',
+            'release_at' => 'datetime',
             'source_payload_json' => 'array',
             'source_last_imported_at' => 'datetime',
             'kit_tag_id' => 'integer',
@@ -73,5 +86,35 @@ class Course extends Model
     protected function getThumbnailUrlAttribute(?string $value): ?string
     {
         return PublicMediaUrl::resolve($value);
+    }
+
+    public function isReleased(): bool
+    {
+        if (! $this->release_at) {
+            return true;
+        }
+
+        return CarbonImmutable::now()->greaterThanOrEqualTo($this->release_at->toImmutable());
+    }
+
+    public function isPreorderWindowActive(): bool
+    {
+        if (! $this->is_preorder_enabled) {
+            return false;
+        }
+
+        $now = CarbonImmutable::now();
+        $startsAt = $this->preorder_starts_at?->toImmutable();
+        $endsAt = $this->preorder_ends_at?->toImmutable();
+
+        if ($startsAt && $now->lessThan($startsAt)) {
+            return false;
+        }
+
+        if ($endsAt && $now->greaterThan($endsAt)) {
+            return false;
+        }
+
+        return true;
     }
 }

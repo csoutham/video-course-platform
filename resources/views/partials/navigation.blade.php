@@ -35,6 +35,13 @@
                     class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
                     Receipts
                 </a>
+                @if (config('learning.subscriptions_enabled'))
+                    <a
+                        href="{{ route('billing.show') }}"
+                        class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
+                        Billing
+                    </a>
+                @endif
 
                 <a href="{{ route('profile') }}" class="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900">
                     Profile
@@ -105,6 +112,11 @@
                 <a href="{{ route('receipts.index') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
                     Receipts
                 </a>
+                @if (config('learning.subscriptions_enabled'))
+                    <a href="{{ route('billing.show') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">
+                        Billing
+                    </a>
+                @endif
 
                 <a href="{{ route('profile') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-100">Profile</a>
                 <form method="POST" action="{{ route('logout') }}" class="pt-2">

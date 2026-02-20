@@ -32,6 +32,7 @@
                 <a href="{{ route('admin.orders.index') }}" class="vc-btn-secondary">View Orders</a>
                 <a href="{{ route('admin.users.index') }}" class="vc-btn-secondary">View Users</a>
                 <a href="{{ route('admin.branding.edit') }}" class="vc-btn-secondary">Branding</a>
+                <a href="{{ route('admin.billing.edit') }}" class="vc-btn-secondary">Billing</a>
             </div>
         </div>
 

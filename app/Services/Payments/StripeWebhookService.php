@@ -8,6 +8,7 @@ use App\Models\OrderItem;
 use App\Models\StripeEvent;
 use App\Models\User;
 use App\Services\Audit\AuditLogService;
+use App\Services\Billing\SubscriptionSyncService;
 use App\Services\Claims\GiftClaimService;
 use App\Services\Claims\PurchaseClaimService;
 use App\Services\Gifts\GiftNotificationService;
@@ -30,6 +31,7 @@ class StripeWebhookService
         private readonly PurchaseReceiptService $purchaseReceiptService,
         private readonly KitAudienceService $kitAudienceService,
         private readonly AuditLogService $auditLogService,
+        private readonly SubscriptionSyncService $subscriptionSyncService,
     ) {
     }
 
@@ -83,6 +85,11 @@ class StripeWebhookService
             'checkout.session.completed', 'checkout.session.async_payment_succeeded' => $this->markOrderPaid($object),
             'checkout.session.async_payment_failed' => $this->markOrderFailed($object),
             'charge.refunded' => $this->markOrderRefunded($object),
+            'customer.subscription.created',
+            'customer.subscription.updated',
+            'customer.subscription.deleted' => $this->subscriptionSyncService->syncFromStripeSubscription($object),
+            'invoice.paid' => $this->subscriptionSyncService->recordInvoice($object, true),
+            'invoice.payment_failed' => $this->subscriptionSyncService->recordInvoice($object, false),
             default => null,
         };
     }
@@ -132,6 +139,7 @@ class StripeWebhookService
                 'stripe_customer_id' => Arr::get($session, 'customer') ?: null,
                 'stripe_payment_intent_id' => $paymentIntentId,
                 'status' => 'paid',
+                'order_type' => 'one_time',
                 'subtotal_amount' => (int) Arr::get($session, 'amount_subtotal', 0),
                 'discount_amount' => max(0, (int) Arr::get($session, 'amount_subtotal', 0) - (int) Arr::get($session, 'amount_total', 0)),
                 'total_amount' => (int) Arr::get($session, 'amount_total', 0),
@@ -222,6 +230,7 @@ class StripeWebhookService
             [
                 'email' => $email,
                 'status' => 'failed',
+                'order_type' => 'one_time',
                 'subtotal_amount' => (int) Arr::get($session, 'amount_subtotal', 0),
                 'discount_amount' => max(0, (int) Arr::get($session, 'amount_subtotal', 0) - (int) Arr::get($session, 'amount_total', 0)),
                 'total_amount' => (int) Arr::get($session, 'amount_total', 0),

@@ -21,6 +21,8 @@ class Order extends Model
         'stripe_payment_intent_id',
         'stripe_receipt_url',
         'status',
+        'order_type',
+        'subscription_id',
         'subtotal_amount',
         'discount_amount',
         'total_amount',
@@ -72,6 +74,11 @@ class Order extends Model
     public function giftPurchase(): HasOne
     {
         return $this->hasOne(GiftPurchase::class);
+    }
+
+    public function subscription(): BelongsTo
+    {
+        return $this->belongsTo(Subscription::class);
     }
 
     public function isStripeReceiptEligible(): bool

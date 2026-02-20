@@ -4,7 +4,7 @@
         @if ($course->is_free)
             Get access now{{ $course->free_access_mode === 'claim_link' ? ' with a secure claim link.' : '.' }}
         @else
-                Complete checkout to unlock this course immediately.
+            Complete checkout to unlock this course immediately.
         @endif
     </p>
 
@@ -112,4 +112,47 @@
             @endif
         </button>
     </form>
+
+    @if (($subscriptionsEnabled ?? false) && !$course->is_subscription_excluded && !$course->is_free)
+        <div class="border-t border-slate-200 pt-4">
+            <p class="text-xs font-semibold tracking-[0.14em] text-slate-500 uppercase">Or subscribe</p>
+            <p class="mt-1 text-sm text-slate-600">Get platform-wide access with a monthly or yearly plan.</p>
+            @error('subscription')
+                <p class="vc-error mt-2">{{ $message }}</p>
+            @enderror
+            @auth
+                <div class="mt-3 grid gap-2 sm:grid-cols-2">
+                    <form method="POST" action="{{ route('checkout.subscription.start') }}">
+                        @csrf
+                        <input type="hidden" name="interval" value="monthly" />
+                        <button
+                            type="submit"
+                            class="vc-btn-secondary w-full justify-center"
+                            @disabled(!($subscriptionMonthlyPriceId ?? null))>
+                            Subscribe monthly
+                        </button>
+                    </form>
+
+                    <form method="POST" action="{{ route('checkout.subscription.start') }}">
+                        @csrf
+                        <input type="hidden" name="interval" value="yearly" />
+                        <button
+                            type="submit"
+                            class="vc-btn-secondary w-full justify-center"
+                            @disabled(!($subscriptionYearlyPriceId ?? null))>
+                            Subscribe yearly
+                        </button>
+                    </form>
+                </div>
+                @if (!($subscriptionMonthlyPriceId ?? null) || !($subscriptionYearlyPriceId ?? null))
+                    <p class="vc-help mt-2">Subscription checkout is not fully configured yet.</p>
+                @endif
+            @else
+                <p class="mt-3 text-sm text-slate-600">
+                    <a href="{{ route('login') }}" class="vc-link">Sign in</a>
+                    to start a subscription.
+                </p>
+            @endauth
+        </div>
+    @endif
 </div>

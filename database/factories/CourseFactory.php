@@ -34,6 +34,13 @@ class CourseFactory extends Factory
             'is_free' => false,
             'free_access_mode' => 'claim_link',
             'is_published' => true,
+            'is_subscription_excluded' => false,
+            'is_preorder_enabled' => false,
+            'preorder_starts_at' => null,
+            'preorder_ends_at' => null,
+            'release_at' => null,
+            'preorder_price_amount' => null,
+            'stripe_preorder_price_id' => null,
         ];
     }
 

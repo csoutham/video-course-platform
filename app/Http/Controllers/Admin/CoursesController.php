@@ -63,6 +63,7 @@ class CoursesController extends Controller
             'price_currency' => ['required', 'string', 'in:usd,gbp'],
             'is_published' => ['nullable', 'boolean'],
             'is_free' => ['nullable', 'boolean'],
+            'is_subscription_excluded' => ['nullable', 'boolean'],
             'free_access_mode' => ['nullable', 'string', 'in:direct,claim_link'],
             'auto_create_stripe_price' => ['nullable', 'boolean'],
         ]);
@@ -102,6 +103,7 @@ class CoursesController extends Controller
             'price_amount' => $isFree ? 0 : $priceAmount,
             'price_currency' => strtolower((string) $validated['price_currency']),
             'is_free' => $isFree,
+            'is_subscription_excluded' => (bool) ($validated['is_subscription_excluded'] ?? false),
             'free_access_mode' => (string) ($validated['free_access_mode'] ?? 'claim_link'),
             'stripe_price_id' => null,
             'is_published' => (bool) ($validated['is_published'] ?? false),
@@ -168,6 +170,7 @@ class CoursesController extends Controller
             'stripe_price_id' => ['nullable', 'string', 'max:255'],
             'is_published' => ['nullable', 'boolean'],
             'is_free' => ['nullable', 'boolean'],
+            'is_subscription_excluded' => ['nullable', 'boolean'],
             'free_access_mode' => ['nullable', 'string', 'in:direct,claim_link'],
             'refresh_stripe_price' => ['nullable', 'boolean'],
         ]);
@@ -208,6 +211,7 @@ class CoursesController extends Controller
             'price_currency' => strtolower((string) $validated['price_currency']),
             'stripe_price_id' => $isFree ? null : ($validated['stripe_price_id'] ?: null),
             'is_free' => $isFree,
+            'is_subscription_excluded' => (bool) ($validated['is_subscription_excluded'] ?? false),
             'free_access_mode' => (string) ($validated['free_access_mode'] ?? 'claim_link'),
             'is_published' => (bool) ($validated['is_published'] ?? false),
         ])->save();
