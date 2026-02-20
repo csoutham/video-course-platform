@@ -2,7 +2,7 @@
 
 This folder contains the implementation-ready documentation for Video Courses v1, a web-based platform to browse, buy,
 and watch purchasable courses.
-Docs version: `0.10.11`.
+Docs version: `0.10.12`.
 
 ## Scope Summary
 

@@ -19,7 +19,7 @@ trait InvokesControllerAction
     {
         $targetClass = static::targetClass();
         $targetMethod = static::targetMethod();
-        $target = app($targetClass);
+        $target = resolve($targetClass);
         $method = new ReflectionMethod($target, $targetMethod);
         $resolvedArgs = [];
 
@@ -47,7 +47,7 @@ trait InvokesControllerAction
                 return $this->resolveModelParameter($request, $parameter, $typeName, $namedType->allowsNull());
             }
 
-            return app($typeName);
+            return resolve($typeName);
         }
 
         $routeValue = $request->route($parameter->getName());
@@ -80,11 +80,11 @@ trait InvokesControllerAction
                 return null;
             }
 
-            throw (new ModelNotFoundException())->setModel($modelClass);
+            throw new ModelNotFoundException()->setModel($modelClass);
         }
 
         /** @var Model $model */
-        $model = app($modelClass);
+        $model = resolve($modelClass);
         $route = $request->route();
         $bindingField = method_exists($route, 'bindingFieldFor') ? $route->bindingFieldFor($name) : null;
         $resolved = $model->resolveRouteBinding($routeValue, $bindingField);
@@ -94,7 +94,7 @@ trait InvokesControllerAction
                 return null;
             }
 
-            throw (new ModelNotFoundException())->setModel($modelClass, [$routeValue]);
+            throw new ModelNotFoundException()->setModel($modelClass, [$routeValue]);
         }
 
         return $resolved;
