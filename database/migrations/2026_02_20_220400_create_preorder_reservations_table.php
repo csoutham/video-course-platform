@@ -9,8 +9,8 @@ return new class () extends Migration {
     {
         Schema::create('preorder_reservations', function (Blueprint $table): void {
             $table->id();
-            $table->foreignId('course_id')->constrained()->cascadeOnDelete()->index();
-            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete()->index();
+            $table->foreignId('course_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->string('email')->index();
             $table->string('stripe_customer_id')->index();
             $table->string('stripe_setup_intent_id')->unique();
