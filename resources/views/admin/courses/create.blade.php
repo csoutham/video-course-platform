@@ -37,8 +37,8 @@
             <div>
                 <label for="description" class="vc-label">Subtitle</label>
                 <textarea id="description" name="description" rows="4" class="vc-input">
-{{ old('description') }}
-                </textarea>
+{{ old('description') }}</textarea
+                >
                 @error('description')
                     <p class="vc-error">{{ $message }}</p>
                 @enderror
