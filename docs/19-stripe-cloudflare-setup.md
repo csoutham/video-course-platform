@@ -159,6 +159,12 @@ php artisan config:clear
 
 ## 5) Cloudflare R2 Setup
 
+Before deploying R2-backed uploads, ensure the S3 Flysystem adapter is installed:
+
+```bash
+composer require league/flysystem-aws-s3-v3:^3.0
+```
+
 1. Create R2 bucket(s) for resources and image uploads.
 2. Create API token (Object Read/Write as needed).
 3. Use token as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
