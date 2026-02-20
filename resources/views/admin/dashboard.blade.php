@@ -1,4 +1,4 @@
-<x-admin-layout maxWidth="max-w-none" containerPadding="px-4 py-6 lg:px-8" title="Admin Dashboard">
+<x-admin-layout maxWidth="max-w-none" containerPadding="px-4 py-6" title="Admin Dashboard">
     <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <article class="vc-panel p-4">
             <p class="text-xs font-semibold tracking-wide text-slate-500 uppercase">Courses</p>
@@ -18,7 +18,7 @@
         <article class="vc-panel p-4">
             <p class="text-xs font-semibold tracking-wide text-slate-500 uppercase">Revenue</p>
             <p class="mt-2 text-2xl font-semibold text-slate-900">
-                ${{ number_format($metrics['revenue_cents'] / 100, 2) }}
+                &pound;{{ number_format($metrics['revenue_cents'] / 100, 2) }}
             </p>
             <p class="mt-1 text-sm text-slate-600">Delivered gifts: {{ $metrics['gifts_delivered'] }}</p>
         </article>

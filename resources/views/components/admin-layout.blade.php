@@ -26,7 +26,7 @@
         @stack('head')
     </head>
     <body class="va-shell min-h-screen antialiased" data-admin-shell="true">
-        <header class="va-topbar sticky top-0 z-50 border-b border-slate-200 bg-white">
+        <header class="va-topbar fixed top-0 right-0 left-0 z-50 border-b border-slate-200 bg-white">
             <div class="mx-auto flex max-w-none items-center justify-between px-4 py-3 lg:px-6">
                 <div class="flex items-center gap-3">
                     <button
@@ -75,13 +75,13 @@
             </div>
         </header>
 
-        <div class="mx-auto flex max-w-none gap-0">
+        <div class="mx-auto max-w-none pt-[57px]">
             <aside
-                class="va-sidebar hidden min-h-[calc(100vh-57px)] w-72 shrink-0 border-r border-slate-200 bg-white lg:block">
+                class="va-sidebar fixed top-[57px] bottom-0 left-0 hidden w-72 overflow-y-auto border-r border-slate-200 bg-white lg:block">
                 @include('partials.admin.navigation')
             </aside>
 
-            <main class="{{ $maxWidth }} {{ $containerPadding }} min-h-[calc(100vh-57px)] w-full flex-1">
+            <main class="{{ $maxWidth }} {{ $containerPadding }} min-h-[calc(100vh-57px)] w-full lg:pl-76">
                 {{ $slot }}
             </main>
         </div>

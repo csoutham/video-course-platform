@@ -1,11 +1,11 @@
-<x-admin-layout maxWidth="max-w-none" containerPadding="px-4 py-6 lg:px-8" title="Edit Course">
+<x-admin-layout maxWidth="max-w-none" containerPadding="px-4 py-6" title="Edit Course">
     @php
         $moduleCount = $course->modules->count();
         $lessonCount = $course->modules->sum(fn ($module) => $module->lessons->count());
     @endphp
 
     <section
-        class="sticky top-0 z-50 -mx-4 border-y border-slate-200/90 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:-mx-8 lg:px-8">
+        class="fixed top-[55px] right-0 left-0 z-40 border-y border-slate-200/90 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:left-72 lg:px-8">
         <div class="mx-auto flex max-w-none flex-wrap items-center justify-between gap-3">
             <div class="inline-flex rounded-xl border border-slate-200 bg-white p-1">
                 <button
@@ -34,7 +34,9 @@
         </div>
     </section>
 
-    <section class="vc-panel mt-6 p-6" data-admin-tab-panel="details">
+    <div class="h-16" aria-hidden="true"></div>
+
+    <section class="vc-panel p-6" data-admin-tab-panel="details">
         <form
             method="POST"
             action="{{ route('admin.courses.update', $course) }}"
@@ -381,7 +383,7 @@
         </form>
     </section>
 
-    <section class="vc-panel mt-6 hidden p-6" data-admin-tab-panel="curriculum">
+    <section class="vc-panel hidden p-6" data-admin-tab-panel="curriculum">
         <h2 class="text-lg font-semibold tracking-tight text-slate-900">Modules and Lessons</h2>
         <p class="mt-2 text-sm text-slate-600">Create modules and lessons directly from this screen.</p>
 
@@ -979,7 +981,7 @@
         </div>
     </section>
 
-    <section class="vc-panel mt-6 hidden p-6" data-admin-tab-panel="assets">
+    <section class="vc-panel hidden p-6" data-admin-tab-panel="assets">
         <h2 class="text-lg font-semibold tracking-tight text-slate-900">Assets</h2>
         <p class="mt-2 text-sm text-slate-600">
             Browse Stream assets available to this course and verify durations before assigning lessons.

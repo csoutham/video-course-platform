@@ -1,6 +1,6 @@
-<x-admin-layout maxWidth="max-w-none" containerPadding="px-4 py-6 lg:px-8" title="Branding">
+<x-admin-layout maxWidth="max-w-none" containerPadding="px-4 py-6" title="Branding">
     <section
-        class="sticky top-0 z-50 -mx-4 border-y border-slate-200/90 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:-mx-8 lg:px-8">
+        class="fixed top-[55px] right-0 left-0 z-40 border-y border-slate-200/90 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:left-72 lg:px-8">
         <div class="mx-auto flex max-w-none flex-wrap items-center justify-between gap-3">
             <div class="inline-flex rounded-xl border border-slate-200 bg-white p-1">
                 <button
@@ -38,7 +38,9 @@
         </div>
     </section>
 
-    <section class="mt-6">
+    <div class="h-16" aria-hidden="true"></div>
+
+    <section>
         <form
             id="branding-settings-form"
             method="POST"
