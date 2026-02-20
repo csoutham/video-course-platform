@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PublicMediaUrl;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -67,5 +68,10 @@ class Course extends Model
     protected function scopePublished(Builder $query): Builder
     {
         return $query->where('is_published', true);
+    }
+
+    public function getThumbnailUrlAttribute(?string $value): ?string
+    {
+        return PublicMediaUrl::resolve($value);
     }
 }

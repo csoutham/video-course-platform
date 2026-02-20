@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Support\PublicMediaUrl;
 use App\Services\Learning\CloudflareStreamCatalogService;
 use App\Services\Learning\CloudflareStreamMetadataService;
 use App\Services\Payments\StripeCoursePricingService;
@@ -269,7 +270,7 @@ class CoursesController extends Controller
             }
         }
 
-        return Storage::disk($disk)->url($path);
+        return PublicMediaUrl::forStoragePath($path, $disk);
     }
 
     private function extractDiskPathFromUrl(Filesystem $disk, string $url): string

@@ -4,6 +4,7 @@ namespace App\Services\Branding;
 
 use App\Data\BrandingData;
 use App\Models\BrandingSetting;
+use App\Support\PublicMediaUrl;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
@@ -187,7 +188,7 @@ class BrandingService
     {
         $defaults = (array) config('branding.defaults', []);
         $platformName = (string) ($defaults['platform_name'] ?? config('app.name', 'VideoCourses'));
-        $logoUrl = isset($defaults['logo_url']) && is_string($defaults['logo_url']) ? $defaults['logo_url'] : null;
+        $logoUrl = isset($defaults['logo_url']) && is_string($defaults['logo_url']) ? PublicMediaUrl::resolve($defaults['logo_url']) : null;
         $logoHeightPx = $this->normalizeLogoHeightPx($defaults['logo_height_px'] ?? 32);
         $fontProvider = $this->normalizeFontProvider($defaults['font_provider'] ?? 'bunny');
         $fontFamily = $this->normalizeFontFamily($defaults['font_family'] ?? 'Figtree', 'Figtree');
@@ -261,7 +262,9 @@ class BrandingService
 
         return new BrandingData(
             platformName: (string) ($raw['platform_name'] ?: $defaults['platform_name']),
-            logoUrl: isset($raw['logo_url']) && is_string($raw['logo_url']) && $raw['logo_url'] !== '' ? $raw['logo_url'] : $defaults['logo_url'],
+            logoUrl: isset($raw['logo_url']) && is_string($raw['logo_url']) && $raw['logo_url'] !== ''
+                ? PublicMediaUrl::resolve($raw['logo_url'])
+                : $defaults['logo_url'],
             logoHeightPx: $this->normalizeLogoHeightPx($raw['logo_height_px'] ?? $defaults['logo_height_px']),
             fontProvider: $fontProvider,
             fontFamily: $fontFamily,
@@ -473,7 +476,7 @@ class BrandingService
             return $existingLogoUrl;
         }
 
-        $logoUrl = Storage::disk($disk)->url($path);
+        $logoUrl = PublicMediaUrl::forStoragePath($path, $disk);
         $this->deleteStoredLogo($existingLogoUrl);
 
         return $logoUrl;

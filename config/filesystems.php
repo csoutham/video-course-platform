@@ -17,6 +17,11 @@ return [
 
     'course_resources_disk' => env('COURSE_RESOURCES_DISK', 'local'),
     'image_upload_disk' => env('IMAGE_UPLOAD_DISK', 'public'),
+    'public_media_url' => env('MEDIA_PUBLIC_URL', env('AWS_URL')),
+    'public_media_path_prefixes' => [
+        'course-thumbnails',
+        'branding',
+    ],
 
     /*
     |--------------------------------------------------------------------------
