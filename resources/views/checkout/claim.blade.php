@@ -4,12 +4,12 @@
     <div class="vc-panel mx-auto max-w-xl space-y-6 p-6">
         <div>
             <p class="vc-eyebrow">Secure Claim</p>
-            <h1 class="mt-1 text-2xl font-semibold text-slate-900">
-                Claim your course access
-            </h1>
+            <h1 class="mt-1 text-2xl font-semibold text-slate-900">Claim your course access</h1>
             <p class="mt-2 text-sm text-slate-600">
                 Course:
-                <span class="font-semibold text-slate-900">{{ $order->items->first()?->course?->title ?? 'Course access' }}</span>
+                <span class="font-semibold text-slate-900">
+                    {{ $order->items->first()?->course?->title ?? 'Course access' }}
+                </span>
             </p>
             <p class="mt-2 text-sm text-slate-600">
                 Purchased with:
