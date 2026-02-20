@@ -15,6 +15,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function (): void {
     config()->set('services.cloudflare_stream.signed_urls_enabled', false);
+    config()->set('filesystems.course_resources_disk', 'local');
     $this->seedEntitledLesson = function (): array {
         $user = User::factory()->create();
         $course = Course::factory()->published()->create();
