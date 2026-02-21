@@ -251,12 +251,23 @@ class StripeWebhookService
     private function markOrderRefunded(array $charge): void
     {
         $sessionId = Arr::get($charge, 'metadata.checkout_session_id');
+        $order = null;
 
-        if (! $sessionId) {
-            return;
+        if (is_string($sessionId) && $sessionId !== '') {
+            $order = Order::query()->firstWhere('stripe_checkout_session_id', $sessionId);
         }
 
-        $order = Order::query()->firstWhere('stripe_checkout_session_id', $sessionId);
+        if (! $order) {
+            $paymentIntentId = Arr::get($charge, 'payment_intent');
+
+            if (is_array($paymentIntentId)) {
+                $paymentIntentId = Arr::get($paymentIntentId, 'id');
+            }
+
+            if (is_string($paymentIntentId) && $paymentIntentId !== '') {
+                $order = Order::query()->firstWhere('stripe_payment_intent_id', $paymentIntentId);
+            }
+        }
 
         if (! $order) {
             return;

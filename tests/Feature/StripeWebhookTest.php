@@ -423,6 +423,130 @@ test('partial refund webhook does not revoke entitlements', function (): void {
     ]);
 });
 
+test('refund webhook resolves order by payment intent when checkout metadata is missing', function (): void {
+    config()->set('services.stripe.webhook_secret', 'whsec_test');
+
+    $user = User::factory()->create();
+    $course = Course::factory()->published()->create();
+
+    $order = Order::create([
+        'user_id' => $user->id,
+        'email' => $user->email,
+        'stripe_checkout_session_id' => 'cs_test_refund_by_pi',
+        'stripe_payment_intent_id' => 'pi_test_refund_by_pi',
+        'status' => 'paid',
+        'subtotal_amount' => 4499,
+        'discount_amount' => 0,
+        'total_amount' => 4499,
+        'currency' => 'gbp',
+        'paid_at' => now(),
+    ]);
+
+    Entitlement::create([
+        'user_id' => $user->id,
+        'course_id' => $course->id,
+        'order_id' => $order->id,
+        'status' => 'active',
+        'granted_at' => now(),
+    ]);
+
+    $payload = [
+        'id' => 'evt_refund_by_pi_1',
+        'object' => 'event',
+        'type' => 'charge.refunded',
+        'data' => [
+            'object' => [
+                'id' => 'ch_test_refund_by_pi',
+                'object' => 'charge',
+                'amount' => 4499,
+                'amount_refunded' => 4499,
+                'refunded' => true,
+                'payment_intent' => 'pi_test_refund_by_pi',
+                'metadata' => [],
+            ],
+        ],
+    ];
+
+    $jsonPayload = json_encode($payload, JSON_THROW_ON_ERROR);
+    $signature = ($this->generateSignatureHeader)($jsonPayload, 'whsec_test');
+
+    $this->withHeaders([
+        'Stripe-Signature' => $signature,
+    ])->postJson(route('webhooks.stripe'), $payload)->assertOk();
+
+    $this->assertDatabaseHas('orders', [
+        'id' => $order->id,
+        'status' => 'refunded',
+    ]);
+
+    $this->assertDatabaseHas('entitlements', [
+        'order_id' => $order->id,
+        'status' => 'revoked',
+    ]);
+});
+
+test('partial refund by payment intent does not revoke entitlements', function (): void {
+    config()->set('services.stripe.webhook_secret', 'whsec_test');
+
+    $user = User::factory()->create();
+    $course = Course::factory()->published()->create();
+
+    $order = Order::create([
+        'user_id' => $user->id,
+        'email' => $user->email,
+        'stripe_checkout_session_id' => 'cs_test_partial_refund_by_pi',
+        'stripe_payment_intent_id' => 'pi_test_partial_refund_by_pi',
+        'status' => 'paid',
+        'subtotal_amount' => 4499,
+        'discount_amount' => 0,
+        'total_amount' => 4499,
+        'currency' => 'gbp',
+        'paid_at' => now(),
+    ]);
+
+    Entitlement::create([
+        'user_id' => $user->id,
+        'course_id' => $course->id,
+        'order_id' => $order->id,
+        'status' => 'active',
+        'granted_at' => now(),
+    ]);
+
+    $payload = [
+        'id' => 'evt_partial_refund_by_pi_1',
+        'object' => 'event',
+        'type' => 'charge.refunded',
+        'data' => [
+            'object' => [
+                'id' => 'ch_test_partial_refund_by_pi',
+                'object' => 'charge',
+                'amount' => 4499,
+                'amount_refunded' => 1200,
+                'refunded' => false,
+                'payment_intent' => 'pi_test_partial_refund_by_pi',
+                'metadata' => [],
+            ],
+        ],
+    ];
+
+    $jsonPayload = json_encode($payload, JSON_THROW_ON_ERROR);
+    $signature = ($this->generateSignatureHeader)($jsonPayload, 'whsec_test');
+
+    $this->withHeaders([
+        'Stripe-Signature' => $signature,
+    ])->postJson(route('webhooks.stripe'), $payload)->assertOk();
+
+    $this->assertDatabaseHas('orders', [
+        'id' => $order->id,
+        'status' => 'partially_refunded',
+    ]);
+
+    $this->assertDatabaseHas('entitlements', [
+        'order_id' => $order->id,
+        'status' => 'active',
+    ]);
+});
+
 test('gift checkout creates gift record and sends gift emails', function (): void {
     config()->set('services.stripe.webhook_secret', 'whsec_test');
     Mail::fake();
