@@ -12,12 +12,14 @@
 
     <section class="vc-panel mt-6 p-6">
         <div class="mb-4 flex flex-wrap items-center gap-2">
-            <a href="{{ route('admin.orders.index') }}"
+            <a
+                href="{{ route('admin.orders.index') }}"
                 class="{{ $selectedStatus === '' ? 'vc-btn-primary' : 'vc-btn-secondary' }}">
                 All
             </a>
             @foreach ($quickStatuses as $quickStatus)
-                <a href="{{ route('admin.orders.index', ['status' => $quickStatus]) }}"
+                <a
+                    href="{{ route('admin.orders.index', ['status' => $quickStatus]) }}"
                     class="{{ $selectedStatus === $quickStatus ? 'vc-btn-primary' : 'vc-btn-secondary' }}">
                     {{ str_replace('_', ' ', strtoupper($quickStatus)) }}
                 </a>

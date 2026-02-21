@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class OrdersController extends Controller
 {
-    private const FILTERABLE_STATUSES = [
+    private const array FILTERABLE_STATUSES = [
         'paid',
         'partially_refunded',
         'refunded',
