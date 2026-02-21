@@ -7,4 +7,5 @@ return [
     'subscriptions_enabled' => (bool) env('SUBSCRIPTIONS_ENABLED', false),
     'preorders_enabled' => (bool) env('PREORDERS_ENABLED', false),
     'reviews_enabled' => (bool) env('REVIEWS_ENABLED', false),
+    'certificates_enabled' => (bool) env('CERTIFICATES_ENABLED', false),
 ];

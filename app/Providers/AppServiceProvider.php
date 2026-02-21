@@ -103,6 +103,8 @@ class AppServiceProvider extends ServiceProvider
 
             return Limit::perMinute(20)->by($key);
         });
+
+        RateLimiter::for('certificate-verify', fn (Request $request): Limit => Limit::perMinute(60)->by('certificate-verify:'.$request->ip()));
     }
 
     private function configureSecurity(): void

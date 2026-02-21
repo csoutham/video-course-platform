@@ -23,6 +23,9 @@ use App\Http\Controllers\Admin\Courses\EditController as AdminCoursesEditControl
 use App\Http\Controllers\Admin\Courses\IndexController as AdminCoursesIndexController;
 use App\Http\Controllers\Admin\Courses\StoreController as AdminCoursesStoreController;
 use App\Http\Controllers\Admin\Courses\UpdateController as AdminCoursesUpdateController;
+use App\Http\Controllers\Admin\Courses\Certificate\EditController as AdminCoursesCertificateEditController;
+use App\Http\Controllers\Admin\Courses\Certificate\UpdateController as AdminCoursesCertificateUpdateController;
+use App\Http\Controllers\Certificates\VerifyController as CertificateVerifyController;
 use App\Http\Controllers\Admin\Imports\Udemy\CommitController as AdminImportsUdemyCommitController;
 use App\Http\Controllers\Admin\Imports\Udemy\PreviewController as AdminImportsUdemyPreviewController;
 use App\Http\Controllers\Admin\Imports\Udemy\ShowController as AdminImportsUdemyShowController;
@@ -37,6 +40,7 @@ use App\Http\Controllers\Admin\Reviews\UpdateController as AdminReviewsUpdateCon
 use App\Http\Controllers\Admin\Users\IndexController as AdminUsersIndexController;
 use App\Http\Controllers\Admin\Users\ShowController as AdminUsersShowController;
 use App\Http\Controllers\Learning\CoursePlayerController;
+use App\Http\Controllers\Learning\Certificates\ShowController as LearningCertificateShowController;
 use App\Http\Controllers\Learning\LessonProgress\CompleteController as LessonProgressCompleteController;
 use App\Http\Controllers\Learning\LessonProgress\VideoController as LessonProgressVideoController;
 use App\Http\Controllers\Learning\MyCoursesController;
@@ -94,6 +98,9 @@ Route::post('/gift-claim/{token}', GiftClaimStoreController::class)
 Route::post('/webhooks/stripe', StripeWebhookController::class)
     ->middleware('throttle:stripe-webhook')
     ->name('webhooks.stripe');
+Route::get('/certificates/verify/{code}', CertificateVerifyController::class)
+    ->middleware('throttle:certificate-verify')
+    ->name('certificates.verify');
 
 Route::middleware('auth')->group(function (): void {
     Route::get('/my-courses', MyCoursesController::class)->name('my-courses.index');
@@ -103,6 +110,7 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/receipts', ReceiptsIndexController::class)->name('receipts.index');
     Route::get('/receipts/{order:public_id}', ReceiptsViewController::class)->name('receipts.view');
     Route::get('/learn/{course:slug}/{lessonSlug?}', CoursePlayerController::class)->name('learn.show');
+    Route::get('/my-courses/{course:slug}/certificate', LearningCertificateShowController::class)->name('certificates.show');
     Route::post('/learn/{course:slug}/{lessonSlug}/progress/complete', LessonProgressCompleteController::class)
         ->name('learn.progress.complete');
     Route::post('/learn/{course:slug}/{lessonSlug}/progress/video', LessonProgressVideoController::class)
@@ -126,6 +134,9 @@ Route::middleware(['auth', 'admin'])
         Route::post('/imports/udemy/commit', AdminImportsUdemyCommitController::class)->name('imports.udemy.commit');
         Route::get('/courses/{course}/edit', AdminCoursesEditController::class)->name('courses.edit');
         Route::put('/courses/{course}', AdminCoursesUpdateController::class)->name('courses.update');
+        Route::get('/courses/{course}/certificate', AdminCoursesCertificateEditController::class)->name('courses.certificate.edit');
+        Route::put('/courses/{course}/certificate', AdminCoursesCertificateUpdateController::class)
+            ->name('courses.certificate.update');
         Route::post('/courses/{course}/modules', AdminModulesStoreController::class)->name('modules.store');
         Route::put('/modules/{module}', AdminModulesUpdateController::class)->name('modules.update');
         Route::delete('/modules/{module}', AdminModulesDestroyController::class)->name('modules.destroy');

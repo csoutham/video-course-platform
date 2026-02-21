@@ -9,6 +9,7 @@ use App\Models\StripeEvent;
 use App\Models\User;
 use App\Services\Audit\AuditLogService;
 use App\Services\Billing\SubscriptionSyncService;
+use App\Services\Certificates\CourseCertificateService;
 use App\Services\Claims\GiftClaimService;
 use App\Services\Claims\PurchaseClaimService;
 use App\Services\Gifts\GiftNotificationService;
@@ -34,6 +35,7 @@ class StripeWebhookService
         private readonly AuditLogService $auditLogService,
         private readonly SubscriptionSyncService $subscriptionSyncService,
         private readonly PreorderReleaseService $preorderReleaseService,
+        private readonly CourseCertificateService $certificateService,
     ) {
     }
 
@@ -289,6 +291,7 @@ class StripeWebhookService
         }
 
         $this->entitlementService->revokeForOrder($order);
+        $this->certificateService->revokeForOrder($order->id, 'order_refunded');
 
         if ($order->giftPurchase) {
             $order->giftPurchase->forceFill([

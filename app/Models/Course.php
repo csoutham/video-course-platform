@@ -36,6 +36,10 @@ class Course extends Model
         'is_published',
         'is_subscription_excluded',
         'is_preorder_enabled',
+        'certificate_enabled',
+        'certificate_template_path',
+        'certificate_signatory_name',
+        'certificate_signatory_title',
         'preorder_starts_at',
         'preorder_ends_at',
         'release_at',
@@ -54,6 +58,7 @@ class Course extends Model
             'is_free' => 'boolean',
             'is_subscription_excluded' => 'boolean',
             'is_preorder_enabled' => 'boolean',
+            'certificate_enabled' => 'boolean',
             'preorder_starts_at' => 'datetime',
             'preorder_ends_at' => 'datetime',
             'release_at' => 'datetime',
@@ -87,6 +92,11 @@ class Course extends Model
     public function reviews(): HasMany
     {
         return $this->hasMany(CourseReview::class)->latest('approved_at');
+    }
+
+    public function certificates(): HasMany
+    {
+        return $this->hasMany(CourseCertificate::class);
     }
 
     protected function scopePublished(Builder $query): Builder
