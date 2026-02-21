@@ -108,3 +108,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-20: Updated Stripe refund handling to treat partial refunds as `partially_refunded` without revoking access; only full refunds revoke entitlements and gift claims.
 - 2026-02-20: Updated admin UX shell with a fixed desktop sidebar, removed Imports from admin nav, and fixed course edit tabs beneath the top header so content scrolls under both bars.
 - 2026-02-21: Fixed Stripe `charge.refunded` order resolution to fall back to `payment_intent` when `metadata.checkout_session_id` is missing, covering full and partial refunds from Dashboard-initiated refund events.
+- 2026-02-21: Added admin Orders quick status filters (including one-click `refunded` and `partially_refunded`) and hardened status filtering to known values only.

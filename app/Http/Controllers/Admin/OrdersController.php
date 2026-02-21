@@ -9,9 +9,17 @@ use Illuminate\Http\Request;
 
 class OrdersController extends Controller
 {
+    private const FILTERABLE_STATUSES = [
+        'paid',
+        'partially_refunded',
+        'refunded',
+        'failed',
+    ];
+
     public function index(Request $request): View
     {
-        $status = $request->string('status')->toString();
+        $requestedStatus = $request->string('status')->toString();
+        $status = in_array($requestedStatus, self::FILTERABLE_STATUSES, true) ? $requestedStatus : '';
 
         $orders = Order::query()
             ->with(['giftPurchase'])
@@ -34,6 +42,7 @@ class OrdersController extends Controller
             'orders' => $orders,
             'statuses' => $statuses,
             'selectedStatus' => $status,
+            'quickStatuses' => self::FILTERABLE_STATUSES,
         ]);
     }
 }

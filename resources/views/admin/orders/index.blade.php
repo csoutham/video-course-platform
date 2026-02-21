@@ -11,6 +11,19 @@
     </section>
 
     <section class="vc-panel mt-6 p-6">
+        <div class="mb-4 flex flex-wrap items-center gap-2">
+            <a href="{{ route('admin.orders.index') }}"
+                class="{{ $selectedStatus === '' ? 'vc-btn-primary' : 'vc-btn-secondary' }}">
+                All
+            </a>
+            @foreach ($quickStatuses as $quickStatus)
+                <a href="{{ route('admin.orders.index', ['status' => $quickStatus]) }}"
+                    class="{{ $selectedStatus === $quickStatus ? 'vc-btn-primary' : 'vc-btn-secondary' }}">
+                    {{ str_replace('_', ' ', strtoupper($quickStatus)) }}
+                </a>
+            @endforeach
+        </div>
+
         <form method="GET" class="flex flex-wrap items-end gap-3">
             <label class="vc-label" for="status">Filter by status</label>
             <select id="status" name="status" class="vc-input-sm max-w-xs">
