@@ -332,6 +332,9 @@ test('refund webhook revokes entitlements for order', function (): void {
             'object' => [
                 'id' => 'ch_test_refund',
                 'object' => 'charge',
+                'amount' => 9900,
+                'amount_refunded' => 9900,
+                'refunded' => true,
                 'metadata' => [
                     'checkout_session_id' => 'cs_test_refund',
                 ],
@@ -356,6 +359,68 @@ test('refund webhook revokes entitlements for order', function (): void {
         'status' => 'revoked',
     ]);
 
+});
+
+test('partial refund webhook does not revoke entitlements', function (): void {
+    config()->set('services.stripe.webhook_secret', 'whsec_test');
+
+    $user = User::factory()->create();
+    $course = Course::factory()->published()->create();
+
+    $order = Order::create([
+        'user_id' => $user->id,
+        'email' => $user->email,
+        'stripe_checkout_session_id' => 'cs_test_partial_refund',
+        'status' => 'paid',
+        'subtotal_amount' => 9900,
+        'discount_amount' => 0,
+        'total_amount' => 9900,
+        'currency' => 'usd',
+        'paid_at' => now(),
+    ]);
+
+    Entitlement::create([
+        'user_id' => $user->id,
+        'course_id' => $course->id,
+        'order_id' => $order->id,
+        'status' => 'active',
+        'granted_at' => now(),
+    ]);
+
+    $payload = [
+        'id' => 'evt_partial_refund_1',
+        'object' => 'event',
+        'type' => 'charge.refunded',
+        'data' => [
+            'object' => [
+                'id' => 'ch_test_partial_refund',
+                'object' => 'charge',
+                'amount' => 9900,
+                'amount_refunded' => 3000,
+                'refunded' => false,
+                'metadata' => [
+                    'checkout_session_id' => 'cs_test_partial_refund',
+                ],
+            ],
+        ],
+    ];
+
+    $jsonPayload = json_encode($payload, JSON_THROW_ON_ERROR);
+    $signature = ($this->generateSignatureHeader)($jsonPayload, 'whsec_test');
+
+    $this->withHeaders([
+        'Stripe-Signature' => $signature,
+    ])->postJson(route('webhooks.stripe'), $payload)->assertOk();
+
+    $this->assertDatabaseHas('orders', [
+        'id' => $order->id,
+        'status' => 'partially_refunded',
+    ]);
+
+    $this->assertDatabaseHas('entitlements', [
+        'order_id' => $order->id,
+        'status' => 'active',
+    ]);
 });
 
 test('gift checkout creates gift record and sends gift emails', function (): void {
@@ -478,6 +543,9 @@ test('refund webhook revokes claimed gift', function (): void {
             'object' => [
                 'id' => 'ch_test_refund_gift',
                 'object' => 'charge',
+                'amount' => 9900,
+                'amount_refunded' => 9900,
+                'refunded' => true,
                 'metadata' => [
                     'checkout_session_id' => 'cs_test_refund_gift',
                 ],

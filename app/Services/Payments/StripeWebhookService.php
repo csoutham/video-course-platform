@@ -262,10 +262,20 @@ class StripeWebhookService
             return;
         }
 
+        $chargeAmount = (int) Arr::get($charge, 'amount', 0);
+        $amountRefunded = (int) Arr::get($charge, 'amount_refunded', 0);
+        $isFullyRefunded = $chargeAmount > 0
+            ? $amountRefunded >= $chargeAmount
+            : (bool) Arr::get($charge, 'refunded', false);
+
         $order->forceFill([
-            'status' => 'refunded',
+            'status' => $isFullyRefunded ? 'refunded' : 'partially_refunded',
             'refunded_at' => now(),
         ])->save();
+
+        if (! $isFullyRefunded) {
+            return;
+        }
 
         $this->entitlementService->revokeForOrder($order);
 

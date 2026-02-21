@@ -125,7 +125,7 @@
 - `stripe_checkout_session_id` (unique)
 - Uses Stripe session IDs for paid checkouts and `free_*` synthetic IDs for free enrollments.
 - `stripe_customer_id` (nullable)
-- `status` (`pending|paid|failed|refunded`)
+- `status` (`pending|paid|failed|partially_refunded|refunded`)
 - `order_type` (`one_time|subscription|preorder`)
 - `subscription_id` (nullable FK for recurring subscription invoice orders)
 - `subtotal_amount`

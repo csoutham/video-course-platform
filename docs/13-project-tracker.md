@@ -105,4 +105,5 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-20: Added ratings/reviews implementation spec with manual Udemy review entry workflow in `/docs/30-ratings-reviews-and-manual-udemy-import.md`.
 - 2026-02-20: Implemented ratings/reviews end-to-end (eligibility + moderation + aggregates + public display) and added admin manual Udemy review bulk entry + moderation queue.
 - 2026-02-20: Fixed admin Reviews navigation 404 by removing admin-side `REVIEWS_ENABLED` gating so moderation/import remains available even when public reviews are disabled.
+- 2026-02-20: Updated Stripe refund handling to treat partial refunds as `partially_refunded` without revoking access; only full refunds revoke entitlements and gift claims.
 - 2026-02-20: Updated admin UX shell with a fixed desktop sidebar, removed Imports from admin nav, and fixed course edit tabs beneath the top header so content scrolls under both bars.
