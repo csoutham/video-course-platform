@@ -111,3 +111,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-21: Added admin Orders quick status filters (including one-click `refunded` and `partially_refunded`) and hardened status filtering to known values only.
 - 2026-02-21: Added decision-complete certificate issuance spec in `/docs/31-course-certificates.md` (template PDF overlay, verification URL, and full-refund revocation behavior).
 - 2026-02-21: Implemented course completion certificates end-to-end (admin template settings, learner PDF generation, public verification, and full-refund revocation integration).
+- 2026-02-21: Moved public course-detail ratings/reviews section under the enrollment panel in the right column on desktop (and directly after enrollment on mobile) for stronger conversion flow.
