@@ -179,6 +179,19 @@
                     @endif
                 </div>
             </div>
+
+            @if (($certificateEligibility['eligible'] ?? false) === true)
+                <div class="border-t border-slate-200 pt-4">
+                    <a
+                        href="{{ route('certificates.show', ['course' => $course->slug]) }}"
+                        target="_blank"
+                        class="vc-btn-secondary">
+                        Download completion certificate
+                    </a>
+                </div>
+            @elseif ((($certificateEligibility['certificate']->status ?? null) === 'revoked'))
+                <div class="border-t border-slate-200 pt-4 text-sm font-medium text-amber-700">Certificate revoked</div>
+            @endif
         </section>
     </div>
 

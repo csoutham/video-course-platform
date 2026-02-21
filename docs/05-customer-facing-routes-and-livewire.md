@@ -29,6 +29,8 @@
   - Claim gifted course from recipient claim token.
 - `POST /gift-claim/{token}`
   - Redeem gifted course into recipient account.
+- `GET /certificates/verify/{code}`
+  - Public certificate verification endpoint.
 
 ## Authenticated Routes
 
@@ -46,6 +48,8 @@
   - Redirect to Stripe-hosted receipt for an eligible Stripe order (owner-only).
 - `GET /learn/{course}/{lesson?}`
   - Course player; defaults to next incomplete lesson if lesson omitted.
+- `GET /my-courses/{course:slug}/certificate`
+  - Streams generated completion certificate PDF for eligible learner.
 - `POST /learn/{course}/{lesson}/progress/complete`
   - Toggle lesson progress between completed and in-progress for entitled learner.
 - `GET /resources/{resource}/download`
@@ -68,6 +72,9 @@
 - `CoursePlayer`
   - Inputs: course + lesson context.
   - Outputs: lesson navigation, active lesson media state, resource links.
+- `Certificate Download`
+  - Inputs: authenticated user + course slug.
+  - Outputs: generated PDF when access + completion checks pass.
 
 ## Authorization Rules
 
@@ -78,6 +85,7 @@
 - Subscription checkout requires authenticated user.
 - Standard checkout is blocked for unreleased preorder courses.
 - Player and download routes require auth plus active entitlement.
+- Certificate download requires auth, active access, course certificate enabled/template configured, and 100% lesson completion.
 - Authorization policy checks user-course entitlement or active subscription (when enabled) on protected learning requests.
 
 ## UX State Requirements

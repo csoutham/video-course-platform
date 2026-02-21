@@ -66,6 +66,7 @@ Include metadata sufficient to reconcile internal records:
 - Grant `active` entitlement on first successful paid state.
 - Ensure duplicate events do not create duplicate entitlements.
 - Revoke entitlement on refunded order according to policy.
+- Revoke active course certificates linked to fully refunded orders.
 - Gift order: skip buyer entitlement grant; grant entitlement only when recipient claims.
 - Subscription access: no per-course entitlement row required when active subscription is valid and course is not excluded.
 

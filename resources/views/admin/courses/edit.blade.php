@@ -34,9 +34,14 @@
                 </button>
             </div>
 
-            <p class="text-xs text-slate-600" data-course-count-summary>
-                {{ $moduleCount }} modules · {{ $lessonCount }} lessons
-            </p>
+            <div class="flex items-center gap-3">
+                <p class="text-xs text-slate-600" data-course-count-summary>
+                    {{ $moduleCount }} modules · {{ $lessonCount }} lessons
+                </p>
+                <a href="{{ route('admin.courses.certificate.edit', $course) }}" class="vc-btn-secondary">
+                    Certificate
+                </a>
+            </div>
         </div>
     </section>
 

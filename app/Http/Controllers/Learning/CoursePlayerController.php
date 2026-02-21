@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\CourseLesson;
 use App\Models\LessonResource;
 use App\Models\LessonProgress;
+use App\Services\Certificates\CourseCertificateService;
 use App\Services\Learning\CourseAccessService;
 use App\Services\Learning\VideoPlaybackService;
 use Illuminate\Contracts\View\View;
@@ -20,6 +21,7 @@ class CoursePlayerController extends Controller
         Course $course,
         CourseAccessService $accessService,
         VideoPlaybackService $videoPlaybackService,
+        CourseCertificateService $certificateService,
         ?string $lessonSlug = null,
     ): View {
         abort_if(! $course->is_published, 404);
@@ -125,6 +127,7 @@ class CoursePlayerController extends Controller
             'streamEmbedUrl' => $activeLesson->stream_video_id
                 ? $videoPlaybackService->streamEmbedUrl($activeLesson->stream_video_id)
                 : null,
+            'certificateEligibility' => $certificateService->eligibilityWithCertificate($request->user(), $course),
         ]);
     }
 }

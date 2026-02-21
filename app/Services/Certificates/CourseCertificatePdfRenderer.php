@@ -14,9 +14,7 @@ class CourseCertificatePdfRenderer
         $pdf = new Fpdi();
         $pageCount = $pdf->setSourceFile($templatePath);
 
-        if ($pageCount < 1) {
-            throw new \RuntimeException('Certificate template PDF is empty.');
-        }
+        throw_if($pageCount < 1, \RuntimeException::class, 'Certificate template PDF is empty.');
 
         $template = $pdf->importPage(1);
         $templateSize = $pdf->getTemplateSize($template);
@@ -64,7 +62,7 @@ class CourseCertificatePdfRenderer
 
         $width = $pdf->GetStringWidth($clean);
         $pdf->SetXY(max(8.0, $centerX - ($width / 2)), $y);
-        $pdf->Cell($width + 1, 6, utf8_decode($clean), 0, 0, 'L');
+        $pdf->Cell($width + 1, 6, mb_convert_encoding($clean, 'ISO-8859-1'), 0, 0, 'L');
     }
 
     private function formatIssuedDate(?CarbonInterface $issuedAt): string

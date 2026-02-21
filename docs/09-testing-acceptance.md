@@ -39,6 +39,9 @@ Current Milestone 1 CI command gates:
 14. Unentitled learner cannot write lesson progress for protected lessons.
 15. Entitled learner video heartbeat persists playback position and percent complete.
 16. Lesson auto-completes when video progress crosses configured threshold.
+17. Eligible learner can download generated completion certificate.
+18. Public verification URL returns active/revoked certificate status correctly.
+19. Full refund revokes certificate; partial refund leaves certificate active.
 12. Policy denial paths return safe responses without leaking resource metadata.
 
 ## Suggested Test Matrix

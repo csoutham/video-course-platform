@@ -24,6 +24,12 @@
         @else
             <div class="grid gap-6 md:grid-cols-2">
                 @foreach ($courses as $course)
+                    @php
+                        $certificateEligibility = $certificateAvailabilityByCourseId->get($course->id);
+                        $certificateEligible = (bool) ($certificateEligibility['eligible'] ?? false);
+                        $certificateRevoked = ($certificateEligibility['certificate']->status ?? null) === 'revoked';
+                    @endphp
+
                     <article
                         class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                         <a href="{{ route('learn.show', ['course' => $course->slug]) }}" class="block">
@@ -54,11 +60,24 @@
                                 {{ $course->description }}
                             </p>
 
-                            <a
-                                href="{{ route('learn.show', ['course' => $course->slug]) }}"
-                                class="vc-btn-primary mt-1">
-                                Continue learning
-                            </a>
+                            <div class="mt-1 flex flex-wrap items-center gap-2">
+                                <a
+                                    href="{{ route('learn.show', ['course' => $course->slug]) }}"
+                                    class="vc-btn-primary">
+                                    Continue learning
+                                </a>
+
+                                @if ($certificateEligible)
+                                    <a
+                                        href="{{ route('certificates.show', ['course' => $course->slug]) }}"
+                                        target="_blank"
+                                        class="vc-btn-secondary">
+                                        Download certificate
+                                    </a>
+                                @elseif ($certificateRevoked)
+                                    <span class="text-xs font-semibold text-amber-700">Certificate revoked</span>
+                                @endif
+                            </div>
                         </div>
                     </article>
                 @endforeach

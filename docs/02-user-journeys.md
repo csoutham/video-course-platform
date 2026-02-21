@@ -118,3 +118,17 @@ Success criteria:
 - Refund webhook sync marks order refunded.
 - Entitlement is revoked based on configured policy.
 - User loses access to protected lessons and resources.
+
+## Journey I: Completion Certificate
+
+1. Entitled learner completes 100% of published lessons in a certificate-enabled course.
+2. Learner clicks `Download certificate` from `My Courses` or lesson playback.
+3. App issues a certificate snapshot record (name/title/date/code) on first request.
+4. App renders certificate PDF from the course template and overlays learner/course details.
+5. Learner can share verification URL or code.
+6. Any full refund revokes the certificate and verification reflects revoked status.
+
+Success criteria:
+
+- Certificate is issued once per learner/course and is publicly verifiable.
+- Full refunds revoke certificate validity.

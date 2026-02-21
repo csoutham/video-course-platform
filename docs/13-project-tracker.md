@@ -110,3 +110,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-21: Fixed Stripe `charge.refunded` order resolution to fall back to `payment_intent` when `metadata.checkout_session_id` is missing, covering full and partial refunds from Dashboard-initiated refund events.
 - 2026-02-21: Added admin Orders quick status filters (including one-click `refunded` and `partially_refunded`) and hardened status filtering to known values only.
 - 2026-02-21: Added decision-complete certificate issuance spec in `/docs/31-course-certificates.md` (template PDF overlay, verification URL, and full-refund revocation behavior).
+- 2026-02-21: Implemented course completion certificates end-to-end (admin template settings, learner PDF generation, public verification, and full-refund revocation integration).

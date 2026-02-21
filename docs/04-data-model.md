@@ -16,6 +16,7 @@
 - `billing_settings`: singleton Stripe subscription + portal configuration.
 - `preorder_reservations`: setup-intent reservations and release-charge outcomes.
 - `course_reviews`: learner and manually imported rating/review records.
+- `course_certificates`: learner completion certificate issuance and verification status.
 - `stripe_events`: idempotent webhook processing ledger.
 
 ## Suggested Fields
@@ -53,6 +54,10 @@
 - `is_published`
 - `is_subscription_excluded` (boolean; excludes course from platform subscription access)
 - `is_preorder_enabled` (boolean)
+- `certificate_enabled` (boolean)
+- `certificate_template_path` (nullable storage path)
+- `certificate_signatory_name` (nullable)
+- `certificate_signatory_title` (nullable)
 - `preorder_starts_at` (nullable timestamp)
 - `preorder_ends_at` (nullable timestamp)
 - `release_at` (nullable timestamp)
@@ -249,6 +254,24 @@ Constraints:
 - `hidden_at` (nullable)
 - `hidden_by_user_id` (nullable)
 - `moderation_note` (nullable)
+- `created_at`, `updated_at`
+
+### course_certificates
+
+- `id`
+- `user_id` (index)
+- `course_id` (index)
+- `order_id` (nullable index)
+- `subscription_id` (nullable index)
+- `public_id` (unique obfuscated reference)
+- `verification_code` (unique public verification token)
+- `issued_name` (immutable learner name snapshot)
+- `issued_course_title` (immutable course title snapshot)
+- `issued_at` (timestamp)
+- `status` (`active|revoked`)
+- `revoked_at` (nullable)
+- `revoke_reason` (nullable)
+- `template_version` (nullable)
 - `created_at`, `updated_at`
 
 Constraints:

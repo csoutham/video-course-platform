@@ -40,9 +40,7 @@ class CourseCertificateService
     {
         $eligibility = $this->eligibilityService->evaluate($user, $course);
 
-        if (! $eligibility['eligible']) {
-            throw new \RuntimeException('Course certificate is not available yet.');
-        }
+        throw_unless($eligibility['eligible'], \RuntimeException::class, 'Course certificate is not available yet.');
 
         [$orderId, $subscriptionId] = $this->resolveSourceReferences($user, $course);
         $issuedName = $this->resolveIssuedName($user);
@@ -90,22 +88,16 @@ class CourseCertificateService
     {
         $course = $certificate->course;
 
-        if (! $course || ! $course->certificate_template_path) {
-            throw new \RuntimeException('Course certificate template is not configured.');
-        }
+        throw_if(! $course || ! $course->certificate_template_path, \RuntimeException::class, 'Course certificate template is not configured.');
 
         $diskName = (string) config('filesystems.image_upload_disk', 'public');
         $disk = Storage::disk($diskName);
 
-        if (! $disk->exists($course->certificate_template_path)) {
-            throw new \RuntimeException('Certificate template file is missing.');
-        }
+        throw_unless($disk->exists($course->certificate_template_path), \RuntimeException::class, 'Certificate template file is missing.');
 
         $tempFile = tempnam(sys_get_temp_dir(), 'certtpl_');
 
-        if ($tempFile === false) {
-            throw new \RuntimeException('Unable to create temporary certificate file.');
-        }
+        throw_if($tempFile === false, \RuntimeException::class, 'Unable to create temporary certificate file.');
 
         $stream = $disk->readStream($course->certificate_template_path);
 
