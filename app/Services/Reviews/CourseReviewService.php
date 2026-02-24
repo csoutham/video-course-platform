@@ -62,4 +62,3 @@ class CourseReviewService
         return true;
     }
 }
-

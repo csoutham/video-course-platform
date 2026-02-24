@@ -109,4 +109,3 @@ class CourseReview extends Model
         return $this->original_reviewed_at ?? $this->approved_at ?? $this->created_at;
     }
 }
-

@@ -180,4 +180,3 @@ function createReviewEligibleUserAndCourse(int $progressPercent): array
 
     return [$user, $course];
 }
-

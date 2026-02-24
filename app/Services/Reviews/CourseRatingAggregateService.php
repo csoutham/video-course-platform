@@ -37,4 +37,3 @@ class CourseRatingAggregateService
         ])->save();
     }
 }
-

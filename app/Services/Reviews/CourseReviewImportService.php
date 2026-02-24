@@ -150,4 +150,3 @@ class CourseReviewImportService
         return $trimmed === '' ? null : $trimmed;
     }
 }
-

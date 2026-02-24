@@ -70,4 +70,3 @@ class CourseReviewModerationService
         $this->aggregateService->refreshForCourse($review->course);
     }
 }
-

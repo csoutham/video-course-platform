@@ -41,4 +41,3 @@ class StoreController extends Controller
             ->with('status', 'Thanks. Your review was submitted and is pending moderation.');
     }
 }
-

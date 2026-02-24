@@ -21,4 +21,3 @@ class DestroyController extends Controller
             ->with('status', 'Your review has been removed.');
     }
 }
-
