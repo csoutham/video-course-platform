@@ -115,3 +115,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-24: Added SEO technical foundations: route-aware robots directives, dynamic `/robots.txt`, dynamic `/sitemap.xml`, canonical normalization helper, and feature coverage for index/noindex behavior.
 - 2026-02-24: Added course-level SEO overrides (`seo_title`, `seo_description`, `seo_image_url`) in admin create/edit and wired public course metadata/schema to prefer override values.
 - 2026-02-24: Added global `Organization` and `WebSite` JSON-LD in shared public layout for indexable pages, with noindex pages excluded from global schema output.
+- 2026-02-24: Added optional canonical host/protocol redirect middleware (`SEO_ENFORCE_CANONICAL_HOST`) for public web requests and covered redirect behavior with feature tests.

@@ -59,3 +59,19 @@ test('checkout success page renders noindex robots meta', function (): void {
         ->assertDontSee('"@type":"Organization"', false)
         ->assertDontSee('"@type":"WebSite"', false);
 });
+
+test('canonical host middleware redirects public requests when enabled', function (): void {
+    config()->set('seo.enforce_canonical_host', true);
+    config()->set('app.url', 'https://courses.example.com');
+
+    $response = $this
+        ->withServerVariables([
+            'HTTP_HOST' => 'staging.example.test',
+            'HTTPS' => 'on',
+        ])
+        ->get('/courses');
+
+    $response
+        ->assertRedirect('https://courses.example.com/courses')
+        ->assertStatus(301);
+});

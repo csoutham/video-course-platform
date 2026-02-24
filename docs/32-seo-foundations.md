@@ -13,6 +13,7 @@ Initial delivery includes:
 5. Feature tests for sitemap, robots, canonical tags, and index/noindex behavior.
 6. Course-level SEO metadata overrides in admin (`seo_title`, `seo_description`, `seo_image_url`).
 7. Global `Organization` and `WebSite` JSON-LD emitted from the shared public layout on indexable pages.
+8. Optional canonical host/protocol enforcement via middleware (`SEO_ENFORCE_CANONICAL_HOST`).
 
 ## Implemented in Current Slice
 
