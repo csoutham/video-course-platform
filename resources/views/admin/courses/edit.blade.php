@@ -82,6 +82,50 @@
                 @enderror
             </div>
 
+            <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                    <label for="seo_title" class="vc-label">SEO title override (optional)</label>
+                    <input
+                        id="seo_title"
+                        name="seo_title"
+                        value="{{ old('seo_title', $course->seo_title) }}"
+                        class="vc-input"
+                        maxlength="160" />
+                    <p class="vc-help">Recommended max 60-70 characters.</p>
+                    @error('seo_title')
+                        <p class="vc-error">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label for="seo_image_url" class="vc-label">SEO social image URL (optional)</label>
+                    <input
+                        id="seo_image_url"
+                        name="seo_image_url"
+                        value="{{ old('seo_image_url', $course->seo_image_url) }}"
+                        class="vc-input"
+                        placeholder="https://..." />
+                    @error('seo_image_url')
+                        <p class="vc-error">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <div>
+                <label for="seo_description" class="vc-label">SEO description override (optional)</label>
+                <textarea
+                    id="seo_description"
+                    name="seo_description"
+                    rows="3"
+                    class="vc-input"
+                    maxlength="320">
+{{ old('seo_description', $course->seo_description) }}</textarea
+                >
+                <p class="vc-help">Recommended max 150-160 characters.</p>
+                @error('seo_description')
+                    <p class="vc-error">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div>
                 <label for="long_description" class="vc-label">Long description (Markdown)</label>
                 <textarea id="long_description" name="long_description" rows="8" class="vc-input">

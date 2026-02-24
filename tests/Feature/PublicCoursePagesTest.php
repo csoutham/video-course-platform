@@ -179,3 +179,21 @@ test('detail page renders long description and requirements markdown', function 
         ->assertSee('important')
         ->assertDontSee("alert('xss')");
 });
+
+test('detail page prefers seo overrides for title description and image metadata', function (): void {
+    $course = Course::factory()->published()->create([
+        'title' => 'Fallback Course Title',
+        'slug' => 'seo-override-course',
+        'description' => 'Fallback subtitle',
+        'seo_title' => 'SEO Optimized Course Title',
+        'seo_description' => 'SEO description override for better search snippets.',
+        'seo_image_url' => 'https://cdn.example.com/seo-image.jpg',
+    ]);
+
+    $this->get(route('courses.show', $course->slug))
+        ->assertOk()
+        ->assertSee('<title>SEO Optimized Course Title | '.config('app.name').'</title>', false)
+        ->assertSee('name="description" content="SEO description override for better search snippets."', false)
+        ->assertSee('property="og:image" content="https://cdn.example.com/seo-image.jpg"', false)
+        ->assertSee('"description":"SEO description override for better search snippets."', false);
+});

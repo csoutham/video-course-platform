@@ -11,6 +11,7 @@ Initial delivery includes:
 3. Public `robots.txt` endpoint.
 4. Dynamic `sitemap.xml` endpoint for catalog and published course pages.
 5. Feature tests for sitemap, robots, canonical tags, and index/noindex behavior.
+6. Course-level SEO metadata overrides in admin (`seo_title`, `seo_description`, `seo_image_url`).
 
 ## Implemented in Current Slice
 
@@ -56,6 +57,6 @@ Initial delivery includes:
 
 ## Next Steps
 
-1. Add metadata override fields to course admin for SEO title/description/image.
-2. Add structured data in shared layout for `Organization` and `WebSite`.
-3. Extend schema assertions and Search Console runbook checks.
+1. Add structured data in shared layout for `Organization` and `WebSite`.
+2. Extend schema assertions and Search Console runbook checks.
+3. Add per-course social image upload workflow to replace URL-only entry for SEO image.

@@ -92,12 +92,17 @@ class Detail extends Component
             ->values()
             ->all();
 
+        $schemaDescription = Str::limit(strip_tags((string) ($course->seo_description ?: $course->long_description ?: $course->description)), 160);
+        $metaDescription = Str::limit(strip_tags((string) ($course->seo_description ?: $course->long_description ?: $course->description)), 155);
+        $metaTitle = trim(($course->seo_title ?: $course->title).' | '.$branding->platformName);
+        $metaImage = $course->seo_image_url ?: ($course->thumbnail_url ?: asset('favicon.ico'));
+
         $courseSchemaJson = json_encode([
             '@context' => 'https://schema.org',
             '@type' => 'Course',
             'name' => $course->title,
-            'description' => Str::limit(strip_tags((string) ($course->long_description ?: $course->description)), 160),
-            'image' => $course->thumbnail_url ?: asset('favicon.ico'),
+            'description' => $schemaDescription,
+            'image' => $metaImage,
             'url' => route('courses.show', $course->slug),
             'provider' => [
                 '@type' => 'Organization',
@@ -162,7 +167,9 @@ class Detail extends Component
             'preorderPriceAmount' => $preorderPriceAmount,
             'courseSchemaJson' => $courseSchemaJson,
             'introVideoEmbedUrl' => $introVideoEmbedUrl,
-            'metaDescription' => Str::limit(strip_tags((string) ($course->long_description ?: $course->description)), 155),
+            'metaTitle' => $metaTitle,
+            'metaDescription' => $metaDescription,
+            'metaImage' => $metaImage,
             'longDescriptionHtml' => $course->long_description
                 ? Str::markdown($course->long_description, [
                     'html_input' => 'strip',
