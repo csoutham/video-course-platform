@@ -39,6 +39,8 @@ test('admin can create course and auto assign stripe price', function (): void {
     $response = $this->post(route('admin.courses.store'), [
         'title' => 'Laravel for Teams',
         'description' => 'Team-focused Laravel training.',
+        'seo_title' => 'Laravel for Teams SEO',
+        'seo_description' => 'SEO description for teams course.',
         'long_description' => "## Long description\n\nBuilt for team learning.",
         'requirements' => "- PHP 8.4\n- Composer",
         'stream_video_filter_term' => 'Laravel for Teams',
@@ -47,6 +49,7 @@ test('admin can create course and auto assign stripe price', function (): void {
         'is_published' => '1',
         'auto_create_stripe_price' => '1',
         'thumbnail_image' => UploadedFile::fake()->image('thumb.png'),
+        'seo_image' => UploadedFile::fake()->image('seo-thumb.png'),
     ]);
 
     $course = Course::query()->firstOrFail();
@@ -56,6 +59,8 @@ test('admin can create course and auto assign stripe price', function (): void {
     $this->assertDatabaseHas('courses', [
         'id' => $course->id,
         'title' => 'Laravel for Teams',
+        'seo_title' => 'Laravel for Teams SEO',
+        'seo_description' => 'SEO description for teams course.',
         'long_description' => "## Long description\n\nBuilt for team learning.",
         'requirements' => "- PHP 8.4\n- Composer",
         'stream_video_filter_term' => 'Laravel for Teams',
@@ -64,6 +69,7 @@ test('admin can create course and auto assign stripe price', function (): void {
     ]);
 
     $this->assertNotNull($course->fresh()->thumbnail_url);
+    expect((string) $course->fresh()->seo_image_url)->toContain('course-seo-images/');
 
 });
 
@@ -92,9 +98,12 @@ test('admin can update course and refresh stripe price', function (): void {
         'title' => 'Updated Course Title',
         'slug' => $course->slug,
         'description' => 'Updated description',
+        'seo_title' => 'Updated SEO Title',
+        'seo_description' => 'Updated SEO description',
         'long_description' => "### Updated long description\n\nMore depth.",
         'requirements' => "- Git\n- Basic Laravel",
         'thumbnail_image' => UploadedFile::fake()->image('new.jpg'),
+        'seo_image' => UploadedFile::fake()->image('seo-new.jpg'),
         'intro_video_id' => 'stream_intro_001',
         'stream_video_filter_term' => 'Updated Course',
         'price_amount' => 14900,
@@ -109,6 +118,8 @@ test('admin can update course and refresh stripe price', function (): void {
     $this->assertDatabaseHas('courses', [
         'id' => $course->id,
         'title' => 'Updated Course Title',
+        'seo_title' => 'Updated SEO Title',
+        'seo_description' => 'Updated SEO description',
         'price_amount' => 14900,
         'long_description' => "### Updated long description\n\nMore depth.",
         'requirements' => "- Git\n- Basic Laravel",
@@ -117,6 +128,8 @@ test('admin can update course and refresh stripe price', function (): void {
         'stripe_price_id' => 'price_new_2',
         'is_published' => true,
     ]);
+
+    expect((string) $course->fresh()->seo_image_url)->toContain('course-seo-images/');
 
 });
 

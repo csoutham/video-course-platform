@@ -56,6 +56,7 @@ class CoursesController extends Controller
             'seo_title' => ['nullable', 'string', 'max:160'],
             'seo_description' => ['nullable', 'string', 'max:320'],
             'seo_image_url' => ['nullable', 'url', 'max:2048'],
+            'seo_image' => ['nullable', 'file', 'image', 'max:5120', 'mimes:jpg,jpeg,png,webp'],
             'long_description' => ['nullable', 'string'],
             'requirements' => ['nullable', 'string'],
             'thumbnail_image' => ['nullable', 'file', 'image', 'max:5120', 'mimes:jpg,jpeg,png,webp'],
@@ -120,6 +121,7 @@ class CoursesController extends Controller
         }
 
         $thumbnailUrl = $this->storeThumbnail($request, null, $validated['title']);
+        $seoImageUrl = $this->storeSeoImage($request, null, $validated['title']);
 
         $course = DB::transaction(fn (): Course => Course::query()->create([
             'title' => $validated['title'],
@@ -127,7 +129,7 @@ class CoursesController extends Controller
             'description' => $validated['description'] ?? null,
             'seo_title' => $validated['seo_title'] ?? null,
             'seo_description' => $validated['seo_description'] ?? null,
-            'seo_image_url' => $validated['seo_image_url'] ?? null,
+            'seo_image_url' => $seoImageUrl ?: ($validated['seo_image_url'] ?? null),
             'long_description' => $validated['long_description'] ?? null,
             'requirements' => $validated['requirements'] ?? null,
             'thumbnail_url' => $thumbnailUrl,
@@ -222,6 +224,7 @@ class CoursesController extends Controller
             'seo_title' => ['nullable', 'string', 'max:160'],
             'seo_description' => ['nullable', 'string', 'max:320'],
             'seo_image_url' => ['nullable', 'url', 'max:2048'],
+            'seo_image' => ['nullable', 'file', 'image', 'max:5120', 'mimes:jpg,jpeg,png,webp'],
             'long_description' => ['nullable', 'string'],
             'requirements' => ['nullable', 'string'],
             'thumbnail_image' => ['nullable', 'file', 'image', 'max:5120', 'mimes:jpg,jpeg,png,webp'],
@@ -288,6 +291,7 @@ class CoursesController extends Controller
         }
 
         $thumbnailUrl = $this->storeThumbnail($request, $course, $validated['title']);
+        $seoImageUrl = $this->storeSeoImage($request, $course, $validated['title']);
 
         $course->forceFill([
             'title' => $validated['title'],
@@ -295,7 +299,7 @@ class CoursesController extends Controller
             'description' => $validated['description'] ?? null,
             'seo_title' => $validated['seo_title'] ?? null,
             'seo_description' => $validated['seo_description'] ?? null,
-            'seo_image_url' => $validated['seo_image_url'] ?? null,
+            'seo_image_url' => $seoImageUrl ?: ($validated['seo_image_url'] ?? null),
             'long_description' => $validated['long_description'] ?? null,
             'requirements' => $validated['requirements'] ?? null,
             'thumbnail_url' => $thumbnailUrl ?: $course->thumbnail_url,
@@ -385,7 +389,7 @@ class CoursesController extends Controller
         }
 
         if ($existingCourse?->thumbnail_url) {
-            $oldPath = $this->extractDiskPathFromUrl(Storage::disk($disk), $existingCourse->thumbnail_url);
+            $oldPath = $this->extractDiskPathFromUrl(Storage::disk($disk), $existingCourse->thumbnail_url, 'course-thumbnails');
             if ($oldPath !== '') {
                 Storage::disk($disk)->delete($oldPath);
             }
@@ -394,7 +398,33 @@ class CoursesController extends Controller
         return PublicMediaUrl::forStoragePath($path, $disk);
     }
 
-    private function extractDiskPathFromUrl(Filesystem $disk, string $url): string
+    private function storeSeoImage(Request $request, ?Course $existingCourse, string $title): ?string
+    {
+        if (! $request->hasFile('seo_image')) {
+            return null;
+        }
+
+        $disk = (string) config('filesystems.image_upload_disk', 'public');
+        $file = $request->file('seo_image');
+        $extension = strtolower((string) ($file?->getClientOriginalExtension() ?: 'jpg'));
+        $filename = Str::slug($title).'-seo-'.Str::uuid().'.'.$extension;
+        $path = $file?->storeAs('course-seo-images', $filename, $disk);
+
+        if (! $path) {
+            return null;
+        }
+
+        if ($existingCourse?->seo_image_url) {
+            $oldPath = $this->extractDiskPathFromUrl(Storage::disk($disk), $existingCourse->seo_image_url, 'course-seo-images');
+            if ($oldPath !== '') {
+                Storage::disk($disk)->delete($oldPath);
+            }
+        }
+
+        return PublicMediaUrl::forStoragePath($path, $disk);
+    }
+
+    private function extractDiskPathFromUrl(Filesystem $disk, string $url, string $directory): string
     {
         $prefix = rtrim((string) $disk->url(''), '/').'/';
 
@@ -407,9 +437,11 @@ class CoursesController extends Controller
             return '';
         }
 
-        if (str_contains($path, '/course-thumbnails/')) {
-            return ltrim(Str::after($path, '/course-thumbnails/'), '/') !== ''
-                ? 'course-thumbnails/'.ltrim(Str::after($path, '/course-thumbnails/'), '/')
+        $directoryPrefix = '/'.$directory.'/';
+
+        if (str_contains($path, $directoryPrefix)) {
+            return ltrim(Str::after($path, $directoryPrefix), '/') !== ''
+                ? $directory.'/'.ltrim(Str::after($path, $directoryPrefix), '/')
                 : '';
         }
 

@@ -118,3 +118,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-24: Added optional canonical host/protocol redirect middleware (`SEO_ENFORCE_CANONICAL_HOST`) for public web requests and covered redirect behavior with feature tests.
 - 2026-02-24: Improved internal-linking signals on course detail pages with breadcrumb navigation and related-course links back into the catalog graph.
 - 2026-02-24: Added SEO operations runbook and baseline reporting guidance in `/docs/33-seo-operations-runbook.md`.
+- 2026-02-24: Added uploaded SEO social image workflow for courses in admin create/edit, including managed replacement cleanup and metadata usage via `seo_image_url`.

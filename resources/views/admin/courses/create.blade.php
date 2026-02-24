@@ -73,6 +73,20 @@
             </div>
 
             <div>
+                <label for="seo_image" class="vc-label">SEO social image upload (optional)</label>
+                <label
+                    for="seo_image"
+                    class="mt-2 flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center transition hover:border-slate-400 hover:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">Drop image here or click to upload</span>
+                    <span class="vc-help">JPG, PNG, WEBP up to 5MB. Takes priority over URL.</span>
+                </label>
+                <input id="seo_image" name="seo_image" type="file" accept="image/*" class="sr-only" />
+                @error('seo_image')
+                    <p class="vc-error">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
                 <label for="seo_description" class="vc-label">SEO description override (optional)</label>
                 <textarea id="seo_description" name="seo_description" rows="3" class="vc-input" maxlength="320">
 {{ old('seo_description') }}</textarea
