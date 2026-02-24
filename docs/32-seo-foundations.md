@@ -12,6 +12,7 @@ Initial delivery includes:
 4. Dynamic `sitemap.xml` endpoint for catalog and published course pages.
 5. Feature tests for sitemap, robots, canonical tags, and index/noindex behavior.
 6. Course-level SEO metadata overrides in admin (`seo_title`, `seo_description`, `seo_image_url`).
+7. Global `Organization` and `WebSite` JSON-LD emitted from the shared public layout on indexable pages.
 
 ## Implemented in Current Slice
 

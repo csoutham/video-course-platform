@@ -46,12 +46,16 @@ test('public course pages render index robots and canonical tags', function (): 
         ->assertOk()
         ->assertSee('name="robots" content="index, follow, max-image-preview:large"', false)
         ->assertSee('name="googlebot" content="index, follow, max-image-preview:large"', false)
-        ->assertSee('rel="canonical" href="'.route('courses.show', 'canonical-course').'"', false);
+        ->assertSee('rel="canonical" href="'.route('courses.show', 'canonical-course').'"', false)
+        ->assertSee('"@type":"Organization"', false)
+        ->assertSee('"@type":"WebSite"', false);
 });
 
 test('checkout success page renders noindex robots meta', function (): void {
     $this->get(route('checkout.success'))
         ->assertOk()
         ->assertSee('name="robots" content="noindex, nofollow"', false)
-        ->assertSee('name="googlebot" content="noindex, nofollow"', false);
+        ->assertSee('name="googlebot" content="noindex, nofollow"', false)
+        ->assertDontSee('"@type":"Organization"', false)
+        ->assertDontSee('"@type":"WebSite"', false);
 });

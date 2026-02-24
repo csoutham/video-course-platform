@@ -114,3 +114,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-21: Moved public course-detail ratings/reviews section under the enrollment panel in the right column on desktop (and directly after enrollment on mobile) for stronger conversion flow.
 - 2026-02-24: Added SEO technical foundations: route-aware robots directives, dynamic `/robots.txt`, dynamic `/sitemap.xml`, canonical normalization helper, and feature coverage for index/noindex behavior.
 - 2026-02-24: Added course-level SEO overrides (`seo_title`, `seo_description`, `seo_image_url`) in admin create/edit and wired public course metadata/schema to prefer override values.
+- 2026-02-24: Added global `Organization` and `WebSite` JSON-LD in shared public layout for indexable pages, with noindex pages excluded from global schema output.

@@ -17,6 +17,20 @@
     $pageImage = $metaImage ?: ($branding?->logoUrl ?: asset('favicon.ico'));
     $pageUrl = \App\Support\Seo\SeoMeta::canonicalUrl($canonicalUrl);
     $robotsContent = \App\Support\Seo\SeoMeta::robotsForRequest(request(), $metaRobots);
+    $isIndexable = str_starts_with($robotsContent, 'index');
+    $organizationSchemaJson = json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'Organization',
+        'name' => $brandingName,
+        'url' => url('/'),
+        'logo' => $branding?->logoUrl ?: asset('favicon.ico'),
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    $websiteSchemaJson = json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'WebSite',
+        'name' => $brandingName,
+        'url' => url('/'),
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 @endphp
 
 <!DOCTYPE html>
@@ -67,6 +81,16 @@
         @endif
 
         @vite(['resources/app.css', 'resources/app.js'])
+
+        @if ($isIndexable)
+            <script type="application/ld+json">
+                {!! $organizationSchemaJson !!}
+            </script>
+            <script type="application/ld+json">
+                {!! $websiteSchemaJson !!}
+            </script>
+        @endif
+
         @stack('head')
     </head>
     <body class="vc-shell flex min-h-screen flex-col text-slate-900 antialiased">
