@@ -14,6 +14,7 @@ Initial delivery includes:
 6. Course-level SEO metadata overrides in admin (`seo_title`, `seo_description`, `seo_image_url`).
 7. Global `Organization` and `WebSite` JSON-LD emitted from the shared public layout on indexable pages.
 8. Optional canonical host/protocol enforcement via middleware (`SEO_ENFORCE_CANONICAL_HOST`).
+9. Internal-linking improvements on course detail pages (breadcrumb + related courses section).
 
 ## Implemented in Current Slice
 

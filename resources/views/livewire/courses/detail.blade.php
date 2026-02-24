@@ -12,6 +12,16 @@
 @endpush
 
 <div class="space-y-8">
+    <nav class="text-sm text-slate-600" aria-label="Breadcrumb">
+        <ol class="flex items-center gap-2">
+            <li>
+                <a href="{{ route('courses.index') }}" wire:navigate class="vc-link">Courses</a>
+            </li>
+            <li aria-hidden="true">/</li>
+            <li class="font-medium text-slate-900">{{ $course->title }}</li>
+        </ol>
+    </nav>
+
     @if (session('status'))
         <div class="vc-alert vc-alert-success">{{ session('status') }}</div>
     @endif
@@ -172,6 +182,27 @@
             @empty
                 <div class="vc-panel border-dashed p-6 text-sm text-slate-600">Curriculum will be published soon.</div>
             @endforelse
+
+            @if ($relatedCourses->isNotEmpty())
+                <article class="vc-panel p-5">
+                    <h2 class="vc-card-title">Explore more courses</h2>
+                    <ul class="mt-3 space-y-2 text-sm">
+                        @foreach ($relatedCourses as $relatedCourse)
+                            <li>
+                                <a
+                                    href="{{ route('courses.show', $relatedCourse->slug) }}"
+                                    wire:navigate
+                                    class="vc-link">
+                                    {{ $relatedCourse->title }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                    <a href="{{ route('courses.index') }}" wire:navigate class="vc-link mt-3 inline-block">
+                        View all courses
+                    </a>
+                </article>
+            @endif
         </section>
 
         <aside class="hidden space-y-4 lg:sticky lg:top-4 lg:block">

@@ -197,3 +197,20 @@ test('detail page prefers seo overrides for title description and image metadata
         ->assertSee('property="og:image" content="https://cdn.example.com/seo-image.jpg"', false)
         ->assertSee('"description":"SEO description override for better search snippets."', false);
 });
+
+test('detail page includes internal navigation links to catalog and related courses', function (): void {
+    $course = Course::factory()->published()->create([
+        'title' => 'Primary Course',
+        'slug' => 'primary-course',
+    ]);
+
+    Course::factory()->published()->create([
+        'title' => 'Related Course',
+        'slug' => 'related-course',
+    ]);
+
+    $this->get(route('courses.show', $course->slug))
+        ->assertOk()
+        ->assertSee(route('courses.index'), false)
+        ->assertSee(route('courses.show', 'related-course'), false);
+});

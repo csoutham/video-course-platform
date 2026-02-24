@@ -153,6 +153,13 @@ class Detail extends Component
         $ratingDistribution = collect(range(1, 5))
             ->mapWithKeys(fn (int $value): array => [(string) $value => (int) ($course->rating_distribution_json[(string) $value] ?? 0)])
             ->all();
+        $relatedCourses = Course::query()
+            ->published()
+            ->whereKeyNot($course->id)
+            ->orderByDesc('reviews_approved_count')
+            ->orderBy('title')
+            ->limit(4)
+            ->get(['title', 'slug']);
 
         return view('livewire.courses.detail', [
             'course' => $course,
@@ -191,6 +198,7 @@ class Detail extends Component
             'viewerReview' => $viewerReview,
             'reviewEligibility' => $reviewEligibility,
             'ratingDistribution' => $ratingDistribution,
+            'relatedCourses' => $relatedCourses,
         ]);
     }
 }
