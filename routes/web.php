@@ -62,11 +62,15 @@ use App\Http\Controllers\Payments\ClaimPurchase\StoreController as ClaimPurchase
 use App\Http\Controllers\Payments\StripeWebhookController;
 use App\Http\Controllers\Reviews\DestroyController as ReviewsDestroyController;
 use App\Http\Controllers\Reviews\StoreController as ReviewsStoreController;
+use App\Http\Controllers\Seo\RobotsController as SeoRobotsController;
+use App\Http\Controllers\Seo\SitemapController as SeoSitemapController;
 use App\Livewire\Courses\Catalog;
 use App\Livewire\Courses\Detail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/robots.txt', SeoRobotsController::class)->name('robots');
+Route::get('/sitemap.xml', SeoSitemapController::class)->name('sitemap');
 Route::get('/', fn (): RedirectResponse => to_route('courses.index'));
 Route::get('/courses', Catalog::class)->name('courses.index');
 Route::get('/courses/{slug}', Detail::class)->name('courses.show');

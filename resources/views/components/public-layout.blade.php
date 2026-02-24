@@ -5,6 +5,7 @@
 'metaDescription' => null,
 'metaImage' => null,
 'canonicalUrl' => null,
+'metaRobots' => null,
 ])
 
 @php
@@ -14,7 +15,8 @@
         $metaDescription ??
         'Learn with practical video courses, instant checkout, and clear step-by-step progress.';
     $pageImage = $metaImage ?: ($branding?->logoUrl ?: asset('favicon.ico'));
-    $pageUrl = $canonicalUrl ?: url()->current();
+    $pageUrl = \App\Support\Seo\SeoMeta::canonicalUrl($canonicalUrl);
+    $robotsContent = \App\Support\Seo\SeoMeta::robotsForRequest(request(), $metaRobots);
 @endphp
 
 <!DOCTYPE html>
@@ -27,8 +29,11 @@
         <title>{{ $pageTitle }}</title>
         <meta name="description" content="{{ $pageDescription }}" />
         <link rel="canonical" href="{{ $pageUrl }}" />
+        <meta name="robots" content="{{ $robotsContent }}" />
+        <meta name="googlebot" content="{{ $robotsContent }}" />
 
         <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="{{ $brandingName }}" />
         <meta property="og:title" content="{{ $pageTitle }}" />
         <meta property="og:description" content="{{ $pageDescription }}" />
         <meta property="og:url" content="{{ $pageUrl }}" />

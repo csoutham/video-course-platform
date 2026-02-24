@@ -21,6 +21,8 @@
 
         <title>{{ $fullTitle }}</title>
         <meta name="description" content="{{ $pageDescription }}" />
+        <meta name="robots" content="noindex, nofollow" />
+        <meta name="googlebot" content="noindex, nofollow" />
 
         @vite(['resources/app.css', 'resources/app.js'])
         @stack('head')
