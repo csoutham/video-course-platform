@@ -60,6 +60,6 @@ Initial delivery includes:
 
 ## Next Steps
 
-1. Add structured data in shared layout for `Organization` and `WebSite`.
-2. Extend schema assertions and Search Console runbook checks.
-3. Add per-course social image upload workflow to replace URL-only entry for SEO image.
+1. Add per-course social image upload workflow to replace URL-only entry for SEO image.
+2. Expand automated assertions to cover JSON-LD payload details (not just presence).
+3. Introduce richer related-course linking strategy based on taxonomy/topic, not only recency/rating.

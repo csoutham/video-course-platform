@@ -117,3 +117,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-24: Added global `Organization` and `WebSite` JSON-LD in shared public layout for indexable pages, with noindex pages excluded from global schema output.
 - 2026-02-24: Added optional canonical host/protocol redirect middleware (`SEO_ENFORCE_CANONICAL_HOST`) for public web requests and covered redirect behavior with feature tests.
 - 2026-02-24: Improved internal-linking signals on course detail pages with breadcrumb navigation and related-course links back into the catalog graph.
+- 2026-02-24: Added SEO operations runbook and baseline reporting guidance in `/docs/33-seo-operations-runbook.md`.

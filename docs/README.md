@@ -2,7 +2,7 @@
 
 This folder contains the implementation-ready documentation for Video Courses v1, a web-based platform to browse, buy,
 and watch purchasable courses.
-Docs version: `0.10.35`.
+Docs version: `0.10.36`.
 
 ## Scope Summary
 
@@ -60,6 +60,7 @@ Docs version: `0.10.35`.
 30. [30-ratings-reviews-and-manual-udemy-import](./30-ratings-reviews-and-manual-udemy-import.md)
 31. [31-course-certificates](./31-course-certificates.md)
 32. [32-seo-foundations](./32-seo-foundations.md)
+33. [33-seo-operations-runbook](./33-seo-operations-runbook.md)
 
 ## API and Mobile Extensions
 
