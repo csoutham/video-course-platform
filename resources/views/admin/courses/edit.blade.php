@@ -3,6 +3,23 @@
         $moduleCount = $course->modules->count();
         $lessonCount = $course->modules->sum(fn ($module) => $module->lessons->count());
         $hasSeoErrors = $errors->hasAny(['seo_title', 'seo_description', 'seo_image_url', 'seo_image']);
+        $hasPricingErrors = $errors->hasAny([
+            'price_amount',
+            'price_currency',
+            'stripe_price_id',
+            'is_free',
+            'free_access_mode',
+            'is_subscription_excluded',
+            'is_preorder_enabled',
+            'preorder_starts_at',
+            'preorder_ends_at',
+            'release_at',
+            'preorder_price_amount',
+            'stripe_preorder_price_id',
+            'is_published',
+            'refresh_stripe_price',
+            'refresh_preorder_stripe_price',
+        ]);
     @endphp
 
     <section
@@ -20,6 +37,12 @@
                     data-admin-tab-button="curriculum"
                     class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
                     Curriculum
+                </button>
+                <button
+                    type="button"
+                    data-admin-tab-button="pricing"
+                    class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
+                    Pricing
                 </button>
                 <button
                     type="button"
@@ -199,6 +222,22 @@
                 @enderror
             </div>
 
+            <div class="flex items-center gap-3">
+                <button class="vc-btn-primary" type="submit">Save Course</button>
+                <a href="{{ route('admin.courses.index') }}" class="vc-btn-secondary">Back</a>
+            </div>
+        </form>
+    </section>
+
+    <section class="vc-panel hidden p-6" data-admin-tab-panel="pricing">
+        <div class="space-y-5">
+            <div>
+                <h2 class="text-lg font-semibold tracking-tight text-slate-900">Pricing and Access</h2>
+                <p class="mt-1 text-sm text-slate-600">
+                    Configure one-time pricing, free-access mode, and preorder settings.
+                </p>
+            </div>
+
             <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <div>
                     <label for="price_amount" class="vc-label">Price (cents/pence)</label>
@@ -208,6 +247,7 @@
                         type="number"
                         min="0"
                         required
+                        form="course-details-form"
                         value="{{ old('price_amount', $course->price_amount) }}"
                         class="vc-input" />
                     @error('price_amount')
@@ -216,7 +256,7 @@
                 </div>
                 <div>
                     <label for="price_currency" class="vc-label">Currency</label>
-                    <select id="price_currency" name="price_currency" required class="vc-input">
+                    <select id="price_currency" name="price_currency" required form="course-details-form" class="vc-input">
                         <option value="usd" @selected(old('price_currency', $course->price_currency) === 'usd')>
                             USD
                         </option>
@@ -233,6 +273,7 @@
                     <input
                         id="stripe_price_id"
                         name="stripe_price_id"
+                        form="course-details-form"
                         value="{{ old('stripe_price_id', $course->stripe_price_id) }}"
                         class="vc-input" />
                     @error('stripe_price_id')
@@ -249,6 +290,7 @@
                             type="checkbox"
                             name="is_free"
                             value="1"
+                            form="course-details-form"
                             @checked(old('is_free', $course->is_free)) />
                         Free course (lead magnet)
                     </label>
@@ -258,6 +300,7 @@
                             type="checkbox"
                             name="is_subscription_excluded"
                             value="1"
+                            form="course-details-form"
                             @checked(old('is_subscription_excluded', $course->is_subscription_excluded)) />
                         Exclude from subscription access
                     </label>
@@ -267,7 +310,7 @@
                 </div>
                 <div>
                     <label for="free_access_mode" class="vc-label">Free access mode</label>
-                    <select id="free_access_mode" name="free_access_mode" class="vc-input">
+                    <select id="free_access_mode" name="free_access_mode" form="course-details-form" class="vc-input">
                         <option
                             value="claim_link"
                             @selected(old('free_access_mode', $course->free_access_mode) === 'claim_link')>
@@ -292,6 +335,7 @@
                         type="checkbox"
                         name="is_preorder_enabled"
                         value="1"
+                        form="course-details-form"
                         @checked(old('is_preorder_enabled', $course->is_preorder_enabled)) />
                     Enable preorder mode
                 </label>
@@ -306,6 +350,7 @@
                             id="preorder_starts_at"
                             name="preorder_starts_at"
                             type="datetime-local"
+                            form="course-details-form"
                             value="{{ old('preorder_starts_at', $course->preorder_starts_at?->format('Y-m-d\\TH:i')) }}"
                             class="vc-input" />
                         @error('preorder_starts_at')
@@ -318,6 +363,7 @@
                             id="preorder_ends_at"
                             name="preorder_ends_at"
                             type="datetime-local"
+                            form="course-details-form"
                             value="{{ old('preorder_ends_at', $course->preorder_ends_at?->format('Y-m-d\\TH:i')) }}"
                             class="vc-input" />
                         @error('preorder_ends_at')
@@ -330,6 +376,7 @@
                             id="release_at"
                             name="release_at"
                             type="datetime-local"
+                            form="course-details-form"
                             value="{{ old('release_at', $course->release_at?->format('Y-m-d\\TH:i')) }}"
                             class="vc-input" />
                         @error('release_at')
@@ -346,6 +393,7 @@
                             name="preorder_price_amount"
                             type="number"
                             min="0"
+                            form="course-details-form"
                             value="{{ old('preorder_price_amount', $course->preorder_price_amount) }}"
                             class="vc-input" />
                         @error('preorder_price_amount')
@@ -357,6 +405,7 @@
                         <input
                             id="stripe_preorder_price_id"
                             name="stripe_preorder_price_id"
+                            form="course-details-form"
                             value="{{ old('stripe_preorder_price_id', $course->stripe_preorder_price_id) }}"
                             class="vc-input" />
                         @error('stripe_preorder_price_id')
@@ -373,6 +422,7 @@
                         type="checkbox"
                         name="is_published"
                         value="1"
+                        form="course-details-form"
                         @checked(old('is_published', $course->is_published)) />
                     Published
                 </label>
@@ -382,6 +432,7 @@
                         type="checkbox"
                         name="refresh_stripe_price"
                         value="1"
+                        form="course-details-form"
                         @checked(old('refresh_stripe_price')) />
                     Create and assign a new Stripe price now
                 </label>
@@ -391,16 +442,17 @@
                         type="checkbox"
                         name="refresh_preorder_stripe_price"
                         value="1"
+                        form="course-details-form"
                         @checked(old('refresh_preorder_stripe_price')) />
                     Create and assign a new preorder Stripe price now
                 </label>
             </div>
 
             <div class="flex items-center gap-3">
-                <button class="vc-btn-primary" type="submit">Save Course</button>
+                <button class="vc-btn-primary" type="submit" form="course-details-form">Save Course</button>
                 <a href="{{ route('admin.courses.index') }}" class="vc-btn-secondary">Back</a>
             </div>
-        </form>
+        </div>
     </section>
 
     <section class="vc-panel hidden p-6" data-admin-tab-panel="seo">
@@ -1445,11 +1497,15 @@
                 '#assets': 'assets',
                 '#reviews': 'reviews',
                 '#seo': 'seo',
+                '#pricing': 'pricing',
             };
             const hashTab = hashToTab[window.location.hash] ?? null;
             const hasSeoErrors = @json($hasSeoErrors);
+            const hasPricingErrors = @json($hasPricingErrors);
             const savedTab = localStorage.getItem(storageKey);
-            setActiveTab(hashTab ?? (hasSeoErrors ? 'seo' : null) ?? savedTab ?? 'details');
+            setActiveTab(
+                hashTab ?? (hasSeoErrors ? 'seo' : null) ?? (hasPricingErrors ? 'pricing' : null) ?? savedTab ?? 'details'
+            );
 
             const normalize = (value) => (value ?? '').toString().trim().toLowerCase();
             const readModuleState = () => {
