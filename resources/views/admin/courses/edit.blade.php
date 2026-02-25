@@ -2,6 +2,7 @@
     @php
         $moduleCount = $course->modules->count();
         $lessonCount = $course->modules->sum(fn ($module) => $module->lessons->count());
+        $hasSeoErrors = $errors->hasAny(['seo_title', 'seo_description', 'seo_image_url', 'seo_image']);
     @endphp
 
     <section
@@ -19,6 +20,12 @@
                     data-admin-tab-button="curriculum"
                     class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
                     Curriculum
+                </button>
+                <button
+                    type="button"
+                    data-admin-tab-button="seo"
+                    class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
+                    SEO
                 </button>
                 <button
                     type="button"
@@ -49,6 +56,7 @@
 
     <section class="vc-panel p-6" data-admin-tab-panel="details">
         <form
+            id="course-details-form"
             method="POST"
             action="{{ route('admin.courses.update', $course) }}"
             enctype="multipart/form-data"
@@ -78,70 +86,6 @@
 {{ old('description', $course->description) }}</textarea
                 >
                 @error('description')
-                    <p class="vc-error">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="grid gap-4 sm:grid-cols-2">
-                <div>
-                    <label for="seo_title" class="vc-label">SEO title override (optional)</label>
-                    <input
-                        id="seo_title"
-                        name="seo_title"
-                        value="{{ old('seo_title', $course->seo_title) }}"
-                        class="vc-input"
-                        maxlength="160" />
-                    <p class="vc-help">Recommended max 60-70 characters.</p>
-                    @error('seo_title')
-                        <p class="vc-error">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div>
-                    <label for="seo_image_url" class="vc-label">SEO social image URL (optional)</label>
-                    <input
-                        id="seo_image_url"
-                        name="seo_image_url"
-                        value="{{ old('seo_image_url', $course->seo_image_url) }}"
-                        class="vc-input"
-                        placeholder="https://..." />
-                    @error('seo_image_url')
-                        <p class="vc-error">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-
-            <div>
-                <label for="seo_image" class="vc-label">SEO social image upload (optional)</label>
-                @if ($course->seo_image_url)
-                    <img
-                        src="{{ $course->seo_image_url }}"
-                        alt="{{ $course->title }} SEO social image"
-                        class="mt-2 h-28 w-full rounded-lg border border-slate-200 object-cover sm:w-56" />
-                @endif
-                <label
-                    for="seo_image"
-                    class="mt-2 flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center transition hover:border-slate-400 hover:bg-slate-100">
-                    <span class="text-sm font-semibold text-slate-700">Drop image here or click to replace</span>
-                    <span class="vc-help">JPG, PNG, WEBP up to 5MB. Takes priority over URL.</span>
-                </label>
-                <input id="seo_image" name="seo_image" type="file" accept="image/*" class="sr-only" />
-                @error('seo_image')
-                    <p class="vc-error">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label for="seo_description" class="vc-label">SEO description override (optional)</label>
-                <textarea
-                    id="seo_description"
-                    name="seo_description"
-                    rows="3"
-                    class="vc-input"
-                    maxlength="320">
-{{ old('seo_description', $course->seo_description) }}</textarea
-                >
-                <p class="vc-help">Recommended max 150-160 characters.</p>
-                @error('seo_description')
                     <p class="vc-error">{{ $message }}</p>
                 @enderror
             </div>
@@ -457,6 +401,95 @@
                 <a href="{{ route('admin.courses.index') }}" class="vc-btn-secondary">Back</a>
             </div>
         </form>
+    </section>
+
+    <section class="vc-panel hidden p-6" data-admin-tab-panel="seo">
+        <div class="space-y-5">
+            <div>
+                <h2 class="text-lg font-semibold tracking-tight text-slate-900">SEO Settings</h2>
+                <p class="mt-1 text-sm text-slate-600">
+                    Configure search title, description, and social preview image for this course page.
+                </p>
+            </div>
+
+            <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                    <label for="seo_title" class="vc-label">SEO title override (optional)</label>
+                    <input
+                        id="seo_title"
+                        name="seo_title"
+                        form="course-details-form"
+                        value="{{ old('seo_title', $course->seo_title) }}"
+                        class="vc-input"
+                        maxlength="160" />
+                    <p class="vc-help">Recommended max 60-70 characters.</p>
+                    @error('seo_title')
+                        <p class="vc-error">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label for="seo_image_url" class="vc-label">SEO social image URL (optional)</label>
+                    <input
+                        id="seo_image_url"
+                        name="seo_image_url"
+                        form="course-details-form"
+                        value="{{ old('seo_image_url', $course->seo_image_url) }}"
+                        class="vc-input"
+                        placeholder="https://..." />
+                    @error('seo_image_url')
+                        <p class="vc-error">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <div>
+                <label for="seo_image" class="vc-label">SEO social image upload (optional)</label>
+                @if ($course->seo_image_url)
+                    <img
+                        src="{{ $course->seo_image_url }}"
+                        alt="{{ $course->title }} SEO social image"
+                        class="mt-2 h-28 w-full rounded-lg border border-slate-200 object-cover sm:w-56" />
+                @endif
+                <label
+                    for="seo_image"
+                    class="mt-2 flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center transition hover:border-slate-400 hover:bg-slate-100">
+                    <span class="text-sm font-semibold text-slate-700">Drop image here or click to replace</span>
+                    <span class="vc-help">JPG, PNG, WEBP up to 5MB. Takes priority over URL.</span>
+                </label>
+                <input
+                    id="seo_image"
+                    name="seo_image"
+                    type="file"
+                    accept="image/*"
+                    class="sr-only"
+                    form="course-details-form" />
+                @error('seo_image')
+                    <p class="vc-error">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="seo_description" class="vc-label">SEO description override (optional)</label>
+                <textarea
+                    id="seo_description"
+                    name="seo_description"
+                    form="course-details-form"
+                    rows="3"
+                    class="vc-input"
+                    maxlength="320">
+{{ old('seo_description', $course->seo_description) }}</textarea
+                >
+                <p class="vc-help">Recommended max 150-160 characters.</p>
+                @error('seo_description')
+                    <p class="vc-error">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button class="vc-btn-primary" type="submit" form="course-details-form">Save Course</button>
+                <a href="{{ route('admin.courses.index') }}" class="vc-btn-secondary">Back</a>
+            </div>
+        </div>
     </section>
 
     <section class="vc-panel hidden p-6" data-admin-tab-panel="curriculum">
@@ -1407,16 +1440,16 @@
 
             bindTabButtons();
 
-            const hashTab =
-                window.location.hash === '#curriculum'
-                    ? 'curriculum'
-                    : window.location.hash === '#assets'
-                      ? 'assets'
-                      : window.location.hash === '#reviews'
-                        ? 'reviews'
-                        : null;
+            const hashToTab = {
+                '#curriculum': 'curriculum',
+                '#assets': 'assets',
+                '#reviews': 'reviews',
+                '#seo': 'seo',
+            };
+            const hashTab = hashToTab[window.location.hash] ?? null;
+            const hasSeoErrors = @json($hasSeoErrors);
             const savedTab = localStorage.getItem(storageKey);
-            setActiveTab(hashTab ?? savedTab ?? 'details');
+            setActiveTab(hashTab ?? (hasSeoErrors ? 'seo' : null) ?? savedTab ?? 'details');
 
             const normalize = (value) => (value ?? '').toString().trim().toLowerCase();
             const readModuleState = () => {
