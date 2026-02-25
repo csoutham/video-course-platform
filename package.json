@@ -1,6 +1,6 @@
 {
     "private": true,
-    "version": "0.10.38",
+    "version": "0.10.39",
     "type": "module",
     "scripts": {
         "dev": "vite --cors",

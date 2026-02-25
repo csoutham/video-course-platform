@@ -120,3 +120,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-24: Added SEO operations runbook and baseline reporting guidance in `/docs/33-seo-operations-runbook.md`.
 - 2026-02-24: Added uploaded SEO social image workflow for courses in admin create/edit, including managed replacement cleanup and metadata usage via `seo_image_url`.
 - 2026-02-25: Split course SEO controls into a dedicated `SEO` tab on admin course edit, while preserving the single underlying save form.
+- 2026-02-25: Split pricing/access controls into a dedicated `Pricing` tab on admin course edit and migrated admin course create to matching tabbed sections (`Course Details`, `Pricing`, `SEO`) with shared-form save behavior.
