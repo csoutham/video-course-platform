@@ -65,6 +65,8 @@ test('admin can update platform name and colors and runtime layout reflects upda
         ->assertSee('Acme Academy')
         ->assertSee('Practical Mastery')
         ->assertSee('Sharpen your skills with practical learning.')
+        ->assertSee('<title>Sharpen your skills with practical learning. | Acme Academy</title>', false)
+        ->assertSee('name="description" content="Short modules. Real outcomes. Keep your own pace."', false)
         ->assertSee('Friendly training from working professionals.')
         ->assertSee('Acme Learning Ltd')
         ->assertSee('--vc-bg: #101010;', false)

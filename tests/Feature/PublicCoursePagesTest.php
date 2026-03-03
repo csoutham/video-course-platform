@@ -129,6 +129,11 @@ test('catalog and detail include seo meta tags', function (): void {
 
     $this->get('/courses')
         ->assertOk()
+        ->assertSee('<title>'.config('branding.defaults.homepage_title').' | '.config('app.name').'</title>', false)
+        ->assertSee(
+            'name="description" content="'.e(\Illuminate\Support\Str::limit(config('branding.defaults.homepage_subtitle'), 155)).'"',
+            false,
+        )
         ->assertSee('name="description"', false)
         ->assertSee('property="og:title"', false)
         ->assertSee('type="application/ld+json"', false)
@@ -141,6 +146,23 @@ test('catalog and detail include seo meta tags', function (): void {
         ->assertSee('property="og:description"', false)
         ->assertSee('type="application/ld+json"', false)
         ->assertSee('"@type":"Course"', false);
+});
+
+test('catalog seo title and description follow homepage branding copy', function (): void {
+    \App\Models\BrandingSetting::query()->create([
+        'platform_name' => 'Acme Academy',
+        'homepage_title' => 'Sharpen your skills with practical learning.',
+        'homepage_subtitle' => 'Short modules. Real outcomes. Keep your own pace.',
+    ]);
+
+    $this->get('/courses')
+        ->assertOk()
+        ->assertSee('<title>Sharpen your skills with practical learning. | Acme Academy</title>', false)
+        ->assertSee('name="description" content="Short modules. Real outcomes. Keep your own pace."', false)
+        ->assertSee('property="og:title" content="Sharpen your skills with practical learning. | Acme Academy"', false)
+        ->assertSee('property="og:description" content="Short modules. Real outcomes. Keep your own pace."', false)
+        ->assertSee('name="twitter:title" content="Sharpen your skills with practical learning. | Acme Academy"', false)
+        ->assertSee('name="twitter:description" content="Short modules. Real outcomes. Keep your own pace."', false);
 });
 
 test('detail page renders intro video when configured', function (): void {

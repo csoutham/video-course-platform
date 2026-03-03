@@ -1,10 +1,14 @@
-<x-slot:title>
-    Professional Video Courses | {{ $branding?->platformName ?? config('app.name') }}
-</x-slot>
-<x-slot:metaDescription>
-    Upgrade practical skills with focused, purchasable video courses. Instant checkout, structured modules, and
-    downloadable resources.
-</x-slot>
+@php
+    $homepageTitle = $branding?->homepageTitle ?? 'Learn faster with curated, results-focused courses.';
+    $homepageSubtitle =
+        $branding?->homepageSubtitle ??
+        'Each course is designed for implementation. Buy once, get immediate access, and follow clear module-based lessons with downloadable resources.';
+    $pageTitle = $homepageTitle.' | '.($branding?->platformName ?? config('app.name'));
+    $metaDescription = \Illuminate\Support\Str::limit(strip_tags((string) $homepageSubtitle), 155);
+@endphp
+
+<x-slot:title>{{ $pageTitle }}</x-slot>
+<x-slot:metaDescription>{{ $metaDescription }}</x-slot>
 
 @push('head')
     <script type="application/ld+json">
@@ -23,10 +27,10 @@
             <div class="space-y-4">
                 <p class="vc-eyebrow">{{ $branding?->homepageEyebrow ?? 'Professional Training' }}</p>
                 <h1 class="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-                    {{ $branding?->homepageTitle ?? 'Learn faster with curated, results-focused courses.' }}
+                    {{ $homepageTitle }}
                 </h1>
                 <p class="max-w-3xl text-base text-slate-600">
-                    {{ $branding?->homepageSubtitle ?? 'Each course is designed for implementation. Buy once, get immediate access, and follow clear module-based lessons with downloadable resources.' }}
+                    {{ $homepageSubtitle }}
                 </p>
             </div>
         </div>

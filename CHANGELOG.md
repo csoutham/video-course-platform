@@ -46,3 +46,4 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 
 - Stripe checkout no longer sends mutually exclusive `allow_promotion_codes` and `discounts` parameters together when a promotion code is provided.
 - Promotion code checkout now resolves human-entered code strings to active Stripe `promo_...` identifiers and returns a validation error for invalid/inactive codes.
+- Catalog homepage SEO metadata now derives title and description from homepage branding copy, keeping search meta aligned with branding updates.
