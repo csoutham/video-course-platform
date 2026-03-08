@@ -34,6 +34,11 @@ class BrandingService
      */
     private array $supportedFontProviders = ['system', 'bunny', 'google'];
 
+    /**
+     * @var array<int, string>
+     */
+    private array $supportedAnalyticsProviders = ['none', 'rybbit', 'custom'];
+
     public function current(): BrandingData
     {
         $defaults = $this->defaults();
@@ -65,6 +70,12 @@ class BrandingService
                     'homepage_eyebrow' => $settings->homepage_eyebrow,
                     'homepage_title' => $settings->homepage_title,
                     'homepage_subtitle' => $settings->homepage_subtitle,
+                    'homepage_seo_title' => $settings->homepage_seo_title,
+                    'homepage_seo_description' => $settings->homepage_seo_description,
+                    'analytics_provider' => $settings->analytics_provider,
+                    'analytics_site_id' => $settings->analytics_site_id,
+                    'analytics_script_url' => $settings->analytics_script_url,
+                    'analytics_custom_head_snippet' => $settings->analytics_custom_head_snippet,
                     'colors' => [],
                 ];
 
@@ -120,6 +131,28 @@ class BrandingService
             $input['homepage_subtitle'] ?? $defaults['homepage_subtitle'],
             500
         );
+        $settings->homepage_seo_title = $this->normalizeNullableString(
+            $input['homepage_seo_title'] ?? $defaults['homepage_seo_title'],
+            160
+        );
+        $settings->homepage_seo_description = $this->normalizeNullableString(
+            $input['homepage_seo_description'] ?? $defaults['homepage_seo_description'],
+            320
+        );
+        $settings->analytics_provider = $this->normalizeAnalyticsProvider(
+            $input['analytics_provider'] ?? $defaults['analytics_provider']
+        );
+        $settings->analytics_site_id = $this->normalizeNullableString(
+            $input['analytics_site_id'] ?? $defaults['analytics_site_id'],
+            120
+        );
+        $settings->analytics_script_url = $this->normalizeUrl(
+            $input['analytics_script_url'] ?? $defaults['analytics_script_url']
+        );
+        $settings->analytics_custom_head_snippet = $this->normalizeNullableString(
+            $input['analytics_custom_head_snippet'] ?? $defaults['analytics_custom_head_snippet'],
+            10000
+        );
 
         foreach ($this->tokenToColumnMap as $column) {
             $raw = $input[$column] ?? null;
@@ -153,6 +186,12 @@ class BrandingService
         $settings->homepage_eyebrow = $defaults['homepage_eyebrow'];
         $settings->homepage_title = $defaults['homepage_title'];
         $settings->homepage_subtitle = $defaults['homepage_subtitle'];
+        $settings->homepage_seo_title = $defaults['homepage_seo_title'];
+        $settings->homepage_seo_description = $defaults['homepage_seo_description'];
+        $settings->analytics_provider = $defaults['analytics_provider'];
+        $settings->analytics_site_id = $defaults['analytics_site_id'];
+        $settings->analytics_script_url = $defaults['analytics_script_url'];
+        $settings->analytics_custom_head_snippet = $defaults['analytics_custom_head_snippet'];
 
         foreach ($this->tokenToColumnMap as $column) {
             $settings->{$column} = null;
@@ -181,6 +220,12 @@ class BrandingService
      *     homepage_eyebrow:?string,
      *     homepage_title:?string,
      *     homepage_subtitle:?string,
+     *     homepage_seo_title:?string,
+     *     homepage_seo_description:?string,
+     *     analytics_provider:string,
+     *     analytics_site_id:?string,
+     *     analytics_script_url:?string,
+     *     analytics_custom_head_snippet:?string,
      *     colors:array<string,string>
      * }
      */
@@ -199,6 +244,12 @@ class BrandingService
         $homepageEyebrow = $this->normalizeNullableString($defaults['homepage_eyebrow'] ?? null, 80);
         $homepageTitle = $this->normalizeNullableString($defaults['homepage_title'] ?? null, 160);
         $homepageSubtitle = $this->normalizeNullableString($defaults['homepage_subtitle'] ?? null, 500);
+        $homepageSeoTitle = $this->normalizeNullableString($defaults['homepage_seo_title'] ?? null, 160);
+        $homepageSeoDescription = $this->normalizeNullableString($defaults['homepage_seo_description'] ?? null, 320);
+        $analyticsProvider = $this->normalizeAnalyticsProvider($defaults['analytics_provider'] ?? 'none');
+        $analyticsSiteId = $this->normalizeNullableString($defaults['analytics_site_id'] ?? null, 120);
+        $analyticsScriptUrl = $this->normalizeUrl($defaults['analytics_script_url'] ?? null);
+        $analyticsCustomHeadSnippet = $this->normalizeNullableString($defaults['analytics_custom_head_snippet'] ?? null, 10000);
         $colors = (array) ($defaults['colors'] ?? []);
 
         $normalizedColors = [];
@@ -219,6 +270,12 @@ class BrandingService
             'homepage_eyebrow' => $homepageEyebrow,
             'homepage_title' => $homepageTitle,
             'homepage_subtitle' => $homepageSubtitle,
+            'homepage_seo_title' => $homepageSeoTitle,
+            'homepage_seo_description' => $homepageSeoDescription,
+            'analytics_provider' => $analyticsProvider,
+            'analytics_site_id' => $analyticsSiteId,
+            'analytics_script_url' => $analyticsScriptUrl,
+            'analytics_custom_head_snippet' => $analyticsCustomHeadSnippet,
             'colors' => $normalizedColors,
         ];
     }
@@ -237,6 +294,14 @@ class BrandingService
     public function supportedFontProviders(): array
     {
         return $this->supportedFontProviders;
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public function supportedAnalyticsProviders(): array
+    {
+        return $this->supportedAnalyticsProviders;
     }
 
     /**
@@ -293,6 +358,28 @@ class BrandingService
             homepageSubtitle: $this->normalizeNullableString(
                 $raw['homepage_subtitle'] ?? $defaults['homepage_subtitle'],
                 500
+            ),
+            homepageSeoTitle: $this->normalizeNullableString(
+                $raw['homepage_seo_title'] ?? $defaults['homepage_seo_title'],
+                160
+            ),
+            homepageSeoDescription: $this->normalizeNullableString(
+                $raw['homepage_seo_description'] ?? $defaults['homepage_seo_description'],
+                320
+            ),
+            analyticsProvider: $this->normalizeAnalyticsProvider(
+                $raw['analytics_provider'] ?? $defaults['analytics_provider']
+            ),
+            analyticsSiteId: $this->normalizeNullableString(
+                $raw['analytics_site_id'] ?? $defaults['analytics_site_id'],
+                120
+            ),
+            analyticsScriptUrl: $this->normalizeUrl(
+                $raw['analytics_script_url'] ?? $defaults['analytics_script_url']
+            ),
+            analyticsCustomHeadSnippet: $this->normalizeNullableString(
+                $raw['analytics_custom_head_snippet'] ?? $defaults['analytics_custom_head_snippet'],
+                10000
             ),
             colors: $colors,
         );
@@ -357,6 +444,13 @@ class BrandingService
     private function cacheTtlSeconds(): int
     {
         return max(60, (int) config('branding.cache_ttl_seconds', 3600));
+    }
+
+    private function normalizeAnalyticsProvider(mixed $value): string
+    {
+        $provider = Str::lower(trim((string) $value));
+
+        return in_array($provider, $this->supportedAnalyticsProviders, true) ? $provider : 'none';
     }
 
     private function normalizeHex(mixed $value): ?string

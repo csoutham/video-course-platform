@@ -24,6 +24,12 @@ class BrandingData
         public readonly ?string $homepageEyebrow,
         public readonly ?string $homepageTitle,
         public readonly ?string $homepageSubtitle,
+        public readonly ?string $homepageSeoTitle,
+        public readonly ?string $homepageSeoDescription,
+        public readonly string $analyticsProvider,
+        public readonly ?string $analyticsSiteId,
+        public readonly ?string $analyticsScriptUrl,
+        public readonly ?string $analyticsCustomHeadSnippet,
         public readonly array $colors,
     ) {
     }
@@ -49,6 +55,12 @@ class BrandingData
             'homepage_eyebrow' => $this->homepageEyebrow,
             'homepage_title' => $this->homepageTitle,
             'homepage_subtitle' => $this->homepageSubtitle,
+            'homepage_seo_title' => $this->homepageSeoTitle,
+            'homepage_seo_description' => $this->homepageSeoDescription,
+            'analytics_provider' => $this->analyticsProvider,
+            'analytics_site_id' => $this->analyticsSiteId,
+            'analytics_script_url' => $this->analyticsScriptUrl,
+            'analytics_custom_head_snippet' => $this->analyticsCustomHeadSnippet,
             'colors' => $this->colors,
         ];
     }

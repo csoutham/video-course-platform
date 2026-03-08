@@ -3,8 +3,10 @@
     $homepageSubtitle =
         $branding?->homepageSubtitle ??
         'Each course is designed for implementation. Buy once, get immediate access, and follow clear module-based lessons with downloadable resources.';
-    $pageTitle = $homepageTitle.' | '.($branding?->platformName ?? config('app.name'));
-    $metaDescription = \Illuminate\Support\Str::limit(strip_tags((string) $homepageSubtitle), 155);
+    $seoTitle = $branding?->homepageSeoTitle ?: $homepageTitle;
+    $seoDescription = $branding?->homepageSeoDescription ?: $homepageSubtitle;
+    $pageTitle = $seoTitle.' | '.($branding?->platformName ?? config('app.name'));
+    $metaDescription = \Illuminate\Support\Str::limit(strip_tags((string) $seoDescription), 155);
 @endphp
 
 <x-slot:title>{{ $pageTitle }}</x-slot>

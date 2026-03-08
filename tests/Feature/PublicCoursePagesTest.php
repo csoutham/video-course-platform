@@ -165,6 +165,32 @@ test('catalog seo title and description follow homepage branding copy', function
         ->assertSee('name="twitter:description" content="Short modules. Real outcomes. Keep your own pace."', false);
 });
 
+test('catalog seo title and description prefer homepage seo branding overrides', function (): void {
+    \App\Models\BrandingSetting::query()->create([
+        'platform_name' => 'Acme Academy',
+        'homepage_title' => 'Sharpen your skills with practical learning.',
+        'homepage_subtitle' => 'Short modules. Real outcomes. Keep your own pace.',
+        'homepage_seo_title' => 'Online Acting Courses for Ambitious Performers',
+        'homepage_seo_description' => 'Browse practical acting courses with direct purchase and self-paced video lessons.',
+    ]);
+
+    $this->get('/courses')
+        ->assertOk()
+        ->assertSee('<title>Online Acting Courses for Ambitious Performers | Acme Academy</title>', false)
+        ->assertSee(
+            'name="description" content="Browse practical acting courses with direct purchase and self-paced video lessons."',
+            false,
+        )
+        ->assertSee(
+            'property="og:title" content="Online Acting Courses for Ambitious Performers | Acme Academy"',
+            false,
+        )
+        ->assertSee(
+            'property="og:description" content="Browse practical acting courses with direct purchase and self-paced video lessons."',
+            false,
+        );
+});
+
 test('detail page renders intro video when configured', function (): void {
     config()->set('services.cloudflare_stream.signed_urls_enabled', false);
     config()->set('services.cloudflare_stream.iframe_base_url', 'https://iframe.videodelivery.net');
@@ -235,4 +261,46 @@ test('detail page includes internal navigation links to catalog and related cour
         ->assertOk()
         ->assertSee(route('courses.index'), false)
         ->assertSee(route('courses.show', 'related-course'), false);
+});
+
+test('public analytics renders rybbit snippet on catalog and course detail only', function (): void {
+    \App\Models\BrandingSetting::query()->create([
+        'platform_name' => 'Acme Academy',
+        'analytics_provider' => 'rybbit',
+        'analytics_site_id' => 'ryb_site_123',
+        'analytics_script_url' => 'https://app.rybbit.io/api/script.js',
+    ]);
+
+    $course = Course::factory()->published()->create([
+        'title' => 'Analytics Course',
+        'slug' => 'analytics-course',
+    ]);
+
+    $this->get(route('courses.index'))
+        ->assertOk()
+        ->assertSee('https://app.rybbit.io/api/script.js', false)
+        ->assertSee('data-site-id="ryb_site_123"', false);
+
+    $this->get(route('courses.show', $course->slug))
+        ->assertOk()
+        ->assertSee('https://app.rybbit.io/api/script.js', false)
+        ->assertSee('data-site-id="ryb_site_123"', false);
+
+    $this->get(route('checkout.cancel'))
+        ->assertOk()
+        ->assertDontSee('https://app.rybbit.io/api/script.js', false)
+        ->assertDontSee('data-site-id="ryb_site_123"', false);
+});
+
+test('public analytics can render custom head snippet on catalog', function (): void {
+    \App\Models\BrandingSetting::query()->create([
+        'platform_name' => 'Acme Academy',
+        'analytics_provider' => 'custom',
+        'analytics_custom_head_snippet' => '<script defer src="https://analytics.example.com/script.js" data-site="academy"></script>',
+    ]);
+
+    $this->get(route('courses.index'))
+        ->assertOk()
+        ->assertSee('https://analytics.example.com/script.js', false)
+        ->assertSee('data-site="academy"', false);
 });

@@ -25,6 +25,12 @@ return [
             'BRANDING_DEFAULT_HOMEPAGE_SUBTITLE',
             'Each course is designed for implementation. Buy once, get immediate access, and follow clear module-based lessons with downloadable resources.'
         ),
+        'homepage_seo_title' => env('BRANDING_DEFAULT_HOMEPAGE_SEO_TITLE'),
+        'homepage_seo_description' => env('BRANDING_DEFAULT_HOMEPAGE_SEO_DESCRIPTION'),
+        'analytics_provider' => env('BRANDING_DEFAULT_ANALYTICS_PROVIDER', 'none'),
+        'analytics_site_id' => env('BRANDING_DEFAULT_ANALYTICS_SITE_ID'),
+        'analytics_script_url' => env('BRANDING_DEFAULT_ANALYTICS_SCRIPT_URL', 'https://app.rybbit.io/api/script.js'),
+        'analytics_custom_head_snippet' => env('BRANDING_DEFAULT_ANALYTICS_CUSTOM_HEAD_SNIPPET'),
         'colors' => [
             'vc-bg' => '#F4F5F8',
             'vc-panel' => '#FFFFFF',

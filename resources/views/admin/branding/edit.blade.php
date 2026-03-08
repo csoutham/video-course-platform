@@ -17,6 +17,12 @@
                 </button>
                 <button
                     type="button"
+                    data-branding-tab-button="analytics"
+                    class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
+                    Analytics
+                </button>
+                <button
+                    type="button"
                     data-branding-tab-button="theme"
                     class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
                     Theme
@@ -208,13 +214,129 @@
 
                     <aside class="vc-panel-soft p-4">
                         <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">
-                            Where this appears
+                            Homepage SEO
                         </h2>
-                        <p class="vc-help mt-2">
-                            These fields power the marketing header copy on
-                            <code>/courses</code>
-                            . Leave empty to use system defaults.
-                        </p>
+                        <p class="vc-help mt-2">These fields control the public catalog page title and meta description.</p>
+
+                        <div class="mt-4 space-y-4">
+                            <div>
+                                <label for="homepage_seo_title" class="vc-label">SEO title</label>
+                                <input
+                                    id="homepage_seo_title"
+                                    name="homepage_seo_title"
+                                    class="vc-input"
+                                    maxlength="160"
+                                    value="{{ old('homepage_seo_title', $branding->homepageSeoTitle) }}" />
+                                <p class="vc-help">Leave empty to reuse the homepage hero title.</p>
+                                @error('homepage_seo_title')
+                                    <p class="vc-error">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="homepage_seo_description" class="vc-label">SEO description</label>
+                                <textarea
+                                    id="homepage_seo_description"
+                                    name="homepage_seo_description"
+                                    class="vc-input min-h-28"
+                                    maxlength="320">{{ old('homepage_seo_description', $branding->homepageSeoDescription) }}</textarea>
+                                <p class="vc-help">Leave empty to reuse the homepage subtitle.</p>
+                                @error('homepage_seo_description')
+                                    <p class="vc-error">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </section>
+
+            <section class="vc-panel hidden p-6" data-branding-tab-panel="analytics">
+                <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
+                    <article class="space-y-4">
+                        <div>
+                            <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">
+                                Public analytics
+                            </h2>
+                            <p class="vc-help mt-2">
+                                Analytics are injected only on public catalog and course-detail pages in v1.
+                            </p>
+                        </div>
+
+                        <div>
+                            <label for="analytics_provider" class="vc-label">Provider</label>
+                            <select id="analytics_provider" name="analytics_provider" class="vc-input" data-analytics-provider>
+                                @foreach ($analyticsProviders as $analyticsProvider)
+                                    <option
+                                        value="{{ $analyticsProvider }}"
+                                        @selected(old('analytics_provider', $branding->analyticsProvider) === $analyticsProvider)>
+                                        {{ str($analyticsProvider)->replace('_', ' ')->title() }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('analytics_provider')
+                                <p class="vc-error">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div data-analytics-rybbit-fields>
+                            <label for="analytics_site_id" class="vc-label">Rybbit site ID</label>
+                            <input
+                                id="analytics_site_id"
+                                name="analytics_site_id"
+                                class="vc-input"
+                                maxlength="120"
+                                value="{{ old('analytics_site_id', $branding->analyticsSiteId) }}"
+                                placeholder="ryb_..." />
+                            <p class="vc-help">Used with the Rybbit script include in the public page head.</p>
+                            @error('analytics_site_id')
+                                <p class="vc-error">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div data-analytics-script-url-fields>
+                            <label for="analytics_script_url" class="vc-label">Script URL</label>
+                            <input
+                                id="analytics_script_url"
+                                name="analytics_script_url"
+                                type="url"
+                                class="vc-input"
+                                maxlength="2048"
+                                value="{{ old('analytics_script_url', $branding->analyticsScriptUrl) }}"
+                                placeholder="https://app.rybbit.io/api/script.js" />
+                            <p class="vc-help">For Rybbit, leave as the default unless you are self-hosting.</p>
+                            @error('analytics_script_url')
+                                <p class="vc-error">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div data-analytics-custom-fields>
+                            <label for="analytics_custom_head_snippet" class="vc-label">Custom head snippet</label>
+                            <textarea
+                                id="analytics_custom_head_snippet"
+                                name="analytics_custom_head_snippet"
+                                class="vc-input min-h-40 font-mono text-sm"
+                                maxlength="10000"
+                                placeholder='<script defer src="https://analytics.example.com/script.js" data-site="example"></script>'>{{ old('analytics_custom_head_snippet', $branding->analyticsCustomHeadSnippet) }}</textarea>
+                            <p class="vc-help">
+                                Rendered as-is inside the public page
+                                <code>&lt;head&gt;</code>
+                                . Use this for non-Rybbit providers that need a custom script snippet.
+                            </p>
+                            @error('analytics_custom_head_snippet')
+                                <p class="vc-error">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </article>
+
+                    <aside class="vc-panel-soft p-4">
+                        <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">
+                            Scope and guardrails
+                        </h2>
+                        <div class="mt-3 space-y-3 text-sm text-slate-600">
+                            <p>Injected only on `courses.index` and `courses.show`.</p>
+                            <p>Checkout, claims, billing, learning, profile, certificates, and admin pages remain excluded.</p>
+                            <p>Use `Custom` only when the provider cannot be expressed as a simple Rybbit-style script include.</p>
+                        </div>
                     </aside>
                 </div>
             </section>
@@ -387,6 +509,7 @@
             const fontProviderInput = document.querySelector('[data-font-provider]');
             const fontFamilyInput = document.querySelector('[data-font-family]');
             const fontWeightsInput = document.querySelector('[data-font-weights]');
+            const analyticsProviderInput = document.querySelector('[data-analytics-provider]');
             let dynamicFontLink = null;
 
             const syncPreview = () => {
@@ -460,8 +583,24 @@
             fontFamilyInput?.addEventListener('input', syncPreview);
             fontWeightsInput?.addEventListener('input', syncPreview);
 
+            const syncAnalyticsVisibility = () => {
+                const provider = analyticsProviderInput?.value || 'none';
+                document.querySelectorAll('[data-analytics-rybbit-fields]').forEach((element) => {
+                    element.classList.toggle('hidden', provider !== 'rybbit');
+                });
+                document.querySelectorAll('[data-analytics-script-url-fields]').forEach((element) => {
+                    element.classList.toggle('hidden', provider === 'none' || provider === 'custom');
+                });
+                document.querySelectorAll('[data-analytics-custom-fields]').forEach((element) => {
+                    element.classList.toggle('hidden', provider !== 'custom');
+                });
+            };
+
+            analyticsProviderInput?.addEventListener('change', syncAnalyticsVisibility);
+
             setActiveTab(window.localStorage.getItem(storageKey) || 'brand');
             syncPreview();
+            syncAnalyticsVisibility();
         })();
     </script>
 </x-admin-layout>

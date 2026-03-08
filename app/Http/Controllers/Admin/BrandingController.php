@@ -20,6 +20,7 @@ class BrandingController extends Controller
             'defaults' => $defaults,
             'tokenColumnMap' => $brandingService->tokenColumnMap(),
             'fontProviders' => $brandingService->supportedFontProviders(),
+            'analyticsProviders' => $brandingService->supportedAnalyticsProviders(),
         ]);
     }
 
@@ -38,6 +39,12 @@ class BrandingController extends Controller
             'homepage_eyebrow' => ['nullable', 'string', 'max:80'],
             'homepage_title' => ['nullable', 'string', 'max:160'],
             'homepage_subtitle' => ['nullable', 'string', 'max:500'],
+            'homepage_seo_title' => ['nullable', 'string', 'max:160'],
+            'homepage_seo_description' => ['nullable', 'string', 'max:320'],
+            'analytics_provider' => ['required', 'string', 'in:none,rybbit,custom'],
+            'analytics_site_id' => ['nullable', 'string', 'max:120'],
+            'analytics_script_url' => ['nullable', 'url', 'max:2048'],
+            'analytics_custom_head_snippet' => ['nullable', 'string', 'max:10000'],
             'color_bg' => ['nullable', 'regex:/^#([A-Fa-f0-9]{6})$/'],
             'color_panel' => ['nullable', 'regex:/^#([A-Fa-f0-9]{6})$/'],
             'color_panel_soft' => ['nullable', 'regex:/^#([A-Fa-f0-9]{6})$/'],

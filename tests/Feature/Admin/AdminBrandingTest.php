@@ -39,6 +39,12 @@ test('admin can update platform name and colors and runtime layout reflects upda
         'homepage_eyebrow' => 'Practical Mastery',
         'homepage_title' => 'Sharpen your skills with practical learning.',
         'homepage_subtitle' => 'Short modules. Real outcomes. Keep your own pace.',
+        'homepage_seo_title' => 'Acting Courses for Working Performers',
+        'homepage_seo_description' => 'Practical actor training with concise modules and self-paced study.',
+        'analytics_provider' => 'rybbit',
+        'analytics_site_id' => 'ryb_test_site',
+        'analytics_script_url' => 'https://app.rybbit.io/api/script.js',
+        'analytics_custom_head_snippet' => null,
         'color_bg' => '#101010',
         'color_panel' => '#FFFFFF',
         'color_panel_soft' => '#F7F7F7',
@@ -56,6 +62,9 @@ test('admin can update platform name and colors and runtime layout reflects upda
         'logo_height_px' => 44,
         'publisher_name' => 'Acme Learning Ltd',
         'homepage_title' => 'Sharpen your skills with practical learning.',
+        'homepage_seo_title' => 'Acting Courses for Working Performers',
+        'analytics_provider' => 'rybbit',
+        'analytics_site_id' => 'ryb_test_site',
         'color_bg' => '#101010',
         'color_warning' => '#F59E0B',
     ]);
@@ -65,13 +74,14 @@ test('admin can update platform name and colors and runtime layout reflects upda
         ->assertSee('Acme Academy')
         ->assertSee('Practical Mastery')
         ->assertSee('Sharpen your skills with practical learning.')
-        ->assertSee('<title>Sharpen your skills with practical learning. | Acme Academy</title>', false)
-        ->assertSee('name="description" content="Short modules. Real outcomes. Keep your own pace."', false)
+        ->assertSee('<title>Acting Courses for Working Performers | Acme Academy</title>', false)
+        ->assertSee('name="description" content="Practical actor training with concise modules and self-paced study."', false)
         ->assertSee('Friendly training from working professionals.')
         ->assertSee('Acme Learning Ltd')
         ->assertSee('--vc-bg: #101010;', false)
         ->assertSee('--vc-logo-height: 44px;', false)
-        ->assertSee('--vc-warning: #F59E0B;', false);
+        ->assertSee('--vc-warning: #F59E0B;', false)
+        ->assertSee('data-site-id="ryb_test_site"', false);
 });
 
 test('admin can upload branding logo', function (): void {
@@ -92,6 +102,12 @@ test('admin can upload branding logo', function (): void {
         'homepage_eyebrow' => null,
         'homepage_title' => null,
         'homepage_subtitle' => null,
+        'homepage_seo_title' => null,
+        'homepage_seo_description' => null,
+        'analytics_provider' => 'none',
+        'analytics_site_id' => null,
+        'analytics_script_url' => 'https://app.rybbit.io/api/script.js',
+        'analytics_custom_head_snippet' => null,
         'logo' => UploadedFile::fake()->image('logo.png', 320, 120),
     ])->assertRedirect(route('admin.branding.edit'));
 
@@ -117,6 +133,12 @@ test('invalid branding color is rejected', function (): void {
             'homepage_eyebrow' => null,
             'homepage_title' => null,
             'homepage_subtitle' => null,
+            'homepage_seo_title' => null,
+            'homepage_seo_description' => null,
+            'analytics_provider' => 'none',
+            'analytics_site_id' => null,
+            'analytics_script_url' => 'https://app.rybbit.io/api/script.js',
+            'analytics_custom_head_snippet' => null,
             'color_bg' => '#12',
         ])
         ->assertRedirect(route('admin.branding.edit'))
@@ -138,6 +160,12 @@ test('google font settings are reflected in runtime layout links', function (): 
         'homepage_eyebrow' => null,
         'homepage_title' => null,
         'homepage_subtitle' => null,
+        'homepage_seo_title' => null,
+        'homepage_seo_description' => null,
+        'analytics_provider' => 'none',
+        'analytics_site_id' => null,
+        'analytics_script_url' => 'https://app.rybbit.io/api/script.js',
+        'analytics_custom_head_snippet' => null,
     ])->assertRedirect(route('admin.branding.edit'));
 
     $this->get(route('courses.index'))
@@ -160,4 +188,35 @@ test('admin can reset branding to defaults', function (): void {
     $branding = BrandingSetting::query()->first();
     expect($branding?->platform_name)->toBe(config('branding.defaults.platform_name'));
     expect($branding?->color_bg)->toBeNull();
+});
+
+test('custom analytics snippet is persisted for branding', function (): void {
+    $this->actingAs(User::factory()->admin()->create());
+
+    $snippet = '<script defer src="https://analytics.example.com/script.js" data-site="academy"></script>';
+
+    $this->put(route('admin.branding.update'), [
+        'platform_name' => 'Acme Academy',
+        'logo_height_px' => 32,
+        'font_provider' => 'bunny',
+        'font_family' => 'Figtree',
+        'font_weights' => '400,500,600,700',
+        'publisher_name' => 'Acme Learning Ltd',
+        'publisher_website' => null,
+        'footer_tagline' => null,
+        'homepage_eyebrow' => null,
+        'homepage_title' => null,
+        'homepage_subtitle' => null,
+        'homepage_seo_title' => null,
+        'homepage_seo_description' => null,
+        'analytics_provider' => 'custom',
+        'analytics_site_id' => null,
+        'analytics_script_url' => null,
+        'analytics_custom_head_snippet' => $snippet,
+    ])->assertRedirect(route('admin.branding.edit'));
+
+    $this->assertDatabaseHas('branding_settings', [
+        'analytics_provider' => 'custom',
+        'analytics_custom_head_snippet' => $snippet,
+    ]);
 });

@@ -18,6 +18,7 @@
     $pageUrl = \App\Support\Seo\SeoMeta::canonicalUrl($canonicalUrl);
     $robotsContent = \App\Support\Seo\SeoMeta::robotsForRequest(request(), $metaRobots);
     $isIndexable = str_starts_with($robotsContent, 'index');
+    $analyticsSnippet = \App\Support\Analytics\PublicAnalytics::headSnippet(request(), $branding ?? null);
     $organizationSchemaJson = json_encode([
         '@context' => 'https://schema.org',
         '@type' => 'Organization',
@@ -89,6 +90,10 @@
             <script type="application/ld+json">
                 {!! $websiteSchemaJson !!}
             </script>
+        @endif
+
+        @if ($analyticsSnippet)
+            {!! $analyticsSnippet !!}
         @endif
 
         @stack('head')

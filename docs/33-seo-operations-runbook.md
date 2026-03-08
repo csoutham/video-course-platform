@@ -88,3 +88,11 @@ For each new/updated course:
 
 - `SEO_ENFORCE_CANONICAL_HOST=false` by default.
 - Enable in production when canonical host/protocol are stable.
+
+## Public Analytics
+
+1. Public-page analytics is runtime-configured via Branding settings.
+2. In v1, analytics scripts render only on the public catalog and course-detail pages.
+3. Use the `Rybbit` provider for a standard head script include with site ID.
+4. Use `Custom` only when another provider requires a full custom head snippet.
+5. Verify analytics does not appear on checkout, claim, learning, billing, profile, certificate, or admin pages.
