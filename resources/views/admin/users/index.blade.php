@@ -1,3 +1,7 @@
+@php
+    $showCreateUserModal = $errors->hasAny(['name', 'email', 'password', 'password_confirmation']);
+@endphp
+
 <x-admin-layout maxWidth="max-w-none" containerPadding="px-4 py-6" title="Admin Users">
     <section class="vc-panel p-6">
         <div class="flex flex-wrap items-start justify-between gap-3">
@@ -10,22 +14,12 @@
                 <button
                     type="button"
                     class="vc-btn-primary"
-                    x-data=""
-                    x-on:click.prevent="$dispatch('open-modal', 'create-user')">
+                    data-user-create-open>
                     New User
                 </button>
                 <a href="{{ route('admin.dashboard') }}" class="vc-btn-secondary">Back to Dashboard</a>
             </div>
         </div>
-    </section>
-
-    <section class="vc-panel mt-6 p-6">
-        <h2 class="text-lg font-semibold tracking-tight text-slate-900">User Directory</h2>
-        <p class="mt-1 text-sm text-slate-600">
-            Inspect learner history, purchases, and course progress. Use
-            <span class="font-medium text-slate-900">New User</span>
-            when you need to create an internal account or another administrator.
-        </p>
     </section>
 
     <section class="vc-panel mt-6 overflow-hidden">
@@ -72,12 +66,18 @@
         </section>
     @endif
 
-    <x-modal
-        name="create-user"
-        :show="$errors->hasAny(['name', 'email', 'password', 'password_confirmation'])"
-        maxWidth="xl"
-        focusable>
-        <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-6 p-6">
+    <div
+        class="{{ $showCreateUserModal ? '' : 'pointer-events-none' }} fixed inset-0 z-[70] overflow-y-auto px-4 py-6 sm:px-0"
+        data-user-create-modal
+        aria-hidden="{{ $showCreateUserModal ? 'false' : 'true' }}">
+        <div
+            class="absolute inset-0 bg-slate-900/50 transition-opacity {{ $showCreateUserModal ? 'opacity-100' : 'opacity-0' }}"
+            data-user-create-backdrop></div>
+
+        <div
+            class="sm:max-w-xl relative mb-6 transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:mx-auto sm:w-full {{ $showCreateUserModal ? 'translate-y-0 opacity-100 sm:scale-100' : 'translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95' }}"
+            data-user-create-panel>
+            <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-6 p-6">
             @csrf
 
             <div class="flex items-start justify-between gap-4">
@@ -91,7 +91,7 @@
                 <button
                     type="button"
                     class="rounded-md p-2 text-slate-500 transition hover:bg-slate-100"
-                    x-on:click="$dispatch('close-modal', 'create-user')"
+                    data-user-create-close
                     aria-label="Close create user modal">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -161,11 +161,54 @@
                 <button
                     type="button"
                     class="vc-btn-secondary"
-                    x-on:click="$dispatch('close-modal', 'create-user')">
+                    data-user-create-close>
                     Cancel
                 </button>
                 <button type="submit" class="vc-btn-primary">Create User</button>
             </div>
         </form>
-    </x-modal>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const modal = document.querySelector('[data-user-create-modal]');
+            if (!modal) return;
+
+            const panel = modal.querySelector('[data-user-create-panel]');
+            const backdrop = modal.querySelector('[data-user-create-backdrop]');
+            const openButtons = document.querySelectorAll('[data-user-create-open]');
+            const closeButtons = modal.querySelectorAll('[data-user-create-close]');
+
+            const open = () => {
+                modal.classList.remove('pointer-events-none');
+                modal.setAttribute('aria-hidden', 'false');
+                backdrop?.classList.remove('opacity-0');
+                backdrop?.classList.add('opacity-100');
+                panel?.classList.remove('translate-y-4', 'opacity-0', 'sm:scale-95');
+                panel?.classList.add('translate-y-0', 'opacity-100', 'sm:scale-100');
+                document.body.classList.add('overflow-y-hidden');
+                modal.querySelector('input, button, select, textarea')?.focus();
+            };
+
+            const close = () => {
+                backdrop?.classList.add('opacity-0');
+                backdrop?.classList.remove('opacity-100');
+                panel?.classList.add('translate-y-4', 'opacity-0', 'sm:scale-95');
+                panel?.classList.remove('translate-y-0', 'opacity-100', 'sm:scale-100');
+                modal.setAttribute('aria-hidden', 'true');
+                window.setTimeout(() => modal.classList.add('pointer-events-none'), 200);
+                document.body.classList.remove('overflow-y-hidden');
+            };
+
+            openButtons.forEach((button) => button.addEventListener('click', open));
+            closeButtons.forEach((button) => button.addEventListener('click', close));
+            backdrop?.addEventListener('click', close);
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') {
+                    close();
+                }
+            });
+        })();
+    </script>
 </x-admin-layout>
