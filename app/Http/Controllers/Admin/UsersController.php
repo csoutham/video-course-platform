@@ -5,10 +5,33 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\CourseLesson;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Contracts\View\View;
 
 class UsersController extends Controller
 {
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique(User::class, 'email')],
+            'password' => ['required', 'string', 'confirmed', Password::defaults()],
+            'is_admin' => ['nullable', 'boolean'],
+        ]);
+
+        User::query()->create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => $validated['password'],
+            'is_admin' => (bool) ($validated['is_admin'] ?? false),
+        ]);
+
+        return to_route('admin.users.index')->with('status', 'User created.');
+    }
+
     public function index(): View
     {
         $users = User::query()

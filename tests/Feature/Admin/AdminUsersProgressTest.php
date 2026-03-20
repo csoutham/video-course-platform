@@ -27,8 +27,49 @@ test('admin can view users list', function (): void {
         ->assertOk()
         ->assertSeeText('Users')
         ->assertSeeText('Learner One')
+        ->assertSeeText('Create User')
         ->assertSee(route('admin.users.show', $learner), false);
 
+});
+
+test('admin can create a new admin user', function (): void {
+    $this->actingAs(User::factory()->admin()->create());
+
+    $this->post(route('admin.users.store'), [
+        'name' => 'New Admin',
+        'email' => 'new-admin@example.com',
+        'password' => 'strong-password-123',
+        'password_confirmation' => 'strong-password-123',
+        'is_admin' => '1',
+    ])
+        ->assertRedirect(route('admin.users.index'));
+
+    $this->assertDatabaseHas('users', [
+        'name' => 'New Admin',
+        'email' => 'new-admin@example.com',
+        'is_admin' => true,
+    ]);
+
+    $this->get(route('admin.users.index'))
+        ->assertOk()
+        ->assertSeeText('New Admin')
+        ->assertSeeText('Admin');
+});
+
+test('admin user creation enforces unique email and password confirmation', function (): void {
+    $this->actingAs(User::factory()->admin()->create());
+    User::factory()->create(['email' => 'duplicate@example.com']);
+
+    $this->from(route('admin.users.index'))
+        ->post(route('admin.users.store'), [
+            'name' => 'Invalid User',
+            'email' => 'duplicate@example.com',
+            'password' => 'strong-password-123',
+            'password_confirmation' => 'different-password-123',
+            'is_admin' => '0',
+        ])
+        ->assertRedirect(route('admin.users.index'))
+        ->assertSessionHasErrors(['email', 'password']);
 });
 
 test('admin can view user course progress summary', function (): void {

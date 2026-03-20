@@ -39,6 +39,7 @@ use App\Http\Controllers\Admin\Reviews\UnhideController as AdminReviewsUnhideCon
 use App\Http\Controllers\Admin\Reviews\UpdateController as AdminReviewsUpdateController;
 use App\Http\Controllers\Admin\Users\IndexController as AdminUsersIndexController;
 use App\Http\Controllers\Admin\Users\ShowController as AdminUsersShowController;
+use App\Http\Controllers\Admin\Users\StoreController as AdminUsersStoreController;
 use App\Http\Controllers\Learning\CoursePlayerController;
 use App\Http\Controllers\Learning\Certificates\ShowController as LearningCertificateShowController;
 use App\Http\Controllers\Learning\LessonProgress\CompleteController as LessonProgressCompleteController;
@@ -164,6 +165,7 @@ Route::middleware(['auth', 'admin'])
             ->name('courses.reviews.import.commit');
         Route::get('/orders', AdminOrdersIndexController::class)->name('orders.index');
         Route::get('/users', AdminUsersIndexController::class)->name('users.index');
+        Route::post('/users', AdminUsersStoreController::class)->name('users.store');
         Route::get('/users/{user}', AdminUsersShowController::class)->name('users.show');
         Route::get('/branding', AdminBrandingEditController::class)->name('branding.edit');
         Route::put('/branding', AdminBrandingUpdateController::class)->name('branding.update');
