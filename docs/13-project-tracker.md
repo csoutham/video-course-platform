@@ -123,3 +123,4 @@ This file is the source of truth for project execution tracking in-repo.
 - 2026-02-25: Split pricing/access controls into a dedicated `Pricing` tab on admin course edit and migrated admin course create to matching tabbed sections (`Course Details`, `Pricing`, `SEO`) with shared-form save behavior.
 - 2026-03-08: Extended runtime branding with homepage SEO title/description overrides and public-page analytics configuration, including a Rybbit preset and custom head-snippet fallback rendered only on catalog and course-detail pages.
 - 2026-03-20: Added admin-side user creation on the users index page with password-policy enforcement, admin-role toggle, and feature coverage for success and validation failure paths.
+- 2026-03-20: Refined admin user creation UI by moving the form into a modal, keeping the directory page focused on the user list while preserving validation-driven reopen behavior.

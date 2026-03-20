@@ -6,73 +6,26 @@
                 <h1 class="vc-title">Users</h1>
                 <p class="vc-subtitle">Inspect learner accounts, purchases, and progress history.</p>
             </div>
-            <a href="{{ route('admin.dashboard') }}" class="vc-btn-secondary">Back to Dashboard</a>
+            <div class="flex items-center gap-2">
+                <button
+                    type="button"
+                    class="vc-btn-primary"
+                    x-data=""
+                    x-on:click.prevent="$dispatch('open-modal', 'create-user')">
+                    New User
+                </button>
+                <a href="{{ route('admin.dashboard') }}" class="vc-btn-secondary">Back to Dashboard</a>
+            </div>
         </div>
     </section>
 
     <section class="vc-panel mt-6 p-6">
-        <div class="grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(360px,420px)]">
-            <div>
-                <h2 class="text-lg font-semibold tracking-tight text-slate-900">User Directory</h2>
-                <p class="mt-1 text-sm text-slate-600">
-                    Search is not available yet, but you can inspect learner history and add new platform users here.
-                </p>
-            </div>
-
-            <aside class="vc-panel-soft p-4">
-                <h2 class="text-sm font-semibold tracking-[0.12em] text-slate-600 uppercase">Create User</h2>
-                <form method="POST" action="{{ route('admin.users.store') }}" class="mt-4 space-y-4">
-                    @csrf
-
-                    <div>
-                        <label for="name" class="vc-label">Name</label>
-                        <input id="name" name="name" value="{{ old('name') }}" required class="vc-input" />
-                        @error('name')
-                            <p class="vc-error">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="email" class="vc-label">Email</label>
-                        <input id="email" name="email" type="email" value="{{ old('email') }}" required class="vc-input" />
-                        @error('email')
-                            <p class="vc-error">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="password" class="vc-label">Password</label>
-                        <input id="password" name="password" type="password" required class="vc-input" />
-                        <p class="vc-help">Must be at least 8 characters and pass the uncompromised-password check.</p>
-                        @error('password')
-                            <p class="vc-error">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="password_confirmation" class="vc-label">Confirm password</label>
-                        <input
-                            id="password_confirmation"
-                            name="password_confirmation"
-                            type="password"
-                            required
-                            class="vc-input" />
-                    </div>
-
-                    <label class="flex items-center gap-2 text-sm text-slate-700">
-                        <input
-                            class="vc-checkbox"
-                            type="checkbox"
-                            name="is_admin"
-                            value="1"
-                            @checked(old('is_admin')) />
-                        Grant admin access
-                    </label>
-
-                    <button type="submit" class="vc-btn-primary w-full justify-center">Create User</button>
-                </form>
-            </aside>
-        </div>
+        <h2 class="text-lg font-semibold tracking-tight text-slate-900">User Directory</h2>
+        <p class="mt-1 text-sm text-slate-600">
+            Inspect learner history, purchases, and course progress. Use
+            <span class="font-medium text-slate-900">New User</span>
+            when you need to create an internal account or another administrator.
+        </p>
     </section>
 
     <section class="vc-panel mt-6 overflow-hidden">
@@ -118,4 +71,101 @@
             {{ $users->links() }}
         </section>
     @endif
+
+    <x-modal
+        name="create-user"
+        :show="$errors->hasAny(['name', 'email', 'password', 'password_confirmation'])"
+        maxWidth="xl"
+        focusable>
+        <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-6 p-6">
+            @csrf
+
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <h2 class="text-lg font-semibold tracking-tight text-slate-900">Create User</h2>
+                    <p class="mt-1 text-sm text-slate-600">
+                        Create a learner or admin account without leaving the user directory.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="rounded-md p-2 text-slate-500 transition hover:bg-slate-100"
+                    x-on:click="$dispatch('close-modal', 'create-user')"
+                    aria-label="Close create user modal">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="grid gap-4 md:grid-cols-2">
+                <div>
+                    <label for="name" class="vc-label">Name</label>
+                    <input id="name" name="name" value="{{ old('name') }}" required class="vc-input" />
+                    @error('name')
+                        <p class="vc-error">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="email" class="vc-label">Email</label>
+                    <input id="email" name="email" type="email" value="{{ old('email') }}" required class="vc-input" />
+                    @error('email')
+                        <p class="vc-error">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="grid gap-4 md:grid-cols-2">
+                <div>
+                    <label for="password" class="vc-label">Password</label>
+                    <input id="password" name="password" type="password" required class="vc-input" />
+                    <p class="vc-help">Must be at least 8 characters and pass the uncompromised-password check.</p>
+                    @error('password')
+                        <p class="vc-error">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="password_confirmation" class="vc-label">Confirm password</label>
+                    <input
+                        id="password_confirmation"
+                        name="password_confirmation"
+                        type="password"
+                        required
+                        class="vc-input" />
+                </div>
+            </div>
+
+            <label class="flex items-center gap-2 text-sm text-slate-700">
+                <input
+                    class="vc-checkbox"
+                    type="checkbox"
+                    name="is_admin"
+                    value="1"
+                    @checked(old('is_admin')) />
+                Grant admin access
+            </label>
+
+            <div class="flex items-center justify-end gap-2">
+                <button
+                    type="button"
+                    class="vc-btn-secondary"
+                    x-on:click="$dispatch('close-modal', 'create-user')">
+                    Cancel
+                </button>
+                <button type="submit" class="vc-btn-primary">Create User</button>
+            </div>
+        </form>
+    </x-modal>
 </x-admin-layout>

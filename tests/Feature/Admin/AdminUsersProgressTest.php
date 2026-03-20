@@ -27,7 +27,7 @@ test('admin can view users list', function (): void {
         ->assertOk()
         ->assertSeeText('Users')
         ->assertSeeText('Learner One')
-        ->assertSeeText('Create User')
+        ->assertSeeText('New User')
         ->assertSee(route('admin.users.show', $learner), false);
 
 });
