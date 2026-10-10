@@ -9,27 +9,27 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
+#[\Illuminate\Database\Eloquent\Attributes\Fillable([
+    'user_id',
+    'email',
+    'stripe_checkout_session_id',
+    'stripe_customer_id',
+    'stripe_payment_intent_id',
+    'stripe_receipt_url',
+    'status',
+    'order_type',
+    'subscription_id',
+    'subtotal_amount',
+    'discount_amount',
+    'total_amount',
+    'currency',
+    'paid_at',
+    'refunded_at',
+])]
+#[\Illuminate\Database\Eloquent\Attributes\RouteKey('public_id')]
 class Order extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'user_id',
-        'email',
-        'stripe_checkout_session_id',
-        'stripe_customer_id',
-        'stripe_payment_intent_id',
-        'stripe_receipt_url',
-        'status',
-        'order_type',
-        'subscription_id',
-        'subtotal_amount',
-        'discount_amount',
-        'total_amount',
-        'currency',
-        'paid_at',
-        'refunded_at',
-    ];
 
     #[\Override]
     protected static function booted(): void
@@ -48,12 +48,6 @@ class Order extends Model
             'paid_at' => 'datetime',
             'refunded_at' => 'datetime',
         ];
-    }
-
-    #[\Override]
-    public function getRouteKeyName(): string
-    {
-        return 'public_id';
     }
 
     public function user(): BelongsTo

@@ -7,25 +7,24 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
+#[\Illuminate\Database\Eloquent\Attributes\Fillable([
+    'user_id',
+    'course_id',
+    'order_id',
+    'subscription_id',
+    'public_id',
+    'verification_code',
+    'issued_name',
+    'issued_course_title',
+    'issued_at',
+    'status',
+    'revoked_at',
+    'revoke_reason',
+    'template_version',
+])]
 class CourseCertificate extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'user_id',
-        'course_id',
-        'order_id',
-        'subscription_id',
-        'public_id',
-        'verification_code',
-        'issued_name',
-        'issued_course_title',
-        'issued_at',
-        'status',
-        'revoked_at',
-        'revoke_reason',
-        'template_version',
-    ];
 
     #[\Override]
     protected static function booted(): void

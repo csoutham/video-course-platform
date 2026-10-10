@@ -6,20 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[\Illuminate\Database\Eloquent\Attributes\Fillable([
+    'course_id',
+    'module_id',
+    'lesson_id',
+    'name',
+    'storage_key',
+    'mime_type',
+    'size_bytes',
+    'sort_order',
+])]
 class LessonResource extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'course_id',
-        'module_id',
-        'lesson_id',
-        'name',
-        'storage_key',
-        'mime_type',
-        'size_bytes',
-        'sort_order',
-    ];
 
     public function course(): BelongsTo
     {

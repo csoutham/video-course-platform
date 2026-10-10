@@ -9,49 +9,48 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[\Illuminate\Database\Eloquent\Attributes\Fillable([
+    'source_platform',
+    'source_url',
+    'source_external_id',
+    'slug',
+    'title',
+    'description',
+    'seo_title',
+    'seo_description',
+    'seo_image_url',
+    'long_description',
+    'requirements',
+    'thumbnail_url',
+    'intro_video_id',
+    'stream_video_filter_term',
+    'kit_tag_id',
+    'source_payload_json',
+    'source_last_imported_at',
+    'price_amount',
+    'price_currency',
+    'stripe_price_id',
+    'is_free',
+    'free_access_mode',
+    'is_published',
+    'is_subscription_excluded',
+    'is_preorder_enabled',
+    'certificate_enabled',
+    'certificate_template_path',
+    'certificate_signatory_name',
+    'certificate_signatory_title',
+    'preorder_starts_at',
+    'preorder_ends_at',
+    'release_at',
+    'preorder_price_amount',
+    'stripe_preorder_price_id',
+    'reviews_approved_count',
+    'rating_average',
+    'rating_distribution_json',
+])]
 class Course extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'source_platform',
-        'source_url',
-        'source_external_id',
-        'slug',
-        'title',
-        'description',
-        'seo_title',
-        'seo_description',
-        'seo_image_url',
-        'long_description',
-        'requirements',
-        'thumbnail_url',
-        'intro_video_id',
-        'stream_video_filter_term',
-        'kit_tag_id',
-        'source_payload_json',
-        'source_last_imported_at',
-        'price_amount',
-        'price_currency',
-        'stripe_price_id',
-        'is_free',
-        'free_access_mode',
-        'is_published',
-        'is_subscription_excluded',
-        'is_preorder_enabled',
-        'certificate_enabled',
-        'certificate_template_path',
-        'certificate_signatory_name',
-        'certificate_signatory_title',
-        'preorder_starts_at',
-        'preorder_ends_at',
-        'release_at',
-        'preorder_price_amount',
-        'stripe_preorder_price_id',
-        'reviews_approved_count',
-        'rating_average',
-        'rating_distribution_json',
-    ];
 
     #[\Override]
     protected function casts(): array
@@ -102,14 +101,15 @@ class Course extends Model
         return $this->hasMany(CourseCertificate::class);
     }
 
-    protected function scopePublished(Builder $query): Builder
+    #[\Illuminate\Database\Eloquent\Attributes\Scope]
+    protected function published(Builder $query): Builder
     {
         return $query->where('is_published', true);
     }
 
-    protected function getThumbnailUrlAttribute(?string $value): ?string
+    protected function thumbnailUrl(): \Illuminate\Database\Eloquent\Casts\Attribute
     {
-        return PublicMediaUrl::resolve($value);
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(get: fn (?string $value) => PublicMediaUrl::resolve($value));
     }
 
     public function isReleased(): bool

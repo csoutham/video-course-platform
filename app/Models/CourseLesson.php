@@ -8,23 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[\Illuminate\Database\Eloquent\Attributes\Fillable([
+    'course_id',
+    'module_id',
+    'title',
+    'slug',
+    'summary',
+    'stream_video_id',
+    'duration_seconds',
+    'sort_order',
+    'is_published',
+    'is_imported_shell',
+    'source_external_key',
+])]
 class CourseLesson extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'course_id',
-        'module_id',
-        'title',
-        'slug',
-        'summary',
-        'stream_video_id',
-        'duration_seconds',
-        'sort_order',
-        'is_published',
-        'is_imported_shell',
-        'source_external_key',
-    ];
 
     #[\Override]
     protected function casts(): array
@@ -56,27 +55,26 @@ class CourseLesson extends Model
         return $this->hasMany(LessonProgress::class, 'lesson_id');
     }
 
-    protected function scopePublished(Builder $query): Builder
+    #[\Illuminate\Database\Eloquent\Attributes\Scope]
+    protected function published(Builder $query): Builder
     {
         return $query->where('is_published', true);
     }
 
-    protected function getDurationLabelAttribute(): ?string
+    protected function durationLabel(): \Illuminate\Database\Eloquent\Casts\Attribute
     {
-        $seconds = (int) ($this->duration_seconds ?? 0);
-
-        if ($seconds <= 0) {
-            return null;
-        }
-
-        $hours = intdiv($seconds, 3600);
-        $minutes = intdiv($seconds % 3600, 60);
-        $remainingSeconds = $seconds % 60;
-
-        if ($hours > 0) {
-            return sprintf('%d:%02d:%02d', $hours, $minutes, $remainingSeconds);
-        }
-
-        return sprintf('%d:%02d', $minutes, $remainingSeconds);
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(get: function () {
+            $seconds = (int) ($this->duration_seconds ?? 0);
+            if ($seconds <= 0) {
+                return null;
+            }
+            $hours = intdiv($seconds, 3600);
+            $minutes = intdiv($seconds % 3600, 60);
+            $remainingSeconds = $seconds % 60;
+            if ($hours > 0) {
+                return sprintf('%d:%02d:%02d', $hours, $minutes, $remainingSeconds);
+            }
+            return sprintf('%d:%02d', $minutes, $remainingSeconds);
+        });
     }
 }

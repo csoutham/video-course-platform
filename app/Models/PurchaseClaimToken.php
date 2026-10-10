@@ -6,18 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[\Illuminate\Database\Eloquent\Attributes\Fillable([
+    'order_id',
+    'gift_purchase_id',
+    'purpose',
+    'token',
+    'expires_at',
+    'consumed_at',
+])]
 class PurchaseClaimToken extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'order_id',
-        'gift_purchase_id',
-        'purpose',
-        'token',
-        'expires_at',
-        'consumed_at',
-    ];
 
     #[\Override]
     protected function casts(): array

@@ -5,17 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[\Illuminate\Database\Eloquent\Attributes\Fillable([
+    'stripe_event_id',
+    'event_type',
+    'payload_json',
+    'processed_at',
+    'processing_error',
+])]
 class StripeEvent extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'stripe_event_id',
-        'event_type',
-        'payload_json',
-        'processed_at',
-        'processing_error',
-    ];
 
     #[\Override]
     protected function casts(): array

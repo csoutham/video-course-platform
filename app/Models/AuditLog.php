@@ -6,15 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[\Illuminate\Database\Eloquent\Attributes\Fillable([
+    'user_id',
+    'event_type',
+    'context',
+])]
 class AuditLog extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'user_id',
-        'event_type',
-        'context',
-    ];
 
     #[\Override]
     protected function casts(): array

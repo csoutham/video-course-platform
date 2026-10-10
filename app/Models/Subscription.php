@@ -7,24 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[\Illuminate\Database\Eloquent\Attributes\Fillable([
+    'user_id',
+    'email',
+    'stripe_customer_id',
+    'stripe_subscription_id',
+    'stripe_price_id',
+    'interval',
+    'status',
+    'current_period_start',
+    'current_period_end',
+    'cancel_at_period_end',
+    'canceled_at',
+    'ended_at',
+])]
 class Subscription extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'user_id',
-        'email',
-        'stripe_customer_id',
-        'stripe_subscription_id',
-        'stripe_price_id',
-        'interval',
-        'status',
-        'current_period_start',
-        'current_period_end',
-        'cancel_at_period_end',
-        'canceled_at',
-        'ended_at',
-    ];
 
     #[\Override]
     protected function casts(): array

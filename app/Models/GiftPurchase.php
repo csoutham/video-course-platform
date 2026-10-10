@@ -7,23 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+#[\Illuminate\Database\Eloquent\Attributes\Fillable([
+    'order_id',
+    'course_id',
+    'buyer_user_id',
+    'buyer_email',
+    'recipient_email',
+    'recipient_name',
+    'gift_message',
+    'status',
+    'delivered_at',
+    'claimed_by_user_id',
+    'claimed_at',
+])]
 class GiftPurchase extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'order_id',
-        'course_id',
-        'buyer_user_id',
-        'buyer_email',
-        'recipient_email',
-        'recipient_name',
-        'gift_message',
-        'status',
-        'delivered_at',
-        'claimed_by_user_id',
-        'claimed_at',
-    ];
 
     #[\Override]
     protected function casts(): array

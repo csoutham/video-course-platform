@@ -7,18 +7,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[\Illuminate\Database\Eloquent\Attributes\Fillable([
+    'user_id',
+    'course_id',
+    'order_id',
+    'status',
+    'granted_at',
+    'revoked_at',
+])]
 class Entitlement extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'user_id',
-        'course_id',
-        'order_id',
-        'status',
-        'granted_at',
-        'revoked_at',
-    ];
 
     #[\Override]
     protected function casts(): array
@@ -44,7 +43,8 @@ class Entitlement extends Model
         return $this->belongsTo(Order::class);
     }
 
-    protected function scopeActive(Builder $query): Builder
+    #[\Illuminate\Database\Eloquent\Attributes\Scope]
+    protected function active(Builder $query): Builder
     {
         return $query->where('status', 'active');
     }

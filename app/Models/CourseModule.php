@@ -7,17 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[\Illuminate\Database\Eloquent\Attributes\Fillable([
+    'course_id',
+    'title',
+    'sort_order',
+    'is_imported_shell',
+    'source_external_key',
+])]
 class CourseModule extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'course_id',
-        'title',
-        'sort_order',
-        'is_imported_shell',
-        'source_external_key',
-    ];
 
     #[\Override]
     protected function casts(): array

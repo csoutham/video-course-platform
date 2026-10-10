@@ -5,12 +5,10 @@ namespace App\Console\Commands;
 use App\Services\Preorders\PreorderReleaseService;
 use Illuminate\Console\Command;
 
+#[\Illuminate\Console\Attributes\Description('Attempt off-session charges for due preorder reservations and grant access on success.')]
+#[\Illuminate\Console\Attributes\Signature('videocourses:preorders-release')]
 class PreordersReleaseCommand extends Command
 {
-    protected $signature = 'videocourses:preorders-release';
-
-    protected $description = 'Attempt off-session charges for due preorder reservations and grant access on success.';
-
     public function handle(PreorderReleaseService $preorderReleaseService): int
     {
         if (! (bool) config('learning.preorders_enabled')) {
